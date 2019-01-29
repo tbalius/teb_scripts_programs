@@ -1,0 +1,31 @@
+# to tart a residue...
+
+#make new directory at same level as old/ non-tarted directory
+mkdir mimetic_tart1_rs_sph
+cd mimetic_tart1_rs_sph/
+
+# copy rec.crg.pdb rec.pdb and xtal-lig.pdb
+cp ../mimetic_4g2i/4G2I/working/rec.pdb .
+cp ../mimetic_4g2i/4G2I/working/rec.crg.pdb .	# if available otherwise see step B
+cp ../mimetic_4g2i/4G2I/working/xtal-lig.pdb .
+
+# step B for when no rec.crg.pdb is available
+#location of standard and modified (allowing tarting based on rec.crg.pdb in working dir) blastermaster script
+ls -l $DOCK_BASE/src/blastermaster_1.0/blastermaster.py
+/nfs/home/tbalius/zzz.svn/dockenv/trunk//src/blastermaster_1.0/blastermaster.py 	# run this if there is no previous rec.crg.pdb file
+
+# kill after 10sec of running as we only need rec.crg.pdb in /working/ (grids will take to long to run and will be discarded anyway in the next step)
+# ctrl+c 
+
+ls -l working/		# check that rec.crg.pdb is there, if not run longer
+cp working/rec.crg.pdb .
+rm -r working/
+mkdir working
+
+vim rec.crg.pdb 	# in file we modified HIP 305 to HNE; and HIE 397 to HPE
+cp rec.crg.pdb working/.	# this will now be "seen" by the modified blastermaster script and used for grid prep etc.
+
+# this is the new blastermaster script and the location of our oxt and ambh files where we defined the tarting of the His alternatives
+$DOCK_BASE/src/blastermaster_1.0/blastermaster_mod.py --addNOhydrogensflag --chargeFile=/mnt/nfs/work/fischer/VDR/grid_inputs/more.his.amb.crg.oxt --vdwprottable=/mnt/nfs/work/fischer/VDR/grid_inputs/more.his.prot.table.ambcrg.ambH -v
+
+

@@ -1,0 +1,26 @@
+5/98 te
+11/98 kb, ags, mll
+3/0 kb
+______________________________________________________________________
+name            hydroxyl
+drive_id        8
+minimize        1
+
+definition      O.3 ( H )
+definition      *
+______________________________________________________________________
+name		thiol
+drive_id	8
+minimize	1
+
+definition	S.3 ( H )
+definition	*
+______________________________________________________________________
+name            sulfonamide 
+drive_id        8
+minimize        1
+
+definition      N.2 ( H ) [ C ] [ N ] [ O ] [ P ]
+definition      S
+______________________________________________________________________
+

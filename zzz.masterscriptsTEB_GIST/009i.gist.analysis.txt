@@ -1,0 +1,26 @@
+
+## Steps to analyse GIST maps using Chimera ##
+
+## (can also alternatively do this in PyMOL by opening corresponding .dx file and selecting mesh at 5sigma level; this also shows the box; then open ligand, protein and water 
+
+
+
+$ chimera
+
+- File > Open > /008b.subtraj_gist/09md/gist-g0.dx
+
+- Tools > VolumeData > VolumeViewer
+	- mesh
+	- Level: e.g. 5 (means 5x bulk solvent)
+
+- File > Open > /007align_to_md/lig_aligned.mol2 
+			      	rec_aligned.pdb
+				ref.pdb
+				waters_aligned.pdb
+
+- Actions > Ribbon > hide
+
+- Tools > command line 
+	display #2:233
+	display #3:230
+

@@ -1,0 +1,70 @@
+#!/bin/csh 
+
+## TEB/ MF comments -- March 2017
+
+setenv DOCKBASE /nfs/home/tbalius/zzz.github/DOCK
+source /nfs/soft/python/envs/complete/latest/env.csh
+
+
+#set mountdir = "/mnt/nfs/work/users/tbalius/Water_Project/run_DOCK3.7"
+set mountdir = `pwd`
+
+set workdir  = $mountdir/gist/010ii.gist_subsite_energetics
+set filedir  = $mountdir/gist/010a.full_gist_combine/
+set scriptdir = $mountdir/GIST_DX_tools-master/src
+
+  rm -rf  ${workdir}
+  mkdir ${workdir}
+  cd ${workdir}
+
+  cp $filedir/gist-EswPlus2Eww_ref.dx .
+  cp $filedir/gist-gO.dx .
+
+  python $scriptdir/dx-gist_make_centers_of_intenisty.py gist-gO.dx 1 5 2 density05 > log
+  $DOCKBASE/proteins/pdbtosph/bin/pdbtosph density05_cluster_centers.pdb density05_cluster_centers.sph >> log
+  sed -i 's/ 0\.700   / 1.400   /g' density05_cluster_centers.sph
+  python $scriptdir/dx-gist_score_gist_sph.py gist-EswPlus2Eww_ref.dx density05_cluster_centers.sph > ! energy_cluster_centers_d05.log
+
+  python $scriptdir/dx-gist_make_centers_of_intenisty.py gist-gO.dx 1 10 2 density10 >> log
+  $DOCKBASE/proteins/pdbtosph/bin/pdbtosph density10_cluster_centers.pdb density10_cluster_centers.sph >> log
+  sed -i 's/ 0\.700   / 1.400   /g' density10_cluster_centers.sph
+  python $scriptdir/dx-gist_score_gist_sph.py gist-EswPlus2Eww_ref.dx density10_cluster_centers.sph > ! energy_cluster_centers_d10.log
+
+  python $scriptdir/dx-gist_make_centers_of_intenisty.py gist-gO.dx 1 20 2 density20 >> log
+  $DOCKBASE/proteins/pdbtosph/bin/pdbtosph density20_cluster_centers.pdb density20_cluster_centers.sph >> log
+  sed -i 's/ 0\.700   / 1.400   /g' density20_cluster_centers.sph
+  python $scriptdir/dx-gist_score_gist_sph.py gist-EswPlus2Eww_ref.dx density20_cluster_centers.sph > ! energy_cluster_centers_d20.log
+
+  python $scriptdir/dx-gist_make_centers_of_intenisty.py gist-gO.dx 1 50 2 density50 >> log
+  $DOCKBASE/proteins/pdbtosph/bin/pdbtosph density50_cluster_centers.pdb density50_cluster_centers.sph >> log
+  sed -i 's/ 0\.700   / 1.400   /g' density50_cluster_centers.sph
+  python $scriptdir/dx-gist_score_gist_sph.py gist-EswPlus2Eww_ref.dx density50_cluster_centers.sph > ! energy_cluster_centers_d50.log
+
+  python $scriptdir/dx-gist_make_centers_of_intenisty.py gist-EswPlus2Eww_ref.dx  1 1.0  2 energy_antiwaters >> log
+  $DOCKBASE/proteins/pdbtosph/bin/pdbtosph energy_antiwaters_cluster_centers.pdb energy_antiwaters_cluster_centers.sph
+  sed -i 's/ 0\.700   / 1.400   /g' energy_antiwaters_cluster_centers.sph
+  python $scriptdir/dx-gist_score_gist_sph.py gist-EswPlus2Eww_ref.dx energy_antiwaters_cluster_centers.sph > ! energy_antiwaters.log
+
+  python $scriptdir/dx-gist_make_centers_of_intenisty.py gist-EswPlus2Eww_ref.dx -1 1.0 2 energy_waters >> log
+  $DOCKBASE/proteins/pdbtosph/bin/pdbtosph energy_waters_cluster_centers.pdb energy_waters_cluster_centers.sph >> log
+  sed -i 's/ 0\.700   / 1.400   /g' energy_waters_cluster_centers.sph
+  python $scriptdir/dx-gist_score_gist_sph.py gist-EswPlus2Eww_ref.dx energy_waters_cluster_centers.sph > ! energy_waters.log
+  #cp out0new_gist.dx out0new_gist-EswPlus2Eww_ref_energy_waters.dx
+
+  echo "MODEL 1" > frames.pdb
+  cat density05_cluster_centers.pdb >> frames.pdb
+  echo "ENDMDL \nMODEL 2" >> frames.pdb
+  cat density10_cluster_centers.pdb >> frames.pdb
+  echo "ENDMDL \nMODEL 3" >> frames.pdb
+  cat density20_cluster_centers.pdb >> frames.pdb
+  echo "ENDMDL \nMODEL 4" >> frames.pdb
+  cat density50_cluster_centers.pdb >> frames.pdb
+
+#   $DOCKBASE/proteins/pdbtosph/bin/pdbtosph one_center_of_energies.pdb one_center_of_energies.sph
+#  sed -i 's/0.700    7/1.400    7/g' one_center_of_energies.sph
+#  python ~/zzz.scripts/dx-gist_score_gist_sph.py loopC.EswPusEww.dx  one_center_of_energies.sph > ! one_center_of_energies.log
+#  #cp out0new_gist.dx out0new_gist_loopC_one_center_of_energies.dx
+
+
+
+

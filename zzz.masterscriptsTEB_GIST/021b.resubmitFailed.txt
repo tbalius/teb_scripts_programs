@@ -1,0 +1,48 @@
+
+# FOR NO_GIST
+#  ls -l vs_nogist/$dir/OUTDOCK
+foreach dir ( `cat vs_nogist/dirlist` )
+  if !(-e vs_nogist/$dir/OUTDOCK) then
+     echo vs_nogist/$dir/OUTDOCK does not exist
+     echo $dir >> vs_nogist/dirlist_new
+  endif
+end 
+
+if !(-e vs_nogist/dirlist_ori) then 
+    mv vs_nogist/dirlist vs_nogist/dirlist_ori
+endif
+
+cp vs_nogist/dirlist_new vs_nogist/dirlist
+
+
+#FOR GIST
+foreach dir ( `cat vs_gist/dirlist` )
+  if !(-e vs_gist/$dir/OUTDOCK) then
+     echo vs_gist/$dir/OUTDOCK does not exist
+     echo $dir >> vs_gist/dirlist_new
+  endif
+end
+
+if !(-e vs_nogist/dirlist_ori) then 
+    mv vs_gist/dirlist vs_gist/dirlist_ori
+endif
+
+cp vs_gist/dirlist_new vs_gist/dirlist
+
+
+# stderr and OUTDOCK can cause trouble -> remove those form the respective dirs first before rerunning the jobs
+
+#check the files
+foreach dir ( `cat vs_gist/dirlist` )
+    ls vs_gist/$dir/OUTDOCK vs_gist/$dir/stderr vs_gist/$dir/test.mol2.gz
+    cat vs_gist/$dir/stderr
+    tail vs_gist/$dir/OUTDOCK
+end
+
+# remove them
+foreach dir ( `cat vs_gist/dirlist` )
+    rm vs_gist/$dir/OUTDOCK vs_gist/$dir/stderr vs_gist/$dir/test.mol2.gz
+end
+
+# then resubmit 021c.run.vs.csh
+

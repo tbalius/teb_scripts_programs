@@ -1,0 +1,25 @@
+# open receptor as molecule #0 (see ModelPanel)
+flex/2prep/rec_aligned.pdb
+
+# open top.1000.mol2 as molecule #1
+Tools -- Surface/BindingAnalysis -- ViewDock
+
+sel #0 & #1 z<3
+Atoms/Bonds -- Show
+Atoms/Bonds -- Wire
+
+# Extend selection with arrow_up key
+Ribbon -- Hide
+
+# For vs_flex__gist also open gist grids as molecule #2
+Open
+VolumeViewer
+
+
+
+Other commands:
+
+display #3:186-194
+hbond intraMol #0&#1
+
+

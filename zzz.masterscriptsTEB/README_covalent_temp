@@ -1,0 +1,41 @@
+#in the presence of rec.pdb and xtal-lig.pdb
+~londonir/Demo-run/prep.sh
+# output is rec.crg within /grids
+#edit rec.crg to remove proton from target CYS
+~londonir/scripts/beMichael.sh
+
+#create a cov.sph file
+copy a template cov.sph and edit the coordinates to match the CA CB and SG of the target CYS.
+
+#to setup a db
+mkdir run.xxx
+cp INDOCK run.xxx
+cd run.xxx
+setup_db.csh /raid9/londonir/ReactiveZINC/fragments/unsat-carbonyl/product/OUT/MOLS/gz_files/
+
+#to send the run
+~londonir/scripts/HEI/pipelined/submit_dock.csh
+
+
+#to combine the run
+combine.py --done
+topdock.py > topdock.pdb
+
+# copy stuff for veiwing: 
+  scp sgehead.bkslab.org:/raid1/people/fischer/postdoc/VDR/covalent/run.frag-unsat-carb/topdock.pdb /mnt/nfs/work/fischer/VDR/covalent/.
+  mv topdock.pdb topdock500_1db1_frag-unsat-carb.pdb	#or other sensible name
+
+
+AVAILABLE DATABASES
+=-=-=-=-=-=-=-=-=-=
+
+/raid9/londonir/ReactiveZINC/lead-like/unsat-carbonyl/product/OUT/MOLS/gz_files_ref/
+/raid9/londonir/ReactiveZINC/fragments/unsat-carbonyl/product/OUT/MOLS/gz_files/   	#already ran this
+/raid9/londonir/ReactiveZINC/lead-like/alkylhalide-noF/product/OUT/MOLS/gz_files/ 
+
+/raid8/londonir/ReactiveZINC/leads-now/aliphatic-cyclic-sec-amines/OUT/MOLS/gz_files/  	#<--*** Nir recommended
+/raid8/londonir/ReactiveZINC/fragments-now/amine-based-acrylamides/primary-aliphatic/OUT/MOLS/gz_files/
+/raid8/londonir/ReactiveZINC/fragments-now/amine-based-acrylamides/secondary-aliphatic/OUT/MOLS/gz_files/
+
+
+

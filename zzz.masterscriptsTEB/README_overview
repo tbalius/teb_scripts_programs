@@ -1,0 +1,8 @@
+# new db2 database files are in:
+
+/nfs/db/tbalius/
+frags-all-marvin 	frags-now-marvin  	leads-now-marvin  	set98
+
+##need to shift new scripts to work with cluster 2 directory structure
+# already altered 0006 to run on the new cluster
+# shift things into for_old_cluster when everything has been run and replace with new scripts

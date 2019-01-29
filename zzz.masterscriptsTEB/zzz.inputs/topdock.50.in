@@ -1,0 +1,16 @@
+ligand_atom_file                                             ligands.mol2
+limit_max_ligands                                            yes
+max_ligands                                                  50
+skip_molecule                                                no
+read_mol_solvation                                           no
+calculate_rmsd                                               no
+use_database_filter                                          no
+orient_ligand                                                no
+use_internal_energy                                          no
+flexible_ligand                                              no
+bump_filter                                                  no
+score_molecules                                              no
+ligand_outfile_prefix                                        topdock
+write_orientations                                           no
+num_scored_conformers                                        1
+rank_ligands                                                 no

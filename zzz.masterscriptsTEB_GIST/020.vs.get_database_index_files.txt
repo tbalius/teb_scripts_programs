@@ -1,0 +1,28 @@
+# TEB/ MF -- March 2017
+
+# Follow these instructions to get index file from ZINC which is called during VS 
+# ? or build your own databases and provied the paths in a index file ?
+
+http://zinc15.docking.org/tranches/home/
+
+- mark Mw (200 to 300) and logP (-1 to 3.5)
+
+- click:
+	- Rep. 3D
+	- React. Standard
+	- Purch. InStock
+	- pH. Ref Mid Low
+	- Charge. -2 -1 0
+
+- click on download
+	- specify ZINC DB Root	/nfs/db/dockable/zinc15/byproperty/
+	- DOCK37 (*.db2.gz) 
+	- DB Index
+
+- take a screenshot of the browser window
+
+- cp screenshot.png 020.get_database_index_files/2017.03.07.ZINC-downloader-3D-db2.gz.database_index.png
+- cp ZINC-downloader-3D-db2.gz.database_index 020.get_database_index_files/2017.03.07.ZINC-downloader-3D-db2.gz.database_index
+
+- to get number of lines for max number of jobs:
+	 wc -l 020.get_database_index_files/2017.03.07.ZINC-downloader-3D-db2.gz.database_index

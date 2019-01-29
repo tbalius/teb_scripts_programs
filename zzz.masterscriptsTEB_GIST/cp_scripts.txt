@@ -1,0 +1,1 @@
+cp ../tutorial_scripts/*csh ../tutorial_scripts/*txt ../tutorial_scripts/*py ../tutorial_scripts/*hemall ../tutorial_scripts/*in .

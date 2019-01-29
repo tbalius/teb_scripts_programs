@@ -1,0 +1,15 @@
+# see /mnt/nfs/work/fischer/VDR/mimetic_4g2i/0002b.alignwithchimera.movespheres.csh
+ 
+# make symbolic link to the modifed spheres. 
+ln -s /mnt/nfs/work/fischer/VDR/mimetic_4g2i/aligned_sph/matching_spheres.sph dockfiles/matching_spheres_mod.sph
+
+# modify INDOCK file to point to the modified (right side) spheres
+vi INDOCK	# change matching_spheres.sph to matching_spheres_mod.sph
+
+# copy files to run VS
+cp ../tartedHIS_rightside_sph/0006.VS_db2.csh .
+cp ../tartedHIS_rightside_sph/0007.VS_combineScoresAndPoses.qsub.csh .
+
+# select frags, leads or NP
+csh 0006.VS_db2.csh
+

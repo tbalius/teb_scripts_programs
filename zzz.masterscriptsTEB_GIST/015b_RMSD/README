@@ -1,0 +1,14 @@
+
+#scripts copied from:
+/nfs/work/tbalius/Water_Project_all_in_the_same_frame_ph4/pose_reproduction/
+
+# get xtal poses from the pdb 001-002
+
+# get the corespondance between docking names of molcules and the pdb names (003-004).  we do this with smiles, fp, and Tc calculations. 
+#  -- this needs chemaxon to work.  
+#  --
+#  -- you can also do the corespondance by hand.  
+ 
+# calculate the rmsd using DOCK6.6 (006)  
+
+# process the rmsd to get stats (007). 

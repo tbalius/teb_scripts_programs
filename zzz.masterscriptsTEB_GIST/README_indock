@@ -1,0 +1,86 @@
+DOCK 3.7 parameter
+##################################################### 
+# NOTE: split_database_index is reserved to specify a list of files
+ligand_atom_file               split_database_index #standard for docking large databases
+#####################################################
+#                             OUTPUT
+output_file_prefix            test. #default, but can be changed
+#####################################################
+#                             MATCHING
+match_method                  2 #1 matches up to the distance_tolerance below, ignoring match_goal, step, maximum, etc. 
+                                            #2 uses the adaptive sampling that attempts to get a number of match_goal orientational samples 
+distance_tolerance            0.05 #starting distance tolerance
+match_goal                    2500 #desired number of orientational samples to get before quitting under match_method = 2
+distance_step                 0.05 #increment from distance_tolerance until max or match_goal is reached
+distance_maximum              0.5 #biggest tolerance that will be used to attempt to get match_goal orientational samples
+timeout                       10.0 #number of seconds before quitting on any given ligand
+nodes_maximum                 4 #max number of points for which all distances must be within the tolerance. 3 possible, 4 suggested.
+nodes_minimum                 4 #min number of points for which all distances must be within the tolerance. 4 suggested, 3 possible.
+bump_maximum                  20.0 #van der Waals score in kcal/mol for any part of the molecule to get before further examination stopped
+bump_rigid                    20.0 #van der Waals score in kcal/mol for the rigid component of the ligand molecule, if above, discarded
+#####################################################
+#                             COLORING
+chemical_matching             no #default to off, can use chemical matching from DOCK3.6 if desired
+case_sensitive                no #case sensitivity for chemical matching groups
+#####################################################
+#                             SEARCH MODE
+atom_minimum                  4 #minimum number of atoms in ligand for it to be scored
+atom_maximum                  100 #maximum number of atoms in ligand for it to be scored
+number_save                   1 #how many poses to save. Any number of poses can be saved, but disk space is a factor!
+save_limit                    1000000 #only scores below (better than) this will have their poses saved. useful for speeding up prospective
+                                      #runs, not recommended for retrospective tests as it can influence/hamper result processing.
+#####################################################
+#                             SCORING
+ligand_desolvation            volume #use GB desolvation scoring, other options are full or none
+vdw_maximum                   1.0e10 #maximum vdw score possible, prevents overflow
+electrostatic_scale           1.0 #scaling factors to be applied to scores, likely not to be trifled with
+gist_scale                   -1.0 #note: currently (!) negative, -0.5 worked well retrospectively
+vdw_scale                     1.0 #again, scales the entire vdw score.
+internal_scale                0.0 #scales an internal focusing term. set this to 0 as this doesn't work at all/isn't implemented
+per_atom_scores               no #change to yes if per-atom scoring breakdowns desired. note that this doubles output size.
+#################################################### 
+#                             DOCKovalent 
+dockovalent                   no
+bond_len                      1.8
+bond_ang1                     109.5
+bond_ang2                     109.5
+len_range                     0.0
+len_step                      0.1
+ang1_range                    10.0
+ang2_range                    10.0
+ang1_step                     2.5
+ang2_step                     2.5
+##################################################### 
+#                    MINIMIZATION
+minimize                      no	# yes
+sim_itmax                     500	# max number of iterations when simplex min is abandoned
+sim_trnstep                   0.2	# initial translation increment (in Angstrom)
+sim_rotstep                   5.0	# initial rotation increment (in degree)
+sim_need_to_restart           1.0	# between 2 subseq runs: if energy changes by more than 1kcal restart minimizer from latest position for another round
+sim_cnvrge                    0.1	# within one run: considered converged when energies of lowest and highest energy state differ by only 0.1kcal/mol
+min_cut                       1.0e15 	# don't minimize molecules that score above this large number
+iseed                         777	# random seed (e.g. used for trn and rotstep calc) 
+#####################################################
+# INPUT FILES / THINGS THAT CHANGE
+receptor_sphere_file          ../dockfiles/matching_spheres.sph #receptor matching spheres file following age old SPH format
+vdw_parameter_file            ../dockfiles/vdw.parms.amb.mindock #vdw parameter file.
+flexible_receptor             no #describing only single receptor file for now
+total_receptors               1 
+############## grids/data for one receptor
+rec_number                    1
+rec_group                     1
+rec_group_option              1
+solvmap_file                  ../dockfiles/ligand.desolv.heavy #GB-based desolvation maps 
+hydrogen_solvmap_file         ../dockfiles/ligand.desolv.hydrogen
+delphi_file                   ../dockfiles/trim.electrostatics.phi #electrostatics map, size must be declared with delphi_nsize below
+gist_file                     ../gistfiles/gist-EswPlus2Eww_ref.dx	#includes selected gist grid
+chemgrid_file                 ../dockfiles/vdw.vdw #vdw grid file, contains vdw scores
+bumpmap_file                  ../dockfiles/vdw.bmp #vdw bump file, only used for header data for chemgrid_file 
+############## end of INDOCK
+delphi_nsize                  193 #size of electrostatics grid (cubic). blastermaster.py trims to the minimum size necessary to save memory.
+
+check_clashes    yes/no  # This parameter is used to check for internal clashes.  
+                         # Note that clashes are per-computed during db2 generations 
+                         # and stored in the db2 file in the first line  for each set (S).
+                         # Read in ligread2.f stored in set_broken variable.  
+                         # If check_clash equals yes then all sets with any numbers of clashes (clash number > 0) will not be docked.

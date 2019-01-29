@@ -1,0 +1,7 @@
+/nfs/home/tbalius/zzz.scripts/
+~tbalius/zzz.scripts/search_pdb_lig_code.py
+/nfs/home/tbalius/work/Water_Project_all_in_the_same_frame_ph4_multigrid_mod/vs_zinc/
+/nfs/home/tbalius/work/Water_Project_all_in_the_same_frame_ph4_multigrid_mod/vs_zinc/vs_run1001_fullgist/README
+/nfs/home/tbalius/work/Water_Project_all_in_the_same_frame_ph4_multigrid/pose_reproduction/*csh
+
+
