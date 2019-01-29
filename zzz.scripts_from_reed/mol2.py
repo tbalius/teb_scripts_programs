@@ -1,1 +1,1 @@
-../zzz.scripts/mol2.py
+../scripts/mol2.py
