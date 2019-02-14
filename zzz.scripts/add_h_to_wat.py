@@ -2,6 +2,8 @@
 import pdb_lib
 import sys,copy
 
+# Written by Trent E. Balius, B. Shoichet Lab
+
 O  = [ 28.781,  50.284,  29.051]
 H1 = [ 29.738,  50.284,  29.051]
 H2 = [ 28.541,  51.210,  29.051]

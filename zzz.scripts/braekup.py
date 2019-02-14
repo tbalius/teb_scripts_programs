@@ -2,6 +2,7 @@
 import sys
 import gzip
 
+# Written by Trent E. Balius, B. Shoichet Lab, UCSF
 #################################################################################################################
 def read_write_ism(input_file, output_ex, chunk_num):
     print "input file ="+input_file

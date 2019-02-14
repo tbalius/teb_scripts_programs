@@ -1,4 +1,5 @@
 
+# Written by Trent E. Balius, B. Shoichet Lab at UCSF
 # this get the database from the autodude webpage
 
 import sys, os

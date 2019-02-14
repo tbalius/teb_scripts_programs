@@ -1,6 +1,8 @@
 import sys
 import pdb_lib
 
+# Written by Trent E. Balius in the Shoichet Lab at UCSF
+
 class cord:
     def __init__(self, x, y, z):
         self.x = x

@@ -3,6 +3,7 @@ import sys
 #import gzip
 import commands
 
+# Written by Trent E. Balius, B. Shoichet Lab, UCSF
 ## This script will split the combine.score file into 2 files: active.score and decoy.score
 ## The broken molecules are filtered out.
 

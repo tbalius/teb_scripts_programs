@@ -58,6 +58,68 @@ def remove_dullicates(list):
 #FORMAT: (I5, 3F10.5, F8.3, I5, I2, I3) 
 # ccluster is the chosen cluster
 
+def read_sph_cluster_list(filename):
+    sphere_clusters = []
+    #sphere_list = []
+    insph = open(filename,'r')
+
+    flag_frist = True
+
+    for line in insph:
+       #if line[0:4] == 'DOCK' or line[0:4]=='clus':
+       if line[0:4] == 'DOCK':
+          continue
+       elif line[0:4]=='clus':
+          cluster = int(line[7:16] )
+          #print cluster
+          print "cluster", cluster
+          if flag_frist:
+             flag_frist = False
+             sphere_list = []
+          else: # if it is not frist.
+             sphere_clusters.append(sphere_list)
+             sphere_list = []  
+       elif not (line[0:5].replace(' ','').isdigit()):
+            #print line[0:5], line[0:5].replace(' ','').isdigit()
+            print line
+       else:
+          index   = int(line[0:5])
+          x       = float(line[5:15])
+          y       = float(line[15:25])
+          z       = float(line[25:35])
+          r       = float(line[35:43])
+          if (r == 0.0):
+              r = 0.5
+              print "radius of 0.0 detected.  changed to 0.5."
+
+          atomnum = int(line[43:48])
+          #print '\'' + line[48:50] + '\'' 
+          if (line[48:50] != '  '):
+              clust = int(line[48:50])
+          else:
+              clust = 0
+          if (line[50:53] != '   '):
+             col = int(line[50:53])
+          else:
+             col = 0
+
+          tmp_sphere = sphere(index,x,y,z,r,atomnum,clust,col)
+          sphere_list.append(tmp_sphere)
+
+    #sphere_list.append(tmp_sphere)
+    sphere_list.sort(byIndex)
+    ## remove duplicates:
+    remove_dullicates(sphere_list)
+
+    if len(sphere_list) == 0:
+       print "there is a problem"
+
+    sphere_clusters.append(sphere_list)
+
+    return sphere_clusters
+
+
+
 def read_sph(filename,ccluster,color):
     sphere_list = []
     insph = open(filename,'r')

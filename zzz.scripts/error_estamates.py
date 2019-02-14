@@ -5,6 +5,8 @@ import sph_lib as sph
 #import pdb_lib as pdb
 import random
 
+# Written by Trent E. Balius, Shoichet Lab, UCSF, in 2019.
+
 def random_samp(p,n):
     print "in random_samp" 
     h = 0

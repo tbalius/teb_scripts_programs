@@ -1,6 +1,7 @@
 import sys
 import pdb_lib
 
+# Written by Trent E. Balius in the Shoichet Lab at UCSF
 # this is not done.  started on April 6, 2018
 
 class cord:

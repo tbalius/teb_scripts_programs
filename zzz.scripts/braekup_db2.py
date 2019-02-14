@@ -2,6 +2,7 @@
 import sys
 import gzip
 
+# Written by Trent E. Balius, B. Shoichet Lab, UCSF
 #################################################################################################################
 def read_write_db2(input_file, output_prefix):
     print "input file ="+input_file

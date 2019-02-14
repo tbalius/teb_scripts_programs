@@ -1,7 +1,7 @@
 import sys,  gzip
 
-## Writen by Trent Balius in the Rizzo Group
-## converts a mol2 to spheres. 
+## Writen by Trent Balius in Shoichet Lab modified frem a script from while Trent was in the Rizzo Group 
+## converts a eel to pdb. 
 
 
 def lookUpEle(num_str):

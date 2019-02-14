@@ -4,6 +4,7 @@ import os.path
 from math import sqrt
 
 #################################################################################################################
+# Written by Trent Balius, Shoichet Lab at UCSF
 # this function reads in two lists and writes two files not_in_one.txt and not_in_two.txt
 #################################################################################################################
 
