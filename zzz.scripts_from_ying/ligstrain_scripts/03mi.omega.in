@@ -1,0 +1,11 @@
+01mi.in: minimization with GB/SA
+&cntrl
+imin = 5, maxcyc = 10000, ncyc = 2500,  ntmin = 2, 
+igb = 1, gbsa = 1,
+ioutfm = 0, 
+ntx = 1, ntc = 1, ntf = 1,
+ntb = 0, ntp = 0,
+ntwx = 1, ntwe = 0, ntpr = 100,
+cut = 999.9,
+ntr = 0,
+/

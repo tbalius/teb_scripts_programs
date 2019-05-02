@@ -1,0 +1,13 @@
+01mi.in: minimization with GB/SA
+&cntrl
+imin = 1, maxcyc = 2500, ntmin = 2, drms = 0.005, 
+igb = 1, gbsa = 1,
+ntx = 1, ntc = 1, ntf = 1,
+ntb = 0, ntp = 0,
+ntwx = 100, ntwe = 0, ntpr = 100, ntwr = 100,
+cut = 999.9,
+ntr = 1, restraint_wt = 5.00,
+restraintmask=':1-209&!(@H=)'
+/
+
+# ntr = 0,

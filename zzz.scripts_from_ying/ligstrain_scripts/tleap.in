@@ -1,0 +1,15 @@
+set default PBradii mbondi2
+source leaprc.protein.ff14SB
+source leaprc.gaff
+
+loadamberparams lig.frcmod
+LIG = loadmol2  lig_bcc.mol2
+
+prot   = loadpdb rec.pdb
+sys    = combine {prot LIG}
+
+saveamberparm prot   rec.leap.parm7 rec.leap.rst7
+saveamberparm sys    com.leap.parm7 com.leap.rst7
+saveamberparm LIG    lig.leap.parm7 lig.leap.rst7
+
+quit

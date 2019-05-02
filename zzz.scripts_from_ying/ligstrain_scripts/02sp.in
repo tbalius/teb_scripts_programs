@@ -1,0 +1,10 @@
+02sp.in: minimization with GB/SA
+&cntrl
+imin = 1, maxcyc = 1, ncyc = 1,  ntmin = 1,
+igb=1, gbsa = 1,
+ntx = 1, ntc = 1, ntf = 1,
+ntb = 0, ntp = 0,
+ntwx = 0, ntwe = 0, ntpr = 1,
+cut = 999.9,
+ntr = 0,
+/
