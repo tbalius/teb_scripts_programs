@@ -3,6 +3,7 @@ import os.path
 
 from math import sqrt
 
+# Writen by Trent Balius
 #################################################################################################################
 ############################################################
 ##reads in multi-mol2 file (file) and outputs the molicule 

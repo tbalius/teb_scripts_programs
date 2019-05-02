@@ -3,6 +3,7 @@ import os.path
 
 from math import sqrt
 
+# Writen by Trent Balius
 
 def read_multi_mol2file(filename,molname,text1):
     file1 = open(filename,'r')
