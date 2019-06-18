@@ -37,6 +37,11 @@ def read_dock_multimol2_file_printmol2_files(file,setname):
                          #outputprefix = linesplit[2]+ "_" + setname
                          outputprefix = linesplit[2].split('.')[0] + "_" + setname
              if (flag and linesplit[0] == "@<TRIPOS>MOLECULE"):
+             #if ( linesplit[0] == "@<TRIPOS>MOLECULE"):
+                 if (header == ''): 
+                     print "no header"
+                     outputprefix = setname
+
                  if (count > 1):
                     file2.close()
                  if (count < 10):
@@ -50,7 +55,9 @@ def read_dock_multimol2_file_printmol2_files(file,setname):
                  else:
                     outputfilename = outputprefix + str("_") + str(count) + str(".mol2")
                  file2 = open(outputfilename,'w')
+
                  file2.write(header)
+
                  file2.write(line)
                  count = count+1
                  #flag = False
