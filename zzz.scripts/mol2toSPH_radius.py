@@ -1,4 +1,4 @@
-import sys,math, mol2
+import sys,math,os,mol2
 
 ## Writen by Trent Balius in the Shoichet Lab, UCSF
 ## modifed in Dec, 2016
@@ -30,7 +30,8 @@ def get_radius(atype,vdw_dict):
 
 def write_sph(filename,mol):
     dt   = mol2.convert_sybyl_to_dock(mol) # get dock atom types.
-    vdw_dict = intialize_vdw_parm('/nfs/home/tbalius/zzz.github/DOCK/proteins/defaults/vdw.parms.amb.mindock') 
+    dockbase = os.environ.get('DOCKBASE')
+    vdw_dict = intialize_vdw_parm(dockbase+'/proteins/defaults/vdw.parms.amb.mindock') 
     outsph = open(filename,'w')
     print len(mol.atom_list)
     outsph.write("DOCK spheres generated from ligand heavy atoms\n")
