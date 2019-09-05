@@ -5,7 +5,12 @@ import sys
 import copy
 import time
 
-import math, matplotlib, scipy, pylab,numpy
+import math 
+
+import matplotlib 
+matplotlib.use('Agg')  # allows you to not have an x-server running
+
+import scipy, pylab,numpy
 import scipy.cluster.hierarchy as sch
 
 
