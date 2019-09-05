@@ -8,7 +8,7 @@ import sys, math
 
 
 class PDB_atom_info:
-    def __init__(self, molname, chainid, resname, resnum, atomname, atomnum, X, Y, Z, bfact, boolhet):
+    def __init__(self, molname, chainid, resname, resnum, atomname, atomnum, X, Y, Z, occ, bfact, boolhet):
         self.molname  = molname
         self.chainid  = chainid
         self.resname  = resname
@@ -18,6 +18,7 @@ class PDB_atom_info:
         self.X        = X
         self.Y        = Y
         self.Z        = Z
+        self.occ      = occ
         self.bfact    = bfact
         self.boolhet  = boolhet
 
@@ -61,8 +62,16 @@ def read_pdb(pdb_file):
                    X        = float(line[30:38])
                    Y        = float(line[38:46])
                    Z        = float(line[46:54])
+                   if len(line) >= 60:
+                      occ      = float(line[54:60])
+                   else: 
+                      occ = 0.0
+                   if len(line) >= 66: 
+                      tempfac  = float(line[60:66])
+                   else: 
+                      tempfac = 0.0
                    boolhet  = (linesplit[0] == "HETATM")
-                   temp_atom_info = PDB_atom_info('',chainid,resname,resnum,atomname,atomnum,X,Y,Z,0.0,boolhet)
+                   temp_atom_info = PDB_atom_info('',chainid,resname,resnum,atomname,atomnum,X,Y,Z,occ,tempfac,boolhet)
                    temp_atom_list.append(temp_atom_info)
             elif (linesplit[0] == "TER" or linesplit[0] == "END"):
                    chain_list.append(temp_atom_list)
@@ -92,9 +101,15 @@ def output_pdb(pdb,filename):
 #
     file1 = open(filename,'w')
     for atom in pdb:
-        file1.write("ATOM  %5d %2s %3s %1s%4d%12.3f%8.3f%8.3f%6.2f%6.2f           %s\n" % (int(atom.atomnum), atom.atomname, atom.resname, atom.chainid, int(atom.resnum), atom.X, atom.Y, atom.Z, 1.00 , atom.bfact, atom.atomname[1:2]) )
+        file1.write("ATOM  %5d %2s %3s %1s%4d%12.3f%8.3f%8.3f%6.2f%6.2f           %s\n" % (int(atom.atomnum), atom.atomname, atom.resname, atom.chainid, int(atom.resnum), atom.X, atom.Y, atom.Z, atom.occ, atom.bfact, atom.atomname[1:2]) )
 
     file1.close()
+
+#################################################################################################################
+#################################################################################################################
+def cal_dist(atom1,atom2):
+    d2 = (atom1.X - atom2.X)**2 + (atom1.Y - atom2.Y)**2 + (atom1.Z - atom2.Z)**2
+    return math.sqrt(d2)
 
 #################################################################################################################
 #################################################################################################################
