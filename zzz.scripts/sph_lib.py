@@ -5,7 +5,7 @@
 import sys
 
 class sphere:
-    def __init__(self,index,X,Y,Z,radius,atomnum,critical_cluster,sphere_color):
+    def __init__(self,index,X,Y,Z,radius,atomnum,critical_cluster,sphere_color,cluster):
         self.index            = int(index)
         self.X                = float(X)
         self.Y                = float(Y)
@@ -14,6 +14,7 @@ class sphere:
         self.atomnum          = int(atomnum)
         self.critical_cluster = int(critical_cluster)
         self.sphere_color     = int(sphere_color)
+        self.cluster          = int(cluster) # this is the cluster in the header.  
 def byIndex(x, y):
     return cmp(x.index, y.index)
 
@@ -103,7 +104,7 @@ def read_sph_cluster_list(filename):
           else:
              col = 0
 
-          tmp_sphere = sphere(index,x,y,z,r,atomnum,clust,col)
+          tmp_sphere = sphere(index,x,y,z,r,atomnum,clust,col,cluster)
           sphere_list.append(tmp_sphere)
 
     #sphere_list.append(tmp_sphere)
@@ -168,7 +169,7 @@ def read_sph(filename,ccluster,color):
           else:
              flag_color = False
           
-          tmp_sphere = sphere(index,x,y,z,r,atomnum,clust,col)
+          tmp_sphere = sphere(index,x,y,z,r,atomnum,clust,col,cluster)
 
           if (flag_cluster and flag_color): 
           # only put sphere on list if it is in a cluster of instrested
