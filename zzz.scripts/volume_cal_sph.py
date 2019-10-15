@@ -236,11 +236,11 @@ def main():
    
    print gridscale ,xn,yn,zn,dx,dy,dz,origin   
 
-   file1 = open(outfile+'gist_values.txt','w')
+   file1 = open(outfile+'vol_values.txt','w')
 
    count = 0
    new_values = calc_volume(outfile,values,gridscale,xn,yn,zn,origin, sphs, file1, True)
-   write_out_dx_file(outfile +str(count) +"new_gist.dx",xn,yn,zn,dx,dy,dz,origin,new_values)
+   write_out_dx_file(outfile +str(count) +"new_vol.dx",xn,yn,zn,dx,dy,dz,origin,new_values)
    file1.close()
 main()
 
