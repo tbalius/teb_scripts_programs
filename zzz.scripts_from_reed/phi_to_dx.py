@@ -8,6 +8,7 @@ import copy
 
 # Written by Reed Stein, Shoichet lab, 2016
 # took parts from blastermaster and Trent Balius' GIST tools. 
+# Modified by Trent Balius (2019/12/10)
 
 class phi(object):
 

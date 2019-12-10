@@ -3,6 +3,7 @@ import sys
 import array
 
 # written by Reed Stien
+# Modified by Trent Balius (2019/12/10)
 
 
 def write_out_dx_file(file,xn,yn,zn,dx,dy,dz,origin,values):
