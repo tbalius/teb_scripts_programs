@@ -46,30 +46,30 @@ def write_out_dx_file(file,xn,yn,zn,dx,dy,dz,origin,values):
         fileh.close()
 
 
-def read_bump(bump_file):
-
-        bump_open = open(bump_file,'r')
-        bump_read = bump_open.readlines()
-        bump_open.close()
-
-        x_coords = []
-        y_coords = []
-        z_coords = []
-
-        for line in bump_read[0:2]:
-                #print(line)
-                line = line.strip().split()
-                spacing = '0.200'
-                if line[0] == spacing:
-                        print(line)
-                        box_corner_x = float(line[1])
-                        box_corner_y = float(line[2])
-                        box_corner_z = float(line[3])
-                        x_dim = int(line[4])
-                        y_dim = int(line[5])
-                        z_dim = int(line[6])
-
-	return(x_dim, y_dim, z_dim, [box_corner_x, box_corner_y, box_corner_z])
+#def readef read_bump(bump_file):
+#
+#     bump_open = open(bump_file,'r')
+#     bump_read = bump_open.readlines()
+#     bump_open.close()
+#
+#     x_coords = []
+#     y_coords = []
+#     z_coords = []
+#
+#     for line in bump_read[0:2]:
+#             #print(line)
+#             line = line.strip().split()
+#             spacing = '0.200'
+#             if line[0] == spacing:
+#                     print(line)
+#                     box_corner_x = float(line[1])
+#                     box_corner_y = float(line[2])
+#                     box_corner_z = float(line[3])
+#                     x_dim = int(line[4])
+#                     y_dim = int(line[5])
+#                     z_dim = int(line[6])
+#
+#    return(x_dim, y_dim, z_dim, [box_corner_x, box_corner_y, box_corner_z])
 
 def construct_box(dx_file_name, origin, spacing, xn, yn, zn, values):
 
@@ -166,8 +166,16 @@ def read_bump(bump_file):
 
 def main():
 
-        vdw_file = "vdw.vdw"
-	values, dims, origin = read_bump("vdw.bmp")
+        
+        if (len(sys.argv) != 3):
+           print "Error. this script takes 2 arguments: grid filename prefix (eg. vdw) and dx filename prefix (eg. vdw_energies). "
+           exit()
+
+        inputprefix = sys.argv[1]
+        outputprefix = sys.argv[2]
+
+        vdw_file = inputprefix + '.vdw' #"vdw.vdw"
+	values, dims, origin = read_bump( inputprefix + ".bmp")
 
 	x_dim = dims[0]
 	y_dim = dims[1]
@@ -175,16 +183,42 @@ def main():
 
 	spacing = 0.200
         vdwFile = open(vdw_file, 'rb')  # b is for binary, r is for read
+
+        # skip the frist number, marked open? 
+
+        for i in range(0,1):
+         tempArray = array.array('f') 
+         tempArray.fromfile(vdwFile,1)
+         tempArray.byteswap()
+         print (i, tempArray)
+
         tempArray = array.array('f')
         tempArray.fromfile(vdwFile, x_dim * y_dim * z_dim)
         tempArray.byteswap()
 
-	construct_box("vdw_energies_repulsive.dx", origin, spacing, x_dim, y_dim, z_dim, tempArray)
+	construct_box( outputprefix + "_repulsive.dx", origin, spacing, x_dim, y_dim, z_dim, tempArray)
+
+        # skip 2 points , marked close then open ?
+        for i in range(0,2):
+         tempArray = array.array('f') 
+         tempArray.fromfile(vdwFile,1)
+         tempArray.byteswap()
+         print (i, tempArray)
+
         tempArray = array.array('f')
         tempArray.fromfile(vdwFile, x_dim * y_dim * z_dim)
         tempArray.byteswap()
-	construct_box("vdw_energies_attractive.dx", origin, spacing, x_dim, y_dim, z_dim, tempArray)
+	construct_box(outputprefix + "_attractive.dx", origin, spacing, x_dim, y_dim, z_dim, tempArray)
 
-	construct_box("vdw.dx", origin, spacing, x_dim, y_dim, z_dim, values)
+	construct_box( outputprefix +"_bmp.dx", origin, spacing, x_dim, y_dim, z_dim, values)
+
+        print (x_dim, y_dim, z_dim,  x_dim * y_dim * z_dim )
+
+        # there is one point left, marked close? 
+        for i in range(0,1): 
+         tempArray = array.array('f') 
+         tempArray.fromfile(vdwFile,1)
+         tempArray.byteswap()
+         print (i, tempArray)
 
 main()

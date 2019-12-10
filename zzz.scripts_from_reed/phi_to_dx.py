@@ -207,6 +207,10 @@ def determine_grid_size(input_phi_file):
 
 
 def main():
+
+        if (len(sys.argv) != 3):
+           print "Error. this script takes 2 arguments: grid filename and dx_file_name. "
+           exit()
 	dx_file_name = sys.argv[2]
 	phiSize = determine_grid_size(sys.argv[1])
 	print(phiSize)

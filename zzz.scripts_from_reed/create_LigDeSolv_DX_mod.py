@@ -3,10 +3,11 @@ import sys
 import array
 
 # written by Reed Stien
+# Modified by Trent Balius (2019/12/10)
 
 
 def write_out_dx_file(file,xn,yn,zn,dx,dy,dz,origin,values):
-        print "I AM HERE in write_out_dx_file"
+        #print "I AM HERE in write_out_dx_file"
         fileh = open(file,'w')
         #object 1 class gridpositions counts 40 40 40
         #origin 35.31 27.576 18.265
@@ -72,7 +73,7 @@ def write_out_dx_file(file,xn,yn,zn,dx,dy,dz,origin,values):
 #	return(x_dim, y_dim, z_dim, [box_corner_x, box_corner_y, box_corner_z])
 
 def construct_box(dx_file_name, origin, spacing, xn, yn, zn, values):
-        print "I AM HERE in construct_box"
+        #print "I AM HERE in construct_box"
         matrix = []
         for x in range(xn):
                y_list = []
@@ -183,12 +184,19 @@ def read_bump(bump_file):
 
 def main():
 
-        filename = sys.argv[1]
-        print "filename = ", filename
+        if (len(sys.argv) != 3):
+           print "Error. this script takes 2 arguments: grid filename and dx_file_name. "
+           exit()
 
-	values, dims, origin, spacing = read_bump(filename)
+        infilename = sys.argv[1]
+        outfilename = sys.argv[2]
+        print "input filename = ", infilename
+        print "output filename = ", infilename
 
-	construct_box("ligdesolv.dx", origin, spacing, dims[0], dims[1], dims[2], values)
+	values, dims, origin, spacing = read_bump(infilename)
+
+	#construct_box("ligdesolv.dx", origin, spacing, dims[0], dims[1], dims[2], values)
+	construct_box(outfilename, origin, spacing, dims[0], dims[1], dims[2], values)
 	#construct_box("vdw_energies_attractive.dx", origin, spacing, x_dim, y_dim, z_dim, tempArray)
 	#construct_box("vdw.dx", origin, spacing, x_dim, y_dim, z_dim, values)
 
