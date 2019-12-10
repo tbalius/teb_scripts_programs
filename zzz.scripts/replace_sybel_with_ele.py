@@ -1,3 +1,11 @@
+
+# This script was written by Trent Balius in ~ 2014 while in the Shoichet Lab (UCSF).  
+# This script is for preparing a molecule for symestry corected RMSD calculation in DOCK6
+# It will convert a sybel atom type to an element.  This is so that if your reference 
+# molecule has a different atom type for an atom than your docked pose the RMSD correctly. 
+# DOCK 6 uses the Hungarian Algorithm to creat a correspondance amoung poses.  
+
+
 import math, sys
 import os.path
 
