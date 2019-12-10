@@ -50,20 +50,20 @@ def reaction(smarts,smiles1,smiles2):
 
 def main():
    if len(sys.argv) != 5:
-     print "besure to source /nfs/soft/www/apps/zinc15/envs/production/env.csh"
-     print "example: "
-     print 'python simple_reaction.py "[SiH3:5].[C:1]=[C:2]-[C:3]=[O:4]>>[SiH3:5]-[C:1]-[C:2]-[C:3]=[O:4]" "[SiH3]" input.smi output.smi'
-     print 'input file will contain: \n CNCCCCNCCC=C-C(=O)CCCNCCCCNCCCCC lig'
+#     print "besure to source /nfs/soft/www/apps/zinc15/envs/production/env.csh"
+     print ("example: ")
+     print ('python simple_reaction.py "[SiH3:5].[C:1]=[C:2]-[C:3]=[O:4]>>[SiH3:5]-[C:1]-[C:2]-[C:3]=[O:4]" "[SiH3]" input.smi output.smi')
+     print ('input file will contain: \n CNCCCCNCCC=C-C(=O)CCCNCCCCNCCCCC lig')
      exit()
    smarts = sys.argv[1]
    smi1 = sys.argv[2]
    inputsmi = sys.argv[3]
    outputsmi = sys.argv[4]
 
-   print "smarts = " + smarts
-   print "smiles = " + smi1
-   print "input smi file = " + inputsmi
-   print "output smi file = " + outputsmi
+   print ("smarts = " + smarts)
+   print ("smiles = " + smi1)
+   print ("input smi file = " + inputsmi)
+   print ("output smi file = " + outputsmi)
 
    fh = open(inputsmi,'r')  # open up for reading,  file of reactants
    fho = open(outputsmi,'w') # open up for writting, file of products

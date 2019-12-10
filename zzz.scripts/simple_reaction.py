@@ -52,7 +52,7 @@ def reaction(smarts,smiles1,smiles2):
 
     mols = [mole1, mole2]
     products = rxn.RunReactants(mols)
-    print "Products: "
+    print ("Products: ")
     for product in products:
        for mol in product:
           smiles_p =  MolToSmiles(mol, isomericSmiles=True)
@@ -65,17 +65,17 @@ def reaction(smarts,smiles1,smiles2):
 
 def main():
    if len(sys.argv) != 4:
-     print "besure to source /nfs/soft/www/apps/zinc15/envs/production/env.csh"
-     print "example: "
-     print 'python simple_reaction.py "[SiH3:5].[C:1]=[C:2]-[C:3]=[O:4]>>[SiH3:5]-[C:1]-[C:2]-[C:3]=[O:4]" "[SiH3]" "CNCCCCNCCC=C-C(=O)CCCNCCCCNCCCCC"'
+     print ("besure to source /nfs/soft/www/apps/zinc15/envs/production/env.csh")
+     print ("example: ")
+     print ('python simple_reaction.py "[SiH3:5].[C:1]=[C:2]-[C:3]=[O:4]>>[SiH3:5]-[C:1]-[C:2]-[C:3]=[O:4]" "[SiH3]" "CNCCCCNCCC=C-C(=O)CCCNCCCCNCCCCC"')
      exit()
    smarts = sys.argv[1]
    smi1 = sys.argv[2]
    smi2 = sys.argv[3]
 
-   print "smarts = " + smarts
-   print "smiles = " + smi1
-   print "smiles = " + smi2
+   print ("smarts = " + smarts)
+   print ("smiles = " + smi1)
+   print ("smiles = " + smi2)
 
    reaction(smarts,smi1,smi2)
 main()

@@ -1,6 +1,7 @@
 
 # Written by Trent Balius (c) August 12, 2019
 # Frederick National Lab for Cancer Research. 
+# script to get smiles from zinc directories for extract all file entries
 
 import sys
 
@@ -59,6 +60,21 @@ def get_smiles_from_extract_OUTDOCK_smi_files(input_extract_file,dpath,number,ou
                  break
              flag_zinc = False
       fh1.close()
+
+   #for debuging...
+   print "len(zincid_sorted) = ", len(zincid_sorted)
+   print "len(dic_zinc_path.keys()) = ", len(dic_zinc_path.keys())
+   print "len( dic_zinc_path_db2.keys() ) = ", len(dic_zinc_path_db2.keys())
+
+   sys.stdout.flush()
+   # for debuging ...
+   for key in dic_zinc_path:
+       if not (key in dic_zinc_path_db2): 
+          print "\n" + key + " is not in dic_zinc_path_db2, but is in  dic_zinc_path."
+          print key+ "in this path" + dic_zinc_path[key]
+
+   sys.stdout.flush()
+
    dic_zinc_smifile = {}
    #print("I AM HERE")
    print "step three. convert db2 path to smile path"
@@ -95,6 +111,9 @@ def get_smiles_from_extract_OUTDOCK_smi_files(input_extract_file,dpath,number,ou
    print "step five. print smiles in rank order"
    fhout = open(output_smiles_file,'w')
    for zincid in zincid_sorted: 
+       if not (zincid in  dic_zinc_smiles):
+          print zincid + "is not in  dic_zinc_smiles.  continue to next zincid... "
+          continue 
        print dic_zinc_smiles[zincid].strip()
        fhout.write(dic_zinc_smiles[zincid].strip()+'\n')
    fhout.close()
