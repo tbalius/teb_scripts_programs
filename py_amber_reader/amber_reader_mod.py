@@ -736,6 +736,9 @@ def find_range(list):
          int_list.append(tmp_int_list[i])
          print tmp_int_list[i]
 
+  #for i in range(len(int_list)):
+  #    int_list[i] = int_list[i] - 1
+
   return int_list
 
    
@@ -750,7 +753,7 @@ def main():
         print "amber mdcrd filename"
         print "residues list1 for species 1 :  Loop over these residues, continuity not nessicery"
         print "residues list examples: 1-4,7-10,34-59"
-        print "residues list2 for species 2 :  Treat as one group, must be continuous"
+        print "residues list2 for species 2 ( if species 2 is more than one residue generates a matrix)"
         print "output filename"
         return
 
@@ -812,6 +815,8 @@ def main():
 
   #fileh = open(output,'w')
   for i in range(len(frames)):
+    #if i > 10: # for debuging 
+    #    exit()
     j = 0
     vdwfileh = open("vdw"+output+'.'+str(i),'w')
     elefileh = open("ele"+output+'.'+str(i),'w')
@@ -821,14 +826,26 @@ def main():
     intfileh.write("Frame%d\n"%i)
     for resid1 in int_list1:
        k = 0
-       for resid2 in int_list2:
- 
+       if resid1 == len(parm_stuff.RESIDUE_POINTER):
+         start1 = parm_stuff.RESIDUE_POINTER[resid1-1]
+         stop1  = len(parm_stuff.ATOM_NAME)+1
+       else:
          start1 = parm_stuff.RESIDUE_POINTER[resid1-1]
          stop1  = parm_stuff.RESIDUE_POINTER[resid1]
+       # print "************" # for debuging
+       # print "residue1 (resid = %d): atom start = %d, atom stop = %d"%(resid1, start1,stop1) 
+       # print "************"
+       for resid2 in int_list2:
  
-         start2 = parm_stuff.RESIDUE_POINTER[resid2-1]
-         stop2  = parm_stuff.RESIDUE_POINTER[resid2]
- 
+         if resid2 == len(parm_stuff.RESIDUE_POINTER):
+            start2 = parm_stuff.RESIDUE_POINTER[resid2-1]
+            stop2  = len(parm_stuff.ATOM_NAME)+1
+         else: 
+            start2 = parm_stuff.RESIDUE_POINTER[resid2-1]
+            stop2  = parm_stuff.RESIDUE_POINTER[resid2]
+
+         # print "residue2 (resid = %d): atom start = %d, atom stop = %d"%(resid2, start2,stop2) # for debuging 
+
          (Eint,Evdw,Ees) = intermolecular_Energy(parm_stuff,frames[i],start1,stop1,start2,stop2)
          avg_mat_int[j][k] = avg_mat_int[j][k]+Eint
          avg_mat_vdw[j][k] = avg_mat_vdw[j][k]+Evdw

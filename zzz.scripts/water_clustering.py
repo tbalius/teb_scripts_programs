@@ -90,7 +90,7 @@ def cluster_water_pdb(inputfilename,cutoff,outputfilename,denominator):
             
         #alpha = float(count)/float(numwat)
         alpha = float(count)/denominator
-        temp_atom_info = pdb_lib.PDB_atom_info('',"A","HOH",cluster," O  ",cluster,X,Y,Z,alpha,False)
+        temp_atom_info = pdb_lib.PDB_atom_info('',"A","HOH",cluster," O  ",cluster,X,Y,Z,0.0,alpha,False)
 
         # find median water
         min_val = [-1, 1000]
