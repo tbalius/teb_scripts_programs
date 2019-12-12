@@ -68,6 +68,8 @@ for line in lines:
            if dic_bool[key]:
               fileout.write("TER\n")
               dic_bool[key] = False
+           if line[13:16] == 'H  ' : # do not write atom H that follows a TER 
+              continue
         fileout.write(line)
 
 fileout.close()
