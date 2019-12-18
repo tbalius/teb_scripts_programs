@@ -5,7 +5,6 @@ import sys
 import copy
 import  matplotlib
 matplotlib.use('Agg')  # allows you to not have an x-server running
-
 import math, scipy, pylab, numpy
 
 
@@ -63,6 +62,9 @@ def mat_larger_mag(mat,lab1,lab2,thrsmax,thrsmin):
      lm = len(lab1)
      ln = len(lab2)
      print n,m,ln,lm
+
+     print "thrsmax = %f"%thrsmax
+     print "thrsmin = %f"%thrsmin
 
      for i in range(m):
          for j in range(n):
@@ -152,7 +154,8 @@ def heatmap(Mat0,filename,heatmap_threshold,cmin,cmax,lab1file,lab2file):
      axmatrix.set_ylim(-0.5, m-0.5)
      axmatrix.set_xticks(range(0,n))
      axmatrix.set_xticklabels(xlabel)
-     axmatrix.set_yticks(range(0,m,50))
+     #axmatrix.set_yticks(range(0,m,50))
+     axmatrix.set_yticks(range(0,m))
      val_yticks = axmatrix.get_yticks()
      val_ylim = axmatrix.get_ylim()
      print val_yticks
@@ -163,11 +166,11 @@ def heatmap(Mat0,filename,heatmap_threshold,cmin,cmax,lab1file,lab2file):
      axmatrix.set_yticklabels(sel_ylabel)
 
      for item in (axmatrix.get_yticklabels()):
-         item.set_fontsize(5)
+         item.set_fontsize(4)
 
      for i in range(n):
          labels = axmatrix.xaxis.get_major_ticks()[i].label
-         labels.set_fontsize(5)
+         labels.set_fontsize(4)
          labels.set_rotation('vertical')
      # write out vector to file
      print len(vec1), len(ylabel)
@@ -204,6 +207,10 @@ def main():
   vmax               = float(sys.argv[4])
   lab1               = sys.argv[5] 
   lab2               = sys.argv[6] 
+
+  if (vmin > vmax): 
+     print "error:heatmap_min > heatmap_max" 
+     exit()
   print "input matrix file = " + file1name
   file1handel = open(file1name+'.txt','r')
   m = readmatrix(file1handel)
