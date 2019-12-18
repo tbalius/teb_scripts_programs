@@ -4,7 +4,11 @@
 import sys
 import copy
 
-import math, matplotlib, scipy, pylab, numpy
+import  matplotlib
+matplotlib.use('Agg')  # allows you to not have an x-server running
+
+
+import math, scipy, pylab, numpy
 
 
 ## Writen by Trent Balius in the Shoichet Group
