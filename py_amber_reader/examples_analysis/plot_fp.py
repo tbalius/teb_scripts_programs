@@ -3,9 +3,9 @@
 
 import sys
 import copy
-
-import math, matplotlib, scipy, pylab, numpy
-
+import  matplotlib
+matplotlib.use('Agg')  # allows you to not have an x-server running
+import math, scipy, pylab, numpy
 
 ## Writen by Trent Balius in the Shoichet Group
 
@@ -98,13 +98,14 @@ def heatmap(Mat0,filename,heatmap_threshold,cmin,cmax,lab1file,lab2file):
 
      fig = pylab.figure(figsize=(8,8))
 
-     ax2 = fig.add_axes([0.3,0.75,0.6,0.2])
+     #ax2 = fig.add_axes([0.3,0.75,0.6,0.2])
+     ax2 = fig.add_axes([0.1,0.75,0.8,0.2])
      print vec1
      matplotlib.pyplot.plot(range(0,m),vec1,'k-') # draws a datshed line where dendogram is cut.
      ax2.set_xticks([])
      #ax2.set_yticks([])
      ax2.set_xlim(-0.5, m-0.5)
-     ax2.set_ylim(cmin,cmax)
+     #ax2.set_ylim(cmin,cmax)
         
      ax2.set_xticks(range(0,m))
      ax2.set_xticklabels(ylabel)
@@ -145,7 +146,7 @@ def main():
   lab1               = sys.argv[5] 
   lab2               = sys.argv[6] 
   print "input matrix file = " + file1name
-  file1handel = open(file1name,'r')
+  file1handel = open(file1name+'.txt','r')
   m = readmatrix(file1handel)
   #write_matrix(file2handel,m)
   file1handel.close()

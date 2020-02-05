@@ -4,7 +4,9 @@
 import sys
 import copy
 
-import math, matplotlib, scipy, pylab, numpy
+import  matplotlib
+matplotlib.use('Agg')  # allows you to not have an x-server running
+import math, scipy, pylab, numpy
 
 
 ## Writen by Trent Balius in the Shoichet Group
@@ -50,9 +52,12 @@ def mat_to_mat(mat):
 
      for i in range(m):
          for j in range(n):
+             #print i,j,
+             #print mat[i][j]
+             #print mat[j][i]
              mat2[i,j] = mat[i][j]
              vec1[i] = vec1[i] + mat[i][j] 
-             vec2[j] = vec1[j] + mat[i][j] 
+             vec2[j] = vec2[j] + mat[i][j] 
 
      return mat2, vec1, vec2
 

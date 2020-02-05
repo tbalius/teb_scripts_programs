@@ -3,8 +3,9 @@
 
 import sys
 import copy
-
-import math, matplotlib, scipy, pylab, numpy
+import  matplotlib
+matplotlib.use('Agg')  # allows you to not have an x-server running
+import math, scipy, pylab, numpy
 
 
 ## Writen by Trent Balius in the Shoichet Group
@@ -63,6 +64,9 @@ def mat_larger_mag(mat,lab1,lab2,thrsmax,thrsmin):
      lm = len(lab1)
      ln = len(lab2)
      print n,m,ln,lm
+
+     print "thrsmax = %f"%thrsmax
+     print "thrsmin = %f"%thrsmin
 
      for i in range(m):
          for j in range(n):
@@ -210,6 +214,10 @@ def main():
   vmax               = float(sys.argv[4])
   lab1               = sys.argv[5] 
   lab2               = sys.argv[6] 
+
+  if (vmin > vmax): 
+     print "error:heatmap_min > heatmap_max" 
+     exit()
   print "input matrix file = " + file1name
   file1handel = open(file1name,'r')
   m = readmatrix(file1handel)

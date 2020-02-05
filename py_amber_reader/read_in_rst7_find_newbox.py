@@ -2,9 +2,10 @@ import sys
 import copy
 import math
 
-def read_MD_rst7(filename,outputname):
+def read_MD_rst7(filename,outputname,vpad):
 
     fileh = open(filename,'r')
+    fileho = open(outputname,'w')
 
 
     result_flag = False    
@@ -18,7 +19,9 @@ def read_MD_rst7(filename,outputname):
     for line in fileh:
        if count == 0: # frist line is a comment 
           print line
+          fileho.write(line)
        elif count == 1: # second line contain one or two values is the number of atoms in the system and my have time float
+          fileho.write(line)
           sl = line.split()
           if len(sl) > 2: 
              print "error"
@@ -66,26 +69,47 @@ def read_MD_rst7(filename,outputname):
     diffZ = xyzMax[2] - xyzMin[2] + pad
 
     print "new dim = ", diffX, diffY, diffZ
+    print "new dim+pad = ", diffX+vpad, diffY+vpad, diffZ+vpad
     print "old dim = ", values[countVal-6] , values[countVal-5], values[countVal-4]
 
+    count = 0
+    for i in range(0, (numatoms*3), 3):
+        fileho.write('%12.7f%12.7f%12.7f'%(values[i],values[i+1],values[i+2]))
+        if (count == 1): 
+           fileho.write('\n')
+           count = 0
+        else:
+           count=count+1
+
+    if (count==1): 
+       fileho.write('\n')
+
+    fileho.write('%12.7f%12.7f%12.7f'%(diffX+vpad, diffY+vpad, diffZ+vpad))
+
+    fileho.write('%12.7f%12.7f%12.7f'%(values[-3],values[-2],values[-1]))
+    fileho.write('\n')
+
     fileh.close()
+    fileho.close()
     return 
 
 def main():
 
-    if len(sys.argv) != 3:
+    if len(sys.argv) != 4:
       print "error:  this program takes 2 inputs:"
       print "   (1) filename of existing rst7 "
       print "   (2) filename for new rst7 output"
+      print "   (3) pad by a float: 0.0 is no padding"
       exit()
 
     infilename  = sys.argv[1]
     outfilename = sys.argv[2]
+    pad         = float(sys.argv[3])
 
     # read in file with a list of mdout files.
     print "input file:  " + infilename
     print "output file: " + outfilename
-    read_MD_rst7(infilename,outfilename)
+    read_MD_rst7(infilename,outfilename,pad)
 
 main()
 
