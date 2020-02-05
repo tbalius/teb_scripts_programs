@@ -2,7 +2,7 @@ import sys, mol2
 import copy
 
 ## Writen by Trent Balius in the Shoichet Group
-## shifts a mol2 file cordenates along the x axis. 
+## shifts a mol2 file cordenates in the x,y,z directions. 
 
 
 def shift_mol2(fileprefix,ori_mol,xtran,ytran,ztran):

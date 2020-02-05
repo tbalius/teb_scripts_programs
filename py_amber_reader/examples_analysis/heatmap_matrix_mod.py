@@ -17,6 +17,8 @@ def readmatrix(filehandel):
     maxval = -10000.
     minval = 10000.0
     for line in filehandel:
+        if ("Frame" in line) or ("AVG" in line): 
+            continue
         #line = replace_char(line,'>',' ')
         #line = replace_char(line,';',' ')
         splitline = line.split(',')
@@ -66,7 +68,9 @@ def mat_larger_mag(mat,lab1,lab2,thrsmax,thrsmin):
          for j in range(n):
              #print lab1[i],lab2[j], mat[i][j], thrsmax,thrsmin
              if mat[i][j]>thrsmax or mat[i][j]<thrsmin : 
-                print lab1[i],lab2[j], mat[i][j]
+                #print "%s %s %6.2f\n"%(lab1[i],lab2[j], mat[i][j])
+                #print lab1[i],lab2[j], mat[i][j]
+                print "%s %s %6.2f"%(lab1[i],lab2[j], mat[i][j])
 
 
 #def heatmap(Mat,label,filename,threshold,heatmap_threshold):
@@ -98,6 +102,7 @@ def heatmap(Mat0,filename,heatmap_threshold,cmin,cmax,lab1file,lab2file):
      #ax1.set_xticks([])
      ax1.set_yticks([])
      ax1.set_ylim(-0.5, m-0.5)
+     ax1.set_xlim(cmin,cmax)
         
      ax2 = fig.add_axes([0.3,0.75,0.6,0.2])
      print vec2
@@ -105,6 +110,7 @@ def heatmap(Mat0,filename,heatmap_threshold,cmin,cmax,lab1file,lab2file):
      ax2.set_xticks([])
      #ax2.set_yticks([])
      ax2.set_xlim(-0.5, n-0.5)
+     ax2.set_ylim(cmin,cmax)
         
          # Plot distance matrix.
      axmatrix = fig.add_axes([0.3,0.1,0.6,0.6])
@@ -150,22 +156,24 @@ def heatmap(Mat0,filename,heatmap_threshold,cmin,cmax,lab1file,lab2file):
      axmatrix.set_ylim(-0.5, m-0.5)
      axmatrix.set_xticks(range(0,n))
      axmatrix.set_xticklabels(xlabel)
-     axmatrix.set_yticks(range(0,m,50))
+     #axmatrix.set_yticks(range(0,m,50))
+     axmatrix.set_yticks(range(0,m))
      val_yticks = axmatrix.get_yticks()
      val_ylim = axmatrix.get_ylim()
      print val_yticks
      print val_ylim
      sel_ylabel = []
      for i in val_yticks:
+     #      print i
            sel_ylabel.append(ylabel[i])
      axmatrix.set_yticklabels(sel_ylabel)
 
      for item in (axmatrix.get_yticklabels()):
-         item.set_fontsize(5)
+         item.set_fontsize(3)
 
      for i in range(n):
          labels = axmatrix.xaxis.get_major_ticks()[i].label
-         labels.set_fontsize(5)
+         labels.set_fontsize(3)
          labels.set_rotation('vertical')
      # write out vector to file
      print len(vec1), len(ylabel)
@@ -203,7 +211,7 @@ def main():
   lab1               = sys.argv[5] 
   lab2               = sys.argv[6] 
   print "input matrix file = " + file1name
-  file1handel = open(file1name+'.txt','r')
+  file1handel = open(file1name,'r')
   m = readmatrix(file1handel)
   #write_matrix(file2handel,m)
   file1handel.close()
