@@ -17,7 +17,8 @@ def shift_mol2(fileprefix,ori_mol,xtran,ytran,ztran):
 
 def main():
   if len(sys.argv) != 6: # if no input
-     print "ERORR"
+     print "ERORR." 
+     print "syntax: namemol2in namemol2outprefix xtran ytran ztran"
      return
   namemol2in        = sys.argv[1]
   namemol2outprefix = sys.argv[2]

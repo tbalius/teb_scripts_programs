@@ -74,6 +74,6 @@ def main():
        name = splitline[1]
        plist = reaction(smarts,smi1,smi2) # products list
        for p in plist:
-           fho.write('%s %s\n'%(p, name+str(count)))
+           fho.write('%s %s\n'%(p, name+'_'+str(count)))
            count = count+1
 main()

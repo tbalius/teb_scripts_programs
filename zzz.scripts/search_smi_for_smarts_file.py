@@ -37,7 +37,7 @@ def main():
    for line in fh: # read in a line, which contains a smiles
        if 'smiles' in line: 
            continue
-       #print(line)
+       print(line)
        splitline = line.split()
        smi2 = splitline[0]
        name = splitline[1]
