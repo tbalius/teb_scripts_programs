@@ -1,7 +1,7 @@
 
 # This script was written by Trent Balius in ~ 2014 while in the Shoichet Lab (UCSF).  
 # This script is for preparing a molecule for symestry corected RMSD calculation in DOCK6
-# It will convert a sybel atom type to an element.  This is so that if your reference 
+# It will convert a sybyl atom type to an element.  This is so that if your reference 
 # molecule has a different atom type for an atom than your docked pose the RMSD correctly. 
 # DOCK 6 uses the Hungarian Algorithm to creat a correspondance amoung poses.  
 
@@ -11,10 +11,10 @@ import os.path
 
 from math import sqrt
 
-# take a syble atom type and returns an element.  
+# take a sybyl atom type and returns an element.  
 # does this by spliting on the dot (.) in the type 
 # and returning the chars before the dot.
-def sybel_to_ele(atom_type):
+def sybyl_to_ele(atom_type):
     atom_type=atom_type.replace(" ","")
     ele = atom_type.split('.')[0]
     return ele
@@ -35,7 +35,7 @@ def read_mol2(filename,text1):
              if (atom_flag):
                 atom_type = line[47:51] 
                 print atom_type
-                ele = sybel_to_ele(atom_type) 
+                ele = sybyl_to_ele(atom_type) 
                 line_mod = '%s%-5s%s\n'%(line[0:47],ele,line[52:-1])
                 #text1 = text1+line
                 text1 = text1+line_mod

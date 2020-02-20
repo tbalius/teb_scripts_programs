@@ -42,14 +42,15 @@ def readmatrix_one_cell(filehandel,si,sj):
 
 
 #def heatmap(Mat,label,filename,threshold,heatmap_threshold):
-def make_plot(val_array,title,filename):
+def make_plot(val_array,title,filename,start,stop):
 
      print "Here in make_plot"
      fig = pylab.figure(figsize=(8,8))
 
-     timearray = numpy.linspace(1,50000,num=len(val_array))
-     print timearray[0]
-     print timearray[999]
+     #timearray = numpy.linspace(1,50000,num=len(val_array))
+     timearray = numpy.linspace(1,len(val_array),num=len(val_array))
+     print timearray[start-1]
+     print timearray[stop-1]
      ax1 = fig.add_axes([0.1,0.1,0.6,0.2])
      matplotlib.pyplot.plot(timearray,val_array,'k-') # draws a datshed line where dendogram is cut.
      #ax1.set_xticks([])
@@ -67,7 +68,7 @@ def make_plot(val_array,title,filename):
      ax2.set_yticks([])
      #ax2.set_xlim(-0.5, n-0.5)
      fig.show()
-     fig.savefig(filename,dpi=600)   
+     fig.savefig(filename+'.png',dpi=600)   
      return
 
 
@@ -94,7 +95,7 @@ def main():
       val = readmatrix_one_cell(file1handel,row_n,col_n)
       file1handel.close()
       val_array.append(val)
-  make_plot(val_array,title,output)
+  make_plot(val_array,title,output,start,stop)
   #heatmap(m,file1name+'.png',heatmap_threshold,vmin,vmax,lab1,lab2)
   return
   #SimlesToFingerPrint("CCC") 

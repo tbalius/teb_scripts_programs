@@ -19,6 +19,8 @@ def readmatrix(filehandel):
     maxval = -10000.
     minval = 10000.0
     for line in filehandel:
+        if "Frame" in line: 
+            continue
         #line = replace_char(line,'>',' ')
         #line = replace_char(line,';',' ')
         splitline = line.split(',')
@@ -76,12 +78,14 @@ def heatmap(Mat0,filename,heatmap_threshold,cmin,cmax):
      #ax1.set_xticks([])
      ax1.set_yticks([])
      ax1.set_ylim(-0.5, m-0.5)
+     ax1.set_xlim(cmin,cmax)
         
      ax2 = fig.add_axes([0.3,0.75,0.6,0.2])
      matplotlib.pyplot.plot(range(0,n),vec2,'k-') # draws a datshed line where dendogram is cut.
      ax2.set_xticks([])
      #ax2.set_yticks([])
      ax2.set_xlim(-0.5, n-0.5)
+     ax2.set_ylim(cmin,cmax)
         
          # Plot distance matrix.
      axmatrix = fig.add_axes([0.3,0.1,0.6,0.6])
@@ -153,7 +157,8 @@ def main():
   vmin               = float(sys.argv[3])
   vmax               = float(sys.argv[4])
   print "input matrix file = " + file1name
-  file1handel = open(file1name+'.txt','r')
+  #file1handel = open(file1name+'.txt','r')
+  file1handel = open(file1name,'r')
   m = readmatrix(file1handel)
   #write_matrix(file2handel,m)
   file1handel.close()

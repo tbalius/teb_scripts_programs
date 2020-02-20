@@ -22,9 +22,11 @@ def main():
   output_prefix = sys.argv[2]
 
   print "pdb input = " + input_pdb 
-  #print "output prefix = " output_prefix
+  print "output prefix = " + output_prefix
 
   #runCommand("open " + input_pdb)
+  #models = chimera.openModels.list(modelTypes=[chimera.Molecule])
+  #model = models
   model = openModels.open(input_pdb)
   runCommand("del @H,H?,H??,H???") # remove all hydrogens
   
@@ -37,6 +39,8 @@ def main():
   
   runCommand("del HC") # remove all non-polar hydrogens
   runCommand("write 0 "+output_prefix+"_polarH.pdb")
+  runCommand("del @H,H?,H??,H???") # remove all hydrogens
+  runCommand("write 0 "+output_prefix+"_noH.pdb")
 
 main()
 
