@@ -19,6 +19,8 @@ def read_write_mol2_file(filename1,fileval,valtype,output,nameval):
             dict_val[name] = float(val)
          if valtype == "int":
             dict_val[name] = int(val)
+         if valtype == "string":
+            dict_val[name] = str(val)
          
     file1.close()
 
@@ -67,6 +69,8 @@ def main():
     valtype   = sys.argv[3]
     output    = sys.argv[4]
     name      = sys.argv[5]
+
+    print(" filename1 = %s\nfileval   = %s\nvaltype   = %s\noutput    = %s\nname      = %s\n"%(filename1,fileval,valtype,output,name))
 
     if valtype != "float" and valtype != "int" and valtype != "str":
        print "valtype must be one of the following: float, int, or str. " 
