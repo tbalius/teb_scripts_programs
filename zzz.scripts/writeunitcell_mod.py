@@ -32,13 +32,13 @@ cpm = PDBmatrices.close_packing_matrices(tflist, center, center, a, b, c, alpha,
 
 # Apply transformations to copies of Molecule
 mlist = []
-from PDBmatrices import matrices
-path = m.openedAs[0]			# Path to original PDB file
-for tf in cpm:
-    xf = matrices.chimera_xform(tf)	# Chimera style transform matrix
-    m.openState.globalXform(xf)
-    mlist.append(m)
-    m = chimera.openModels.open(path)[0]	# Open another copy
+#from PDBmatrices import matrices
+#path = m.openedAs[0]			# Path to original PDB file
+#for tf in cpm:
+#    xf = matrices.chimera_xform(tf)	# Chimera style transform matrix
+#    m.openState.globalXform(xf)
+#    mlist.append(m)
+#    m = chimera.openModels.open(path)[0]	# Open another copy
 
 
 # Adjust transforms so centers of models are in unit cell box
