@@ -133,8 +133,8 @@ def ajust_angle(mol,angle):
 
     radians_input = angle * math.pi / 180
     for atom in mol.atom_list:
-        #if atom.name == 'D1':
-        if atom.name == 'D2':
+        if atom.name == 'D1':
+        #if atom.name == 'D2':
            print (atom.name, atom.type, atom.num)
            atom2_num = atom.num
     connect_atom_nums = [] 
@@ -149,8 +149,8 @@ def ajust_angle(mol,angle):
         exit()
 
     for num in connect_atom_nums:
-        #if mol.atom_list[num-1].name == 'D2':
-        if mol.atom_list[num-1].name == 'D1':
+        if mol.atom_list[num-1].name == 'D2':
+        #if mol.atom_list[num-1].name == 'D1':
            atom1_num = num
         else:
            atom3_num = num
@@ -288,16 +288,16 @@ def modify_mol2_file(mol2file, outputprefix, ang):
               atom.type = 'Du'
               atom.Q = 0.0
               if count_h[0] == 3: 
-                 atom.name = 'D1'
-              elif count_h[0] == 2:
                  atom.name = 'D2'
+              elif count_h[0] == 2:
+                 atom.name = 'D1'
            if atom.num-1 == Si2: 
               atom.type = 'Du'
               atom.Q = 0.0
               if count_h[1] == 3: 
-                 atom.name = 'D1'
-              elif count_h[1] == 2: # 
                  atom.name = 'D2'
+              elif count_h[1] == 2: # 
+                 atom.name = 'D1'
            
            new_atomlist.append(copy.copy(atom))
        # (3) generate mapping from old to new atom numbering to be used in the bond modification. 
