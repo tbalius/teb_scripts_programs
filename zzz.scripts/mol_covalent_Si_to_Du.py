@@ -126,6 +126,17 @@ def translate(atoms,x,y,z):
         atom.Y = atom.Y + y
         atom.Z = atom.Z + z
 
+    
+
+def make_integer_charge(mol,ori_charge): 
+       cur_charge = mol2.formal_charge(mol)
+
+       print ("May be non-integer: %6.3f"%(mol2.formal_charge(mol)))
+       for atom in mol.atom_list:
+           atom.Q = atom.Q * (ori_charge/cur_charge)
+       print ("forced be integer and same as original: %6.3f"%(mol2.formal_charge(mol)))
+
+
 def print_atom(atom):
     print("%s, %f, %f, %f\n"%(atom.name,atom.X, atom.Y, atom.Z))
 
@@ -240,6 +251,7 @@ def modify_mol2_file(mol2file, outputprefix, ang):
     frist = True
     mollist = mol2.read_Mol2_file(mol2file) 
     for mol in mollist:
+       ori_formal_charge = mol2.formal_charge(mol)
        n = len(mol.atom_list) 
        Si_atoms_index = []
        for i in range(n):
@@ -326,6 +338,9 @@ def modify_mol2_file(mol2file, outputprefix, ang):
 
        # ajust Si-Si-C bond angle.  Looks like it is 90 deg. 
        ajust_angle(mol,ang)
+
+       # ajust the partial charge to make it an integer.  
+       make_integer_charge(mol, ori_formal_charge)
 
        #exit()
        filename = outputprefix + '.mol2'
