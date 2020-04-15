@@ -128,14 +128,19 @@ from math import sqrt
 #
 #   
 
-def make_integer_charge(mol,ori_charge): 
+def make_integer_charge(mol,ori_charge):
+       ori_charge = round(ori_charge)
+       N = (len(mol.atom_list) - 2)
        cur_charge = mol2.formal_charge(mol)
-
-       print ("May be non-integer: %6.3f"%(mol2.formal_charge(mol)))
+       avg_diff = (ori_charge-cur_charge)/N
+       print ("current charge may be non-integer: %6.3f"%(mol2.formal_charge(mol)))
+       print ("ori charge: %6.3f"%(ori_charge))
+       print ("avergy diff charge: %6.3f"%(avg_diff))
        for atom in mol.atom_list:
-           atom.Q = atom.Q * (ori_charge/cur_charge)
-       print ("forced be integer and same as original: %6.3f"%(mol2.formal_charge(mol)))
-
+           if atom.type == 'Du':
+              continue
+           atom.Q = atom.Q + avg_diff
+       print ("forced to be an integer and same as original: %6.3f"%(mol2.formal_charge(mol)))
 
 def print_atom(atom):
     print("%s, %f, %f, %f\n"%(atom.name,atom.X, atom.Y, atom.Z))
