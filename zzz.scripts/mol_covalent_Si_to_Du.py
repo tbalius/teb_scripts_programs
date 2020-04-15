@@ -47,22 +47,24 @@ def cross_product_normal(v1,v2):
 
 def calc_angle(v1, v2):
 # this function calculates the cos t = v1 dot v2 / mag|v1| times mag|v2|.  cos t is returned. 
-
+   print("v1 = ",v1)
+   print("v2 = ",v2)
    dot = dot_product(v1,v2)
    v1mag = mag(v1)
    v2mag = mag(v2)
    cos_theata = dot/(v1mag*v2mag)
    if cos_theata > 1.0:
        cos_theata = 1.0
+   print ('%s=%f,%s=%f,%s=%f,%s=%f\n'%('dot',dot,'mag1',v1mag,'mag2',v2mag,'cos_theta',cos_theata))
    return cos_theata
 
-def rotate_x(atoms,cos_t):
+def rotate_x(atoms,cos_t,sign):
 #  |x_n|   | 1      0      0      | |x_o|
 #  |y_n| = | 0    cos(t)  -sin(t) | |y_o|
 #  |z_n|   | 0    sin(t)  cos(t)  | |z_o|
 
     #print cos_t
-    sin_t = math.sqrt((1 - cos_t*cos_t))
+    sin_t = sign*math.sqrt((1 - cos_t*cos_t))
 
     for atom in atoms:
         X = atom.X
@@ -72,12 +74,12 @@ def rotate_x(atoms,cos_t):
         atom.Y = 0.0 + Y*cos_t - Z*sin_t
         atom.Z = 0.0 + Y*sin_t + Z*cos_t
 
-def rotate_y(atoms,cos_t):
+def rotate_y(atoms,cos_t,sign):
 #  |x_n|   | cos(t)  0 sin(t)  | |x_o|
 #  |y_n| = |  0      1   0     | |y_o|
 #  |z_n|   | -sin(t) 0 cos(t)  | |z_o|
 
-    sin_t = math.sqrt(1 - cos_t*cos_t)
+    sin_t = sign*math.sqrt(1 - cos_t*cos_t)
     for atom in atoms:
         X = atom.X
         Y = atom.Y
@@ -86,12 +88,12 @@ def rotate_y(atoms,cos_t):
         #atom.Y = 0.0 + atom.Y +0.0
         atom.Z = -1.0 * X*sin_t + 0.0 + Z*cos_t
 
-def rotate_z(atoms,cos_t):
+def rotate_z(atoms,cos_t,sign):
 #  |x_n|   | cos(t)  -sin(t) 0 | |x_o|
 #  |y_n| = | sin(t)  cos(t)  0 | |y_o|
 #  |z_n|   |   0       0     1 | |z_o|
 
-    sin_t = math.sqrt(1 - cos_t*cos_t)
+    sin_t = sign*math.sqrt(1 - cos_t*cos_t)
     for atom in atoms:
         X = atom.X
         Y = atom.Y
@@ -129,12 +131,18 @@ def translate(atoms,x,y,z):
     
 
 def make_integer_charge(mol,ori_charge): 
+       ori_charge = round(ori_charge)
+       N = (len(mol.atom_list) - 2)
        cur_charge = mol2.formal_charge(mol)
-
-       print ("May be non-integer: %6.3f"%(mol2.formal_charge(mol)))
+       avg_diff = (ori_charge-cur_charge)/N
+       print ("current charge may be non-integer: %6.3f"%(mol2.formal_charge(mol)))
+       print ("ori charge: %6.3f"%(ori_charge))
+       print ("avergy diff charge: %6.3f"%(avg_diff))
        for atom in mol.atom_list:
-           atom.Q = atom.Q * (ori_charge/cur_charge)
-       print ("forced be integer and same as original: %6.3f"%(mol2.formal_charge(mol)))
+           if atom.type == 'Du':
+              continue
+           atom.Q = atom.Q + avg_diff
+       print ("forced to be an integer and same as original: %6.3f"%(mol2.formal_charge(mol)))
 
 
 def print_atom(atom):
@@ -162,9 +170,11 @@ def ajust_angle(mol,angle):
     for num in connect_atom_nums:
         if mol.atom_list[num-1].name == 'D2':
         #if mol.atom_list[num-1].name == 'D1':
-           atom1_num = num
-        else:
+           #atom1_num = num
            atom3_num = num
+        else:
+           #atom3_num = num
+           atom1_num = num
     print ("atom1 name = %s, atom2 name = %s, atom3 name = %s\n"%(mol.atom_list[atom1_num-1].name,mol.atom_list[atom2_num-1].name,mol.atom_list[atom3_num-1].name))
     atom1 = mol.atom_list[atom1_num-1]
     atom2 = mol.atom_list[atom2_num-1]
@@ -178,6 +188,11 @@ def ajust_angle(mol,angle):
     radians = math.acos(cos_angle)
     print cos_angle, radians, 180 * radians / math.pi
     radians_delta = radians_input -radians
+    print "delta", radians_delta, 180 * radians_delta / math.pi
+    sign = 1.0
+    if radians_delta < 0.0: 
+       sign = -1.0
+       print sign
 
     three_atoms = [atom1,atom2,atom3]
     for a in three_atoms:
@@ -200,9 +215,9 @@ def ajust_angle(mol,angle):
     mag_v1 = mag(v1)
     n = [v1[0]/mag_v1,v1[1]/mag_v1,v1[2]/mag_v1]
 
-    print "u = ",u
-    print "w = ",w
-    print "n = ",n
+    print ("u = ",u)
+    print ("w = ",w)
+    print ("n = ",n)
 
     M = [[w[0],n[0],u[0]], [w[1],n[1],u[1]], [w[2],n[2],u[2]]]   
     inverseM = [[0,0,0],[0,0,0],[0,0,0]]
@@ -210,8 +225,8 @@ def ajust_angle(mol,angle):
        for j in range(3):
            inverseM[j][i] = M[i][j]
 
-    print M 
-    print inverseM
+    print (M)
+    print (inverseM)
     #rotate(three_atoms,M)
     print "start"
     for a in three_atoms:
@@ -224,9 +239,9 @@ def ajust_angle(mol,angle):
     
     #rotate_x([atom3],math.cos(0.35))
     #rotate_y([atom3],math.cos(0.35))
-    rotate_z([atom3],math.cos(radians_delta))
+    rotate_z([atom3],math.cos(radians_delta),sign)
 
-    print "rotate back"
+    print ("rotate back")
     rotate(three_atoms,M)
     #translate(three_atoms,atom2.X,atom2.Y,atom2.Z)
     translate(three_atoms,trans_X,trans_Y,trans_Z)
@@ -364,10 +379,10 @@ def main():
         return
 
     mol2file       = sys.argv[1]
-    outputprefix   = sys.argv[2]
+    mol2output     = sys.argv[2]
     angle          = float(sys.argv[3])
 
-    modify_mol2_file(mol2file, outputprefix, angle) 
+    modify_mol2_file(mol2file, mol2output, angle) 
 
     return 
 #################################################################################################################
