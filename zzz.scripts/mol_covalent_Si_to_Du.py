@@ -379,10 +379,10 @@ def main():
         return
 
     mol2file       = sys.argv[1]
-    outputprefix   = sys.argv[2]
+    mol2output     = sys.argv[2]
     angle          = float(sys.argv[3])
 
-    modify_mol2_file(mol2file, outputprefix, angle) 
+    modify_mol2_file(mol2file, mol2output, angle) 
 
     return 
 #################################################################################################################
