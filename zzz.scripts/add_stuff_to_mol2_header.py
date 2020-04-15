@@ -10,6 +10,7 @@ def read_write_mol2_file(filename1,fileval,valtype,output,nameval):
     # now lets read in the rmsds.
     file1 = open(fileval,'r')
     dict_val = {}
+    print 
     for line in file1: 
          splitline = line.split()
          print splitline
@@ -17,11 +18,15 @@ def read_write_mol2_file(filename1,fileval,valtype,output,nameval):
          val = splitline[1]
          if valtype == "float":
             dict_val[name] = float(val)
-         if valtype == "int":
+         elif valtype == "int":
             dict_val[name] = int(val)
-         if valtype == "string":
-            dict_val[name] = str(val)
+         elif valtype == "str":
+            #dict_val[name] = str(val)
+            dict_val[name] = val
+         else: 
+            print ("valtype %s is not valid"%(valtype))
          
+    #print dict_val     
     file1.close()
 
     if valtype == "float":
@@ -44,10 +49,15 @@ def read_write_mol2_file(filename1,fileval,valtype,output,nameval):
          if (len(linesplit) > 0):
              if ("  Name:" in line):
                  name = linesplit[2].split('.')[0]
-                 if name in dict_val.keys(): 
+                 #print name dict_val[name]
+                 #print name, dict_val
+                 #exit()
+                 if name in dict_val: 
+                 #if name in dict_val: 
                     #file2.write("##########%22s     %f\n" % (nameval+":",dict_val[name]))
                     file2.write(FORMATESTRING % (nameval+":",dict_val[name]))
-                 else: 
+                 else:
+                    #print name 
                     file2.write("##########%22s     NA\n" % (nameval+":"))
     file3.close()
     file2.close()
@@ -74,8 +84,9 @@ def main():
 
     if valtype != "float" and valtype != "int" and valtype != "str":
        print "valtype must be one of the following: float, int, or str. " 
-       print "we will use valtype of string."
-       valtype = "str"
+       exit()
+       #print "we will use valtype of string."
+       #valtype = "str"
 
     read_write_mol2_file(filename1,fileval,valtype,output,name)
 
