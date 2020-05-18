@@ -61,6 +61,19 @@ def upper_to_lower(string):
            string_new=string_new+'z'
     return string_new
 
+def pad_string(string):
+    string_new = ''
+    if len(string) == 1: 
+       string_new = string + '  '
+    elif len(string) == 2: 
+       string_new = string + ' '
+    elif len(string) == 3 or len(string) == 4: # do nothing
+       string_new = string
+    elif len(string) > 4: 
+       print("Warning len(string) > 4")
+       string_new = string
+    return string_new
+
 def main():
   if len(sys.argv) != 3: # if no input
      print "ERORR"
@@ -76,7 +89,7 @@ def main():
       print i+1, mol.atom_list[i].type, dt[i]
       fh.write('%2d %4s %4s %4s %-6s %2s\n' % (i+1, mol.atom_list[i].name, mol.atom_list[i].resname, upper_to_lower(mol.atom_list[i].resname), mol.atom_list[i].type, dt[i]))
       fh1.write('%-4s %4s       %6.3f\n' % (mol.atom_list[i].name, upper_to_lower(mol.atom_list[i].resname),  mol.atom_list[i].Q))
-      fh2.write('%4s  %4s       %6.3f %2s\n' % (  mol.atom_list[i].name, mol.atom_list[i].resname, mol.atom_list[i].Q, dt[i]))
+      fh2.write('%4s  %4s       %6.3f %2s\n' % (  pad_string(mol.atom_list[i].name), mol.atom_list[i].resname, mol.atom_list[i].Q, dt[i]))
 
   fh.close()
   fh1.close()
