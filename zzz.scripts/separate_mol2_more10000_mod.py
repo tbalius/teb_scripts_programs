@@ -33,13 +33,13 @@ def read_dock_multimol2_file_printmol2_files(file,setname):
                  header = header + line
                  if (len(linesplit) == 3):
                      if (linesplit[1] == "Name:"):
-                         print line
+                         print (line)
                          #outputprefix = linesplit[2]+ "_" + setname
                          outputprefix = linesplit[2].split('.')[0] + "_" + setname
              if (flag and linesplit[0] == "@<TRIPOS>MOLECULE"):
              #if ( linesplit[0] == "@<TRIPOS>MOLECULE"):
                  if (header == ''): 
-                     print "no header"
+                     print ("no header")
                      outputprefix = setname
 
                  if (count > 1):
@@ -70,10 +70,10 @@ def read_dock_multimol2_file_printmol2_files(file,setname):
 #################################################################################################################
 def main():
     if len(sys.argv) != 3: # if no input
-        print " This script needs the following:"
-        print " (1) mol2filename, "
-        print " (1) setname, "
-        print " this script will uses the name in the mol2 file as output prefix"
+        print (" This script needs the following:")
+        print (" (1) mol2filename, ")
+        print (" (1) setname, ")
+        print (" this script will uses the name in the mol2 file as output prefix")
         return
 
     filename       = sys.argv[1]
