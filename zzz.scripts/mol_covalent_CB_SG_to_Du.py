@@ -305,6 +305,7 @@ def modify_mol2_file(mol2file, outputprefix):
            if atom.num-1 == Si1: 
               atom.type = 'Du'
               atom.Q = 0.0
+              print("Hcount ==", count_h[0])
               if count_h[0] == 3: 
                  atom.name = 'D2'
               elif count_h[0] == 0: # SG will just have no H
@@ -313,6 +314,7 @@ def modify_mol2_file(mol2file, outputprefix):
            if atom.num-1 == Si2: 
               atom.type = 'Du'
               atom.Q = 0.0
+              print("Hcount ==",count_h[1])
               if count_h[1] == 3: 
                  atom.name = 'D2'
               #elif count_h[1] == 2: # 
