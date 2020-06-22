@@ -559,6 +559,7 @@ def convert_sybyl_to_dock (molecule):
                          'N.am': 8,
                          'S.o': 14,
                          'S.o2': 14,
+                         'S.O2': 14,
                          'N.4': 9,
                          'O.co2': 11,
                          'C.cat': 1,
