@@ -313,7 +313,7 @@ def parm_reader(filename):
       F_SCREEN                     = True
 
 #  if ( F_TITLE                      ): 
-#      print "F_TITLE"
+#      print ("F_TITLE")
 
    ## READ IN THE NUMBER OF ELEMENTS FOR 
    ## AS WELL AS FLAGS.
@@ -362,7 +362,7 @@ def parm_reader(filename):
           i = i + 8
 
 #  if ( F_NUMBER_EXCLUDED_ATOMS      ):
-#       print "F_NUMBER_EXCLUDED_ATOMS" 
+#       print ("F_NUMBER_EXCLUDED_ATOMS" )
 
    if ( F_NONBONDED_PARM_INDEX       ):
      if not(line[0] == "%"):
@@ -370,7 +370,8 @@ def parm_reader(filename):
        line = line.strip('\n')
        while i < len(line):
           temp_NONBONDED_PARM_INDEX = line[i:i+8].replace(' ', '')
-          NONBONDED_PARM_INDEX.append(int(temp_NONBONDED_PARM_INDEX))
+          #NONBONDED_PARM_INDEX.append(int(temp_NONBONDED_PARM_INDEX))
+          NONBONDED_PARM_INDEX.append(int(temp_NONBONDED_PARM_INDEX)-1)
           i = i + 8
  
    if ( F_RESIDUE_LABEL              ):
@@ -391,21 +392,21 @@ def parm_reader(filename):
           i = i + 8
  
 #  if ( F_BOND_FORCE_CONSTANT        ):
-#       print "F_BOND_FORCE_CONSTANT" 
+#       print ("F_BOND_FORCE_CONSTANT" )
 #  if ( F_BOND_EQUIL_VALUE           ):
-#       print "F_BOND_EQUIL_VALUE" 
+#       print ("F_BOND_EQUIL_VALUE" )
 #  if ( F_ANGLE_FORCE_CONSTANT       ): 
-#       print "F_ANGLE_FORCE_CONSTANT"
+#       print ("F_ANGLE_FORCE_CONSTANT" )
 #  if ( F_ANGLE_EQUIL_VALUE          ):
-#       print "F_ANGLE_EQUIL_VALUE" 
+#       print ("F_ANGLE_EQUIL_VALUE" )
 #  if ( F_DIHEDRAL_FORCE_CONSTANT    ): 
-#       print "F_DIHEDRAL_FORCE_CONSTANT"
+#       print ("F_DIHEDRAL_FORCE_CONSTANT")
 #  if ( F_DIHEDRAL_PERIODICITY       ): 
-#       print "F_DIHEDRAL_PERIODICITY"
+#       print ("F_DIHEDRAL_PERIODICITY")
 #  if ( F_DIHEDRAL_PHASE             ):
-#       print "F_DIHEDRAL_PHASE" 
+#       print ("F_DIHEDRAL_PHASE") 
 #  if ( F_SOLTY                      ):
-#       print "F_SOLTY"
+#       print ("F_SOLTY")
  
    if ( F_LENNARD_JONES_ACOEF        ): 
       if not(line[0] == "%"):
@@ -427,25 +428,25 @@ def parm_reader(filename):
           i = i + 16
 
 #  if ( F_BONDS_INC_HYDROGEN         ): 
-#       print "F_BONDS_INC_HYDROGEN" 
+#       print ("F_BONDS_INC_HYDROGEN")
 #  if ( F_BONDS_WITHOUT_HYDROGEN     ): 
-#       print "F_BONDS_WITHOUT_HYDROGEN" 
+#       print ("F_BONDS_WITHOUT_HYDROGEN" )
 #  if ( F_ANGLES_INC_HYDROGEN        ): 
-#       print "F_ANGLES_INC_HYDROGEN" 
+#       print ("F_ANGLES_INC_HYDROGEN" )
 #  if ( F_ANGLES_WITHOUT_HYDROGEN    ): 
-#       print "F_ANGLES_WITHOUT_HYDROGEN" 
+#       print ("F_ANGLES_WITHOUT_HYDROGEN" )
 #  if ( F_DIHEDRALS_INC_HYDROGEN     ): 
-#       print "F_DIHEDRALS_INC_HYDROGEN" 
+#       print ("F_DIHEDRALS_INC_HYDROGEN" )
 #  if ( F_DIHEDRALS_WITHOUT_HYDROGEN ):
-#       print "F_DIHEDRALS_WITHOUT_HYDROGEN" 
+#       print ("F_DIHEDRALS_WITHOUT_HYDROGEN" )
 #  if ( F_EXCLUDED_ATOMS_LIST        ):  
-#       print "F_EXCLUDED_ATOMS_LIST" 
+#       print ("F_EXCLUDED_ATOMS_LIST") 
 #  if ( F_HBOND_ACOEF                ): 
-#       print "F_HBOND_ACOEF" 
+#       print ("F_HBOND_ACOEF") 
 #  if ( F_HBOND_BCOEF                ): 
-#       print "F_HBOND_BCOEF" 
+#       print ("F_HBOND_BCOEF") 
 #  if ( F_HBCUT                      ): 
-#       print "F_HBCUT" 
+#       print ("F_HBCUT") 
 
    if ( F_AMBER_ATOM_TYPE            ): 
      if not(line[0] == "%"):
@@ -456,18 +457,18 @@ def parm_reader(filename):
           i = i + 4
  
 #  if ( F_TREE_CHAIN_CLASSIFICATION  ): 
-#       print "F_TREE_CHAIN_CLASSIFICATION" 
+#       print ("F_TREE_CHAIN_CLASSIFICATION") 
 #  if ( F_JOIN_ARRAY                 ): 
-#       print "F_JOIN_ARRAY" 
+#       print ("F_JOIN_ARRAY") 
 #  if ( F_IROTAT                     ): 
-#       print "F_IROTAT" 
+#       print ("F_IROTAT" )
 #  if ( F_RADII                      ): 
-#       print "F_RADII" 
+#       print ("F_RADII" )
 #  if ( F_SCREEN                     ): 
-#       print "F_SCREEN" 
+#       print ("F_SCREEN") 
 
 
-# print str(len(ATOM_NAME)) + " " + str(len(ATOM_TYPE_INDEX)) 
+# print (str(len(ATOM_NAME)) + " " + str(len(ATOM_TYPE_INDEX)) )
 
  ## find what atoms go with what residues 
 
@@ -485,25 +486,25 @@ def parm_reader(filename):
 
     ## for last residue
  for j in range(RESIDUE_POINTER[len(RESIDUE_POINTER)-1]-1,len(ATOM_NAME)):
-     #print j
+     #print (j)
      RESIDUE_ARRAY[j] = RESIDUE_LABEL[len(RESIDUE_LABEL)-1]
 
 
 # for i in range(len(ATOM_NAME)):
-#    print RESIDUE_ARRAY[i] + "  " + str(i)+ " " + ATOM_NAME[i] + " " +AMBER_ATOM_TYPE[i] + " " + str(ATOM_TYPE_INDEX[i]) + \
-#          " " + str(CHARGE[i]) + " " + str(MASS[i])
+#    print (RESIDUE_ARRAY[i] + "  " + str(i)+ " " + ATOM_NAME[i] + " " +AMBER_ATOM_TYPE[i] + " " + str(ATOM_TYPE_INDEX[i]) + \
+#          " " + str(CHARGE[i]) + " " + str(MASS[i]))
 
  ## count the number of atoms of certien types. 
 
- print "ATOM_NAME = ",len(ATOM_NAME)
- print "CHARGE = ",len(CHARGE)
- print "ATOM_TYPE_INDEX = ",len(ATOM_TYPE_INDEX)
- print "max(ATOM_TYPE_INDEX) =", max(ATOM_TYPE_INDEX) 
- print "max(ATOM_TYPE_INDEX)^2 =", max(ATOM_TYPE_INDEX)*max(ATOM_TYPE_INDEX)
- print "NONBONDED_PARM_INDEX = ",len(NONBONDED_PARM_INDEX)
- print "max(NONBONDED_PARM_INDEX) = ",max(NONBONDED_PARM_INDEX)
- print "LENNARD_JONES_ACOEF = ",len(LENNARD_JONES_ACOEF)
- print "LENNARD_JONES_BCOEF = ",len(LENNARD_JONES_BCOEF)
+ print ("ATOM_NAME = ",len(ATOM_NAME))
+ print ("CHARGE = ",len(CHARGE))
+ print ("ATOM_TYPE_INDEX = ",len(ATOM_TYPE_INDEX))
+ print ("max(ATOM_TYPE_INDEX) =", max(ATOM_TYPE_INDEX) )
+ print ("max(ATOM_TYPE_INDEX)^2 =", max(ATOM_TYPE_INDEX)*max(ATOM_TYPE_INDEX))
+ print ("NONBONDED_PARM_INDEX = ",len(NONBONDED_PARM_INDEX))
+ print ("max(NONBONDED_PARM_INDEX) = ",max(NONBONDED_PARM_INDEX))
+ print ("LENNARD_JONES_ACOEF = ",len(LENNARD_JONES_ACOEF))
+ print ("LENNARD_JONES_BCOEF = ",len(LENNARD_JONES_BCOEF))
 
 
  atom_type_uniq = []
@@ -515,11 +516,11 @@ def parm_reader(filename):
            if (count == 0):
                atom_type_uniq.append(AMBER_ATOM_TYPE[i]) 
            count = count+1
-    print "ATOM_TYPE_INDEX == " + str(AtomNum) + " has N = " + str(count) + " atoms of this type"
+    print ("ATOM_TYPE_INDEX == " + str(AtomNum) + " has N = " + str(count) + " atoms of this type")
  
  ## play with LJ matrixes, see how it is orginized?  I did not understand the 
  ## web page explination at : http://ambermd.org/formats.html
- print "\n\n LJ matrixes"
+ print ("\n\n LJ matrixes")
 
  ## make matrix 
 
@@ -543,23 +544,25 @@ def parm_reader(filename):
  for i in range(0,(NTYPES)):
     for j in range(0,(NTYPES)):
         index = NONBONDED_PARM_INDEX[(NTYPES)*(i)+j]
-        print i,j,(NTYPES)*(i)+j,index, LENNARD_JONES_ACOEF[index-1] 
+        print (i,j,(NTYPES)*(i)+j,index)
+        sys.stdout.flush()
+        print (LENNARD_JONES_ACOEF[index-1] )
         M_index[i][j] = index-1
         M_LJA[i][j]   = LENNARD_JONES_ACOEF[index-1]
         M_LJB[i][j]   = LENNARD_JONES_BCOEF[index-1]
 
- print "index:"
+ print ("index:")
  print_matrix_d(M_index)
- print "LENNARD_JONES_ACOEF:"
+ print ("LENNARD_JONES_ACOEF:")
  print_matrix(M_LJA)
- print "LENNARD_JONES_BCOEF:"
+ print ("LENNARD_JONES_BCOEF:")
  print_matrix(M_LJB)
 
  # see Molecular Modelling prenciples and approches by Leach p. 207
  # ACOEF = eps*rm^12 and BCOEF = 2*eps*rm^6 
- print "AMBER ATOM TYPE, ACOEF, BCOEF "
+ print ("AMBER ATOM TYPE, ACOEF, BCOEF ")
  for i in range(0,len(atom_type_uniq)):
-    print atom_type_uniq[i],M_LJA[i][i], M_LJB[i][i]
+    print (atom_type_uniq[i],M_LJA[i][i], M_LJB[i][i])
 
 # print "\n test LJ mat is right" 
 #
@@ -578,22 +581,22 @@ def parm_reader(filename):
 def print_matrix(M):
  for i in range(0,len(M)):
      for j in range(0,len(M[i])):
-        print "%10.1f" % M[i][j],
-     print ""
+        print ("%10.1f" % M[i][j],)
+     print ("")
 
  return
 
 def print_matrix_d(M):
  for i in range(0,len(M)):
      for j in range(0,len(M[i])):
-        print "%4d" % M[i][j],
-     print ""
+        print ("%4d" % M[i][j],)
+     print ("")
 
  return
 
 def coord_reader(filename,size):
  
- print "IN coord_reader"
+ print ("IN coord_reader")
  file = open(filename,'r')
 # lines = file.readlines()
 
@@ -607,6 +610,13 @@ def coord_reader(filename,size):
  vals = []
  for line in file:
    data = line.split()
+   if line_count == 0: 
+       print (line)
+       # we expect this header if restart:
+       # Cpptraj Generated Restart                                                       
+       if "Restart" in line: 
+           # we want to skipe two lines continue with out incrementing the count
+           continue 
    if line_count > 0:
    #if line_count > 1:
      i = 0
@@ -616,18 +626,18 @@ def coord_reader(filename,size):
    line_count = line_count + 1
  file.close()
 
- print "read in coord file"
+ print ("read in coord file")
 # now convet vals to frames 
 #  for val in vals()
  if (len(vals)%3 != 0 ):
-    print "error len(vals)%3 = %d"%(len(vals)%3)
-    exit
+    print ("error len(vals) mod 3 = %d"%(len(vals)%3))
+    exit()
  i = 0
  while i < len(vals):
        if count == size:
           temp_frame = frame(cords)
           frames.append(temp_frame)
-          print "# of Frames now:",len(frames) 
+          print ("# of Frames now:",len(frames) )
           cords  = []
           count  = 0
        x = float(vals[i])
@@ -730,11 +740,11 @@ def find_range(list):
       elif (len(interval) == 2): 
          tmp_int_list = range(int(interval[0]),int(interval[1])+1)
       else:
-        print "error"
+        print ("error")
         sys.exit(0)
       for i in range(len(tmp_int_list)):
          int_list.append(tmp_int_list[i])
-         print tmp_int_list[i]
+         print (tmp_int_list[i])
 
   #for i in range(len(int_list)):
   #    int_list[i] = int_list[i] - 1
@@ -748,13 +758,13 @@ def main():
   ##RESIDUE_ARRAY, ATOM_NAME, AMBER_ATOM_TYPE, ATOM_TYPE_INDEX, CHARGE,MASS, M_LJA, M_LJB =  parm_reader("active_gefitinib.rec.gas.leap.parm")
 
   if len(sys.argv) != 6: # if no input
-        print "Input:";
-        print "amber prmtop filename"
-        print "amber mdcrd filename"
-        print "residues list1 for species 1 :  Loop over these residues, continuity not nessicery"
-        print "residues list examples: 1-4,7-10,34-59"
-        print "residues list2 for species 2 ( if species 2 is more than one residue generates a matrix)"
-        print "output filename"
+        print ("Input:");
+        print ("amber prmtop filename")
+        print ("amber mdcrd filename")
+        print ("residues list1 for species 1 :  Loop over these residues, continuity not nessicery")
+        print ("residues list examples: 1-4,7-10,34-59")
+        print ("residues list2 for species 2 ( if species 2 is more than one residue generates a matrix)")
+        print ("output filename")
         return
 
   parmfile  = sys.argv[1]
@@ -860,7 +870,7 @@ def main():
            vdwfileh.write('%f'%(Evdw))
            elefileh.write('%f'%(Ees))
          else:
-           print "something has gone wrong. "
+           print ("something has gone wrong. ")
            exit()
          k=k+1
        intfileh.write('\n')

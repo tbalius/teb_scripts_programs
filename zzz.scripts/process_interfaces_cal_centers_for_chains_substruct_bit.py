@@ -45,7 +45,8 @@ def min_dist_between_two_sets_of_atoms(atom_list1,filename1,atom_list2,filename2
                    res = filename2+"::"+atom_list1[i].resname+atom_list1[i].resnum+"->"+atom_list2[j].resname+atom_list2[j].resnum
                    interface1[atom_list1[i].resname+atom_list1[i].resnum] = int(atom_list1[i].resnum)
                    interface2[atom_list2[j].resname+atom_list2[j].resnum] = int(atom_list2[j].resnum)
-                   interface1_resnum[atom_list1[j].resnum] = 1
+                   #interface1_resnum[atom_list1[j].resnum] = 1
+                   interface1_resnum[atom_list1[i].resnum] = 1
                    interface2_resnum[atom_list2[j].resnum] = 1
                    # populate dictionary with residue key and store the distance as the definition
                    if res in dict_res: # check if it is in the dictionary
@@ -134,7 +135,7 @@ def centre_of_mass(atom_list):
         #cmass[0] /= molecular_weight
         #cmass[1] /= molecular_weight
         #cmass[2] /= molecular_weight
-        print "number of atoms in reslist: " + str(count)
+        print ("number of atoms in reslist: " + str(count))
         centroid[0] /= count
         centroid[1] /= count
         centroid[2] /= count
@@ -228,7 +229,10 @@ def main():
     #print chains[1][0].chainid
     for i in range(len(chains)):
       chain1 = chains[i]
-      for j in range(i+1,len(chains)):
+      #for j in range(i+1,len(chains)):
+      for j in range(1,len(chains)):
+         if j == i: 
+            continue
          chain2 = chains[j]
          print("i=%d,j=%d"%(i,j))
          flag_write = min_dist_between_two_sets_of_atoms(chain1,'chain %s'%chain1[0].chainid,chain2,'chain %s'%chain2[0].chainid,5,dict_substruct)

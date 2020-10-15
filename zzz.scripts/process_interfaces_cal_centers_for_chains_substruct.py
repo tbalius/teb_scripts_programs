@@ -95,7 +95,7 @@ def centre_of_mass(atom_list):
         #cmass[0] /= molecular_weight
         #cmass[1] /= molecular_weight
         #cmass[2] /= molecular_weight
-        print "number of atoms in reslist: " + str(count)
+        print ("number of atoms in reslist: " + str(count))
         centroid[0] /= count
         centroid[1] /= count
         centroid[2] /= count
@@ -122,6 +122,7 @@ def readin_all_atoms_return_chains(fileinputpdb):
     pdblist = pdb.read_pdb(fileinputpdb)
     if (len(pdblist) > 1):
         print("len(pdblist) = %d"%len(pdblist))
+        #print(pdblist[0])
         print("pdblist is greater than 1. there is more than one model...")
     pdblist_combined = []
     for atoms in pdblist: 
