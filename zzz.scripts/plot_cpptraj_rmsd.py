@@ -8,6 +8,7 @@ import sys
 import copy
 import math
 import matplotlib
+matplotlib.use('Agg')  # allows you to not have an x-server running
 import scipy
 import numpy
 import pylab
