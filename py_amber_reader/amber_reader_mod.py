@@ -706,7 +706,14 @@ def intermolecular_Energy(parm_stuff,frame,start1,stop1,start2,stop2):
     Eint = 0
     Evdw = 0
     Ees = 0 
-    #print start1, start2, stop1, stop2
+    #print (start1, start2, stop1, stop2)
+    print (start1, stop1, start2, stop2)
+
+    print len(parm_stuff.CHARGE)
+
+    if (stop1 > (len(parm_stuff.CHARGE)+1) ): 
+       print ("ERROR")
+       stop1 = len(parm_stuff.CHARGE)+1
 
     for i in range(start1,stop1):
         for j in range(start2,stop2):
@@ -736,7 +743,8 @@ def find_range(list):
   for i in range(len(list_split)):
       interval = list_split[i].split('-')
       if (len(interval) == 1): 
-         tmp_int_list = int(interval[0])
+         tmp_int_list = []
+         tmp_int_list.append(int(interval[0]))
       elif (len(interval) == 2): 
          tmp_int_list = range(int(interval[0]),int(interval[1])+1)
       else:
@@ -838,7 +846,11 @@ def main():
        k = 0
        if resid1 == len(parm_stuff.RESIDUE_POINTER):
          start1 = parm_stuff.RESIDUE_POINTER[resid1-1]
-         stop1  = len(parm_stuff.ATOM_NAME)+1
+         #stop1  = len(parm_stuff.ATOM_NAME)+1
+         stop1  = len(parm_stuff.ATOM_NAME)
+       elif resid1 > len(parm_stuff.RESIDUE_POINTER):
+         print("Error.")
+         exit()
        else:
          start1 = parm_stuff.RESIDUE_POINTER[resid1-1]
          stop1  = parm_stuff.RESIDUE_POINTER[resid1]
@@ -849,12 +861,15 @@ def main():
  
          if resid2 == len(parm_stuff.RESIDUE_POINTER):
             start2 = parm_stuff.RESIDUE_POINTER[resid2-1]
-            stop2  = len(parm_stuff.ATOM_NAME)+1
+            #stop2  = len(parm_stuff.ATOM_NAME)+1
+            stop2  = len(parm_stuff.ATOM_NAME)
+         elif resid2 > len(parm_stuff.RESIDUE_POINTER):
+            print ("Error.") 
          else: 
             start2 = parm_stuff.RESIDUE_POINTER[resid2-1]
             stop2  = parm_stuff.RESIDUE_POINTER[resid2]
 
-         # print "residue2 (resid = %d): atom start = %d, atom stop = %d"%(resid2, start2,stop2) # for debuging 
+         print ( "residue2 (resid = %d): atom start = %d, atom stop = %d"%(resid2, start2,stop2) )# for debuging 
 
          (Eint,Evdw,Ees) = intermolecular_Energy(parm_stuff,frames[i],start1,stop1,start2,stop2)
          avg_mat_int[j][k] = avg_mat_int[j][k]+Eint
