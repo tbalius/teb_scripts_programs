@@ -9,18 +9,16 @@ import mol2_python3 as mol2
 def main():
 
 
-   if len(sys.argv) != 4: # if no input
+   if len(sys.argv) != 3: # if no input
        print ("ERORR:")
-       print ("syntex: energy_filter mol2_file(docked poses) energy_threshold output ")
+       print ("syntex: mol2_energy_sort mol2_file(docked poses) output ")
        return
  
 
    infilemol2_poses     = sys.argv[1]
-   val                  = float(sys.argv[2])
-   outfile              = sys.argv[3]
+   outfile              = sys.argv[2]
 
    print ("input file (poses)     = %s"%infilemol2_poses)
-   print ("energy threshold       = %f"%val)
    print ("outputprefix           = %s"%outfile)
 
    if infilemol2_poses.split('.')[-1] == 'mol2':
@@ -33,19 +31,20 @@ def main():
 
 
    count = 0
+   energy_vec = []
    for mol in mol2_vector: 
-          #print(mol.header)
           lines = mol.header.split('\n')  #file1.close()
           for line in lines:
-              #print(line)
               if 'Total' in line:
-                  #print(line)
                   splitline = line.split()
                   energy = float(splitline[3])
-                  #print(energy) 
-          if energy < val: 
-             print(energy) 
-             mol2.append_mol2(mol,outfile+'.mol2')
+                  energy_vec.append(energy)
+   energy_vec_sort = sorted(enumerate(energy_vec), key=lambda x: x[1])
+   #energy_vec_sort = sorted(enumerate(energy_vec), key=lambda x: -x[1])
+   for entry in energy_vec_sort: 
+       print(entry)
+       print(entry[0])
+       mol2.append_mol2(mol2_vector[entry[0]],outfile+'.mol2')
    #exit()
 main()
 
