@@ -39,7 +39,7 @@ def main():
   #models = chimera.openModels.list(modelTypes=[chimera.Molecule])
   #model = models
   model = openModels.open(input_pdb)
-  if !(keepH):
+  if not (keepH):
      runCommand("del @H,H?,H??,H???") # remove all hydrogens
   
   writeMol2(model, output_prefix+"before_dockprep.mol2")
