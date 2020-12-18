@@ -312,160 +312,160 @@ def parm_reader(filename):
    if ((split_line[0] == "%FLAG") and (split_line[1] == "SCREEN")):
       F_SCREEN                     = True
 
-#  if ( F_TITLE                      ): 
-#      print ("F_TITLE")
+# if ( F_TITLE                      ): 
+#     print ("F_TITLE")
 
-   ## READ IN THE NUMBER OF ELEMENTS FOR 
-   ## AS WELL AS FLAGS.
-   if ( F_POINTERS                   ):
-     if not(line[0] == "%"):
-       i = 0
-       line = line.strip('\n')
-       while i < len(line):
-          temp_POINTERS = line[i:i+8].replace(' ', '')
-          POINTERS.append(int(temp_POINTERS))
-          i = i + 8
-    
-   if ( F_ATOM_NAME                  ):
-     if not(line[0] == "%"):
-       i = 0
-       line = line.strip('\n')
-       while i < len(line):
-          ATOM_NAME.append(line[i:i+4])
-          i = i + 4 
+  ## READ IN THE NUMBER OF ELEMENTS FOR 
+  ## AS WELL AS FLAGS.
+  if ( F_POINTERS                   ):
+    if not(line[0] == "%"):
+      i = 0
+      line = line.strip('\n')
+      while i < len(line):
+         temp_POINTERS = line[i:i+8].replace(' ', '')
+         POINTERS.append(int(temp_POINTERS))
+         i = i + 8
+   
+  if ( F_ATOM_NAME                  ):
+    if not(line[0] == "%"):
+      i = 0
+      line = line.strip('\n')
+      while i < len(line):
+         ATOM_NAME.append(line[i:i+4])
+         i = i + 4 
  
-   if ( F_CHARGE                     ):
-     if not(line[0] == "%"):
-       i = 0
-       line = line.strip('\n')
-       while i < len(line):
-          temp_CHARGE = line[i:i+16].replace(' ', '')
-          CHARGE.append(float(temp_CHARGE))
-          i = i + 16
+  if ( F_CHARGE                     ):
+    if not(line[0] == "%"):
+      i = 0
+      line = line.strip('\n')
+      while i < len(line):
+         temp_CHARGE = line[i:i+16].replace(' ', '')
+         CHARGE.append(float(temp_CHARGE))
+         i = i + 16
  
-   if ( F_MASS                       ):
-     if not(line[0] == "%"):
-       i = 0
-       line = line.strip('\n')
-       while i < len(line):
-          temp_MASS = line[i:i+16].replace(' ', '')
-          MASS.append(float(temp_MASS))
-          i = i + 16
+  if ( F_MASS                       ):
+    if not(line[0] == "%"):
+      i = 0
+      line = line.strip('\n')
+      while i < len(line):
+         temp_MASS = line[i:i+16].replace(' ', '')
+         MASS.append(float(temp_MASS))
+         i = i + 16
 
-   if ( F_ATOM_TYPE_INDEX            ):
-     if not(line[0] == "%"):
-       i = 0
-       line = line.strip('\n')
-       while i < len(line):
-          temp_ATOM_TYPE_INDEX = line[i:i+8].replace(' ', '')
-          ATOM_TYPE_INDEX.append(int(temp_ATOM_TYPE_INDEX))
-          i = i + 8
+  if ( F_ATOM_TYPE_INDEX            ):
+    if not(line[0] == "%"):
+      i = 0
+      line = line.strip('\n')
+      while i < len(line):
+         temp_ATOM_TYPE_INDEX = line[i:i+8].replace(' ', '')
+         ATOM_TYPE_INDEX.append(int(temp_ATOM_TYPE_INDEX))
+         i = i + 8
 
-#  if ( F_NUMBER_EXCLUDED_ATOMS      ):
-#       print ("F_NUMBER_EXCLUDED_ATOMS" )
+# if ( F_NUMBER_EXCLUDED_ATOMS      ):
+#      print ("F_NUMBER_EXCLUDED_ATOMS" )
 
-   if ( F_NONBONDED_PARM_INDEX       ):
+  if ( F_NONBONDED_PARM_INDEX       ):
+    if not(line[0] == "%"):
+      i = 0
+      line = line.strip('\n')
+      while i < len(line):
+         temp_NONBONDED_PARM_INDEX = line[i:i+8].replace(' ', '')
+         #NONBONDED_PARM_INDEX.append(int(temp_NONBONDED_PARM_INDEX))
+         NONBONDED_PARM_INDEX.append(int(temp_NONBONDED_PARM_INDEX)-1)
+         i = i + 8
+ 
+  if ( F_RESIDUE_LABEL              ):
+    if not(line[0] == "%"):
+      i = 0
+      line = line.strip('\n')
+      while i < len(line):
+         RESIDUE_LABEL.append(line[i:i+4])
+         i = i + 4
+ 
+  if ( F_RESIDUE_POINTER            ):
+    if not(line[0] == "%"):
+      i = 0
+      line = line.strip('\n')
+      while i < len(line):
+         temp_RESIDUE_POINTER = line[i:i+8].replace(' ', '')
+         RESIDUE_POINTER.append(int(temp_RESIDUE_POINTER))
+         i = i + 8
+ 
+# if ( F_BOND_FORCE_CONSTANT        ):
+#      print ("F_BOND_FORCE_CONSTANT" )
+# if ( F_BOND_EQUIL_VALUE           ):
+#      print ("F_BOND_EQUIL_VALUE" )
+# if ( F_ANGLE_FORCE_CONSTANT       ): 
+#      print ("F_ANGLE_FORCE_CONSTANT" )
+# if ( F_ANGLE_EQUIL_VALUE          ):
+#      print ("F_ANGLE_EQUIL_VALUE" )
+# if ( F_DIHEDRAL_FORCE_CONSTANT    ): 
+#      print ("F_DIHEDRAL_FORCE_CONSTANT")
+# if ( F_DIHEDRAL_PERIODICITY       ): 
+#      print ("F_DIHEDRAL_PERIODICITY")
+# if ( F_DIHEDRAL_PHASE             ):
+#      print ("F_DIHEDRAL_PHASE") 
+# if ( F_SOLTY                      ):
+#      print ("F_SOLTY")
+ 
+  if ( F_LENNARD_JONES_ACOEF        ): 
      if not(line[0] == "%"):
-       i = 0
-       line = line.strip('\n')
-       while i < len(line):
-          temp_NONBONDED_PARM_INDEX = line[i:i+8].replace(' ', '')
-          #NONBONDED_PARM_INDEX.append(int(temp_NONBONDED_PARM_INDEX))
-          NONBONDED_PARM_INDEX.append(int(temp_NONBONDED_PARM_INDEX)-1)
-          i = i + 8
- 
-   if ( F_RESIDUE_LABEL              ):
-     if not(line[0] == "%"):
-       i = 0
-       line = line.strip('\n')
-       while i < len(line):
-          RESIDUE_LABEL.append(line[i:i+4])
-          i = i + 4
- 
-   if ( F_RESIDUE_POINTER            ):
-     if not(line[0] == "%"):
-       i = 0
-       line = line.strip('\n')
-       while i < len(line):
-          temp_RESIDUE_POINTER = line[i:i+8].replace(' ', '')
-          RESIDUE_POINTER.append(int(temp_RESIDUE_POINTER))
-          i = i + 8
- 
-#  if ( F_BOND_FORCE_CONSTANT        ):
-#       print ("F_BOND_FORCE_CONSTANT" )
-#  if ( F_BOND_EQUIL_VALUE           ):
-#       print ("F_BOND_EQUIL_VALUE" )
-#  if ( F_ANGLE_FORCE_CONSTANT       ): 
-#       print ("F_ANGLE_FORCE_CONSTANT" )
-#  if ( F_ANGLE_EQUIL_VALUE          ):
-#       print ("F_ANGLE_EQUIL_VALUE" )
-#  if ( F_DIHEDRAL_FORCE_CONSTANT    ): 
-#       print ("F_DIHEDRAL_FORCE_CONSTANT")
-#  if ( F_DIHEDRAL_PERIODICITY       ): 
-#       print ("F_DIHEDRAL_PERIODICITY")
-#  if ( F_DIHEDRAL_PHASE             ):
-#       print ("F_DIHEDRAL_PHASE") 
-#  if ( F_SOLTY                      ):
-#       print ("F_SOLTY")
- 
-   if ( F_LENNARD_JONES_ACOEF        ): 
-      if not(line[0] == "%"):
-       i = 0
-       line = line.strip('\n')
-       while i < len(line):
-          temp_LENNARD_JONES_ACOEF = line[i:i+16].replace(' ', '')
-          LENNARD_JONES_ACOEF.append(float(temp_LENNARD_JONES_ACOEF))
-          i = i + 16
+      i = 0
+      line = line.strip('\n')
+      while i < len(line):
+         temp_LENNARD_JONES_ACOEF = line[i:i+16].replace(' ', '')
+         LENNARD_JONES_ACOEF.append(float(temp_LENNARD_JONES_ACOEF))
+         i = i + 16
 
  
-   if ( F_LENNARD_JONES_BCOEF        ): 
-      if not(line[0] == "%"):
-       i = 0
-       line = line.strip('\n')
-       while i < len(line):
-          temp_LENNARD_JONES_BCOEF = line[i:i+16].replace(' ', '')
-          LENNARD_JONES_BCOEF.append(float(temp_LENNARD_JONES_BCOEF))
-          i = i + 16
-
-#  if ( F_BONDS_INC_HYDROGEN         ): 
-#       print ("F_BONDS_INC_HYDROGEN")
-#  if ( F_BONDS_WITHOUT_HYDROGEN     ): 
-#       print ("F_BONDS_WITHOUT_HYDROGEN" )
-#  if ( F_ANGLES_INC_HYDROGEN        ): 
-#       print ("F_ANGLES_INC_HYDROGEN" )
-#  if ( F_ANGLES_WITHOUT_HYDROGEN    ): 
-#       print ("F_ANGLES_WITHOUT_HYDROGEN" )
-#  if ( F_DIHEDRALS_INC_HYDROGEN     ): 
-#       print ("F_DIHEDRALS_INC_HYDROGEN" )
-#  if ( F_DIHEDRALS_WITHOUT_HYDROGEN ):
-#       print ("F_DIHEDRALS_WITHOUT_HYDROGEN" )
-#  if ( F_EXCLUDED_ATOMS_LIST        ):  
-#       print ("F_EXCLUDED_ATOMS_LIST") 
-#  if ( F_HBOND_ACOEF                ): 
-#       print ("F_HBOND_ACOEF") 
-#  if ( F_HBOND_BCOEF                ): 
-#       print ("F_HBOND_BCOEF") 
-#  if ( F_HBCUT                      ): 
-#       print ("F_HBCUT") 
-
-   if ( F_AMBER_ATOM_TYPE            ): 
+  if ( F_LENNARD_JONES_BCOEF        ): 
      if not(line[0] == "%"):
-       i = 0
-       line = line.strip('\n')
-       while i < len(line):
-          AMBER_ATOM_TYPE.append(line[i:i+4])
-          i = i + 4
+      i = 0
+      line = line.strip('\n')
+      while i < len(line):
+         temp_LENNARD_JONES_BCOEF = line[i:i+16].replace(' ', '')
+         LENNARD_JONES_BCOEF.append(float(temp_LENNARD_JONES_BCOEF))
+         i = i + 16
+
+# if ( F_BONDS_INC_HYDROGEN         ): 
+#      print ("F_BONDS_INC_HYDROGEN")
+# if ( F_BONDS_WITHOUT_HYDROGEN     ): 
+#      print ("F_BONDS_WITHOUT_HYDROGEN" )
+# if ( F_ANGLES_INC_HYDROGEN        ): 
+#      print ("F_ANGLES_INC_HYDROGEN" )
+# if ( F_ANGLES_WITHOUT_HYDROGEN    ): 
+#      print ("F_ANGLES_WITHOUT_HYDROGEN" )
+# if ( F_DIHEDRALS_INC_HYDROGEN     ): 
+#      print ("F_DIHEDRALS_INC_HYDROGEN" )
+# if ( F_DIHEDRALS_WITHOUT_HYDROGEN ):
+#      print ("F_DIHEDRALS_WITHOUT_HYDROGEN" )
+# if ( F_EXCLUDED_ATOMS_LIST        ):  
+#      print ("F_EXCLUDED_ATOMS_LIST") 
+# if ( F_HBOND_ACOEF                ): 
+#      print ("F_HBOND_ACOEF") 
+# if ( F_HBOND_BCOEF                ): 
+#      print ("F_HBOND_BCOEF") 
+# if ( F_HBCUT                      ): 
+#      print ("F_HBCUT") 
+
+  if ( F_AMBER_ATOM_TYPE            ): 
+    if not(line[0] == "%"):
+      i = 0
+      line = line.strip('\n')
+      while i < len(line):
+         AMBER_ATOM_TYPE.append(line[i:i+4])
+         i = i + 4
  
-#  if ( F_TREE_CHAIN_CLASSIFICATION  ): 
-#       print ("F_TREE_CHAIN_CLASSIFICATION") 
-#  if ( F_JOIN_ARRAY                 ): 
-#       print ("F_JOIN_ARRAY") 
-#  if ( F_IROTAT                     ): 
-#       print ("F_IROTAT" )
-#  if ( F_RADII                      ): 
-#       print ("F_RADII" )
-#  if ( F_SCREEN                     ): 
-#       print ("F_SCREEN") 
+# if ( F_TREE_CHAIN_CLASSIFICATION  ): 
+#      print ("F_TREE_CHAIN_CLASSIFICATION") 
+# if ( F_JOIN_ARRAY                 ): 
+#      print ("F_JOIN_ARRAY") 
+# if ( F_IROTAT                     ): 
+#      print ("F_IROTAT" )
+# if ( F_RADII                      ): 
+#      print ("F_RADII" )
+# if ( F_SCREEN                     ): 
+#      print ("F_SCREEN") 
 
 
 # print (str(len(ATOM_NAME)) + " " + str(len(ATOM_TYPE_INDEX)) )
