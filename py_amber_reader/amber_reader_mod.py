@@ -546,10 +546,10 @@ def parm_reader(filename):
         index = NONBONDED_PARM_INDEX[(NTYPES)*(i)+j]
         print (i,j,(NTYPES)*(i)+j,index)
         sys.stdout.flush()
-        print (LENNARD_JONES_ACOEF[index-1] )
-        M_index[i][j] = index-1
-        M_LJA[i][j]   = LENNARD_JONES_ACOEF[index-1]
-        M_LJB[i][j]   = LENNARD_JONES_BCOEF[index-1]
+        print (LENNARD_JONES_ACOEF[index] )
+        M_index[i][j] = index
+        M_LJA[i][j]   = LENNARD_JONES_ACOEF[index]
+        M_LJB[i][j]   = LENNARD_JONES_BCOEF[index]
 
  print ("index:")
  print_matrix_d(M_index)
@@ -712,13 +712,15 @@ def intermolecular_Energy(parm_stuff,frame,start1,stop1,start2,stop2):
     print len(parm_stuff.CHARGE)
 
     if (stop1 > (len(parm_stuff.CHARGE)+1) ): 
-       print ("ERROR")
-       stop1 = len(parm_stuff.CHARGE)+1
+       print ("WARNING. stop1 > (len(parm_stuff.CHARGE)+1)")
+       #stop1 = len(parm_stuff.CHARGE)+1
+    if (stop2 > (len(parm_stuff.CHARGE)+1) ): 
+       print ("WARNING. stop2 > (len(parm_stuff.CHARGE)+1)")
 
     for i in range(start1,stop1):
         for j in range(start2,stop2):
              if i == j:
-                #print "i==j. skip"
+                print "i==j. skip"
                 continue
              q1 = parm_stuff.CHARGE[i-1]
              q2 = parm_stuff.CHARGE[j-1]
@@ -730,8 +732,10 @@ def intermolecular_Energy(parm_stuff,frame,start1,stop1,start2,stop2):
              Eint = Eint+energy_function(A,B,q1,q2,r)
              Evdw = Evdw+vdw_energy_function(A,B,r)
              Ees  = Ees+es_energy_function(q1,q2,r)
-             #print i,j,A,B,q1,q2,r,Eint
-
+             #print (i,j,A,B,q1,q2,r, Evdw, Ees, Eint)
+             #print (i,j, parm_stuff.ATOM_TYPE_INDEX[i-1], parm_stuff.ATOM_TYPE_INDEX[j-1])
+             #print (i,j, parm_stuff.AMBER_ATOM_TYPE[i-1], parm_stuff.AMBER_ATOM_TYPE[j-1])
+    print ("%f,%f,%f"%(Eint,Evdw,Ees))
     return (Eint,Evdw,Ees)
 
 
@@ -855,7 +859,7 @@ def main():
          start1 = parm_stuff.RESIDUE_POINTER[resid1-1]
          stop1  = parm_stuff.RESIDUE_POINTER[resid1]
        # print "************" # for debuging
-       # print "residue1 (resid = %d): atom start = %d, atom stop = %d"%(resid1, start1,stop1) 
+       print "residue1 (resid = %d): atom start = %d, atom stop = %d"%(resid1, start1,stop1) 
        # print "************"
        for resid2 in int_list2:
  
@@ -869,7 +873,8 @@ def main():
             start2 = parm_stuff.RESIDUE_POINTER[resid2-1]
             stop2  = parm_stuff.RESIDUE_POINTER[resid2]
 
-         print ( "residue2 (resid = %d): atom start = %d, atom stop = %d"%(resid2, start2,stop2) )# for debuging 
+         
+         print ( "residue2 (resid = %d): atom start = %d, atom stop = %d, number=%d"%(resid2, start2,stop2,(stop2-start2-1)) )# for debuging 
 
          (Eint,Evdw,Ees) = intermolecular_Energy(parm_stuff,frames[i],start1,stop1,start2,stop2)
          avg_mat_int[j][k] = avg_mat_int[j][k]+Eint
