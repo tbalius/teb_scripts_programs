@@ -134,7 +134,8 @@ def write_matrix(filehandel,Matrix):
         for j in range(len(Matrix[i])):
             if (j == 0):
                 filehandel.write('%f' % (Matrix[i][j]))
-            filehandel.write(',%f' % (Matrix[i][j]))
+            else:
+                filehandel.write(',%f' % (Matrix[i][j]))
         filehandel.write('\n')
 
 def mat_to_mat(Mat):
