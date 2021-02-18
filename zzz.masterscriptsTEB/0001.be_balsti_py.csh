@@ -4,10 +4,11 @@
 
 # msms is a molecular surface generation program needed for be_blasti.py to run
 # which is put in your path
-set path = ( /nfs/home/tbalius/zzz.programs/msms $path )
+set path = ( /home/baliuste/zzz.programs/msms $path )
 
-set list = "1DB1" # or use `cat filename` to list your pdb codes here from a text file like pdblist_rat, to loop over each variable (pdb code) later
+#set list = "1DB1" # or use `cat filename` to list your pdb codes here from a text file like pdblist_rat, to loop over each variable (pdb code) later
 #set list = `cat $1`
+set list = `cat pdblist.txt `
 #set list = `cat /nfs/work/users/tbalius/VDR/Enrichment/pdblist_rat `
 
 # CHANGE THIS, according to where the magic is going to happen
@@ -32,11 +33,11 @@ endif
   cd ${workdir}
 
 # the atom type definition is needed for msms which is sym-linked into the cwd
-  ln -s /nfs/home/tbalius/zzz.programs/msms/atmtypenumbers .
+  ln -s /home/baliuste/zzz.programs/msms/atmtypenumbers .
   #python ~/zzz.scripts/be_blasti.py --pdbcode $pdbname nocarbohydrate renumber | tee -a pdbinfo_using_biopython.log        
 # carbs are disregarded as ligands! if it is: carbohydrate instead of nocarbohydrate
 # renumber renumbers the residue number
-  python ~tbalius/zzz.scripts/be_blasti.py --pdbcode $pdbname nocarbohydrate original_numbers | tee -a pdbinfo_using_biopython.log
+  python ${DOCKBASE}/proteins/pdb_breaker/be_blasti.py --pdbcode $pdbname nocarbohydrate original_numbers | tee -a pdbinfo_using_biopython.log
 
 # error checking looks for receptor and ligand file which should be produced by be_blasti.py
   if !(-s rec.pdb) then
@@ -56,6 +57,12 @@ endif
   else
      echo "Warning: No ligand or peptid."
   endif
+
+  /home/baliuste/zzz.programs/Chimera/chimera-1.13.1/bin/chimera --nogui --script "/home/baliuste/zzz.scripts/chimera_dockprep_keep_h_sol.py rec.pdb rec_out"
+
+if -e xtal-lig.pdb then
+   /home/baliuste/zzz.programs/Chimera/chimera-1.13.1/bin/chimera --nogui --script "/home/baliuste/zzz.scripts/chimera_dockprep_keep_h.py xtal-lig.pdb xtal-lig_out"
+endif
 
 end # system
 
