@@ -8,6 +8,7 @@ import sys
 import copy
 import math
 import matplotlib
+matplotlib.use('Agg')  # allows you to not have an x-server running
 import scipy
 import numpy
 import pylab
@@ -72,7 +73,7 @@ def calc_residuel(parms,xvec,yvec_d):
 def mk_matrix(array1,array2,m):
 
     if (len(array1) != len(array2)):
-        print "Arrays are not the same length..."
+        print ("Arrays are not the same length...")
         exit()
 
     matrix = scipy.zeros([m,m])
@@ -94,14 +95,14 @@ ZERRO = 0.0
 
 
 if len(sys.argv) != 3:
-   print "error:  this program takes 2 input extrct filename.  "    
+   print ("error:  this program takes 2 input extrct filename.  " )
    exit()
 
 filename1     = sys.argv[1]
 filename2     = sys.argv[2]
 
-print "extrct filename1     = " + filename1
-print "extrct filename2     = " + filename2
+print ("extrct filename1     = " + filename1)
+print ("extrct filename2     = " + filename2)
 
 dict1, dictscore1 = read_extract_file(filename1)
 dict2, dictscore2 = read_extract_file(filename2)
@@ -109,13 +110,18 @@ dict2, dictscore2 = read_extract_file(filename2)
 #count = len(dict1.keys())
 count1 = 0
 
+dictscore_out_val = 1.0
+dict_out_val = 2000000
+
 for entry in dict1.keys():
     if not entry in dict2:
-       print entry + " not in dictionay 2"
+       print (entry + " not in dictionay 2")
        #dict2[entry] = count
        #count = count+1
-       dictscore2[entry] = 5000.0
-       dict2[entry] = -1.0
+       #dictscore2[entry] = 5000.0
+       #dict2[entry] = -1.0
+       dictscore2[entry] = dictscore_out_val
+       dict2[entry] = dict_out_val
        #exit()
     else:
        count1 = count1+1
@@ -124,11 +130,13 @@ for entry in dict1.keys():
 count2 = 0
 for entry in dict2.keys():
     if not entry in dict1:
-       print entry + " not in dictionay 1"
+       print (entry + " not in dictionay 1")
        #dict1[entry] = count
        #count = count+1
-       dictscore1[entry] = 5000.0
-       dict1[entry] = -1.0
+       #dictscore1[entry] = 5000.0
+       #dict1[entry] = -1.0
+       dictscore1[entry] = dictscore_out_val
+       dict1[entry] = dict_out_val
     else:
        count2 = count2+1
        #exit()
@@ -140,7 +148,7 @@ for entry in dict2.keys():
     if (dict1[entry] != -1.0 and dict2[entry] != -1.0):
         count3 = count3+1
 m = count3
-print count2,count1, m  
+print (count2,count1, m  )
 X = scipy.zeros([m,1])
 Y = scipy.zeros([m,1])
 Xscore = scipy.zeros([m,1])
@@ -157,7 +165,7 @@ fileh = open('in_both.txt','w')
 for entry in dict2.keys():
 
     if dict1[entry] == -1.0 or dict2[entry] == -1.0:
-       print entry
+       print (entry)
        continue
     elif (dict1[entry] < 1000 and dict2[entry] < 1000): 
           fileh.write("%s\n"%entry)
@@ -182,12 +190,12 @@ Xmin = min(X)
 Ymax = max(Y)
 Ymin = min(Y)
 
-print Xmax, Xmin 
-print Ymax, Ymin
+print (Xmax, Xmin) 
+print (Ymax, Ymin)
 
-print "pearson correlation: r = %6.3f, p-value = %6.3e" % (rp)
-print "pearson correlation: r = %6.3f, p-value = %6.3e" % (rps)
-print "spearma correlation: r = %6.3f, p-value = %6.3e" % (rs)
+print ("pearson correlation: r = %6.3f, p-value = %6.3e" % (rp))
+print ("pearson correlation: r = %6.3f, p-value = %6.3e" % (rps))
+print ("spearma correlation: r = %6.3f, p-value = %6.3e" % (rs))
 
 '''*************************
 ppprint "run optimization"
@@ -233,26 +241,29 @@ count_Xlte1000_Ylte1000 = 0
 count_Yonly = 0
 count_Xonly = 0
 for i in range(len(X)):
-    
-    if (X[i] < 1000 ):
+
+    if (X[i] < 1000 and X[i]!=-1):
         count_Xlte1000 = count_Xlte1000 + 1
-    if (Y[i] < 1000 ):
+
+    if (Y[i] < 1000 and Y[i]!=-1):
         count_Ylte1000 = count_Ylte1000 + 1
-    if (X[i] < 1000 and Y[i] >= 1000):
+
+    if (X[i] < 1000 and X[i]!=-1 and (Y[i] >= 1000 or Y[i]==-1) ):
         count_Xonly = count_Xonly + 1
-    if (X[i] >= 1000 and Y[i] < 1000):
+
+    if ((X[i] >= 1000 or X[i] == -1) and Y[i] < 1000 and Y[i]!=-1):
         count_Yonly = count_Yonly + 1
-    if (X[i] < 1000 and Y[i] < 1000):
+    if (X[i] < 1000 and Y[i] < 1000 and  X[i]!=-1  and Y[i]!=-1):
         count_Xlte1000_Ylte1000 = count_Xlte1000_Ylte1000 + 1
 
-    if (X[i] < 1000 or Y[i] < 1000):
+    if ((X[i] < 1000 or Y[i] < 1000) and (X[i]!=-1 or Y[i]!=-1) ):
         X_top.append(X[i])
         Y_top.append(Y[i])
     
-print '%d,%d,%d,%d,%d\n' % (count_Xlte1000, count_Ylte1000, count_Xlte1000_Ylte1000, count_Xonly, count_Yonly)
-print "size X_top  = " + str(len(X_top))
+print ('%d,%d,%d,%d,%d\n' % (count_Xlte1000, count_Ylte1000, count_Xlte1000_Ylte1000, count_Xonly, count_Yonly))
+print ("size X_top  = " + str(len(X_top)))
 
-
+print ("I AM HERE")
 
 im = axis.plot(X,Y,'o') #,[0,100],[0,100],'--')
 
@@ -274,8 +285,8 @@ axis.set_ylabel('file2='+filename2)
 #axis.set_ylim(lim_min, lim_max)
 xmax = max(X)
 ymax = max(Y)
-axis.set_xticks([ 0, xmax/ 2,  xmax ])
-axis.set_yticks([ 0, ymax/2,  ymax ])
+#axis.set_xticks([ 0, xmax/ 2,  xmax ])
+#axis.set_yticks([ 0, ymax/2,  ymax ])
 
 ## new subplot
 axis = fig.add_axes([0.1,0.5,0.3,0.3])
@@ -325,11 +336,11 @@ Ymin = min(Yscore)
 lim_min = min(math.floor(Ymin),math.floor(Xmin))
 lim_max = max(math.ceil(Ymax), math.ceil(Xmax))
 
-im = axis.plot(Xscore,Yscore,'o',[lim_min,lim_max],[lim_min,lim_max],'k-') #,[0,100],[0,100],'--')
+im = axis.plot(Xscore,Yscore,'.',[lim_min,lim_max],[lim_min,lim_max],'k-') #,[0,100],[0,100],'--')
 
 axis.set_xlim(lim_min, lim_max)
-axis.set_xticks([ lim_min, (lim_min+lim_max)/ 2, lim_max ])
-axis.set_yticks([ lim_min, (lim_min+lim_max)/ 2, lim_max ])
+#axis.set_xticks([ lim_min, (lim_min+lim_max)/ 2, lim_max ])
+#axis.set_yticks([ lim_min, (lim_min+lim_max)/ 2, lim_max ])
 
 ## new subplot
 axis = fig.add_axes([0.5,0.5,0.3,0.3])
@@ -361,8 +372,10 @@ im = axis.imshow(matrix, aspect='auto', origin='lower',interpolation='nearest', 
 #im = axis.imshow(matrix, aspect='auto', origin='lower',interpolation='nearest')
 axcolor = fig.add_axes([0.8,0.55,0.05,0.2])
 pylab.colorbar(im, cax=axcolor)
-axis.set_xticks([  ])
-axis.set_yticks([  ])
+axis.set_xticks([])
+axis.set_yticks([])
+#fig.show()
+fig.savefig('fig.png',dpi=600)
 
 # histogram figures
 fig2 = pylab.figure(figsize=(8,8))
@@ -388,32 +401,37 @@ im = axis.plot(midbin2, n2,'b-') #,[0,100],[0,100],'--')
 
 axis = fig2.add_axes([0.5,0.7,0.3,0.2])
 im = axis.plot(midbin1, n1,'r-',midbin2, n2,'b-') #,[0,100],[0,100],'--')
+#fig2.show()
+fig2.savefig('fig2.png',dpi=600)
 
 fig3 = pylab.figure(figsize=(8,8))
 
 ymax = max(Y_top)
 xmax = max(X_top)
 
+print ("I AM HERE (2)")
+
 axis = fig3.add_axes([0.1,0.1,0.3,0.3])
-im = axis.plot(X_top,Y_top,'o') #,[0,100],[0,100],'--')
-axis.set_xlim(0, 1000)
-axis.set_ylim(0, 1000)
+#im = axis.plot(X_top,Y_top,'1') #,[0,100],[0,100],'--')
+im = axis.plot(X_top,Y_top,'.') #,[0,100],[0,100],'--')
+axis.set_xlim(-2, 1000)
+axis.set_ylim(-2, 1000)
 axis.set_xticks([0, 500 ,1000])
 axis.set_yticks([0, 500 ,1000])
 
 axis = fig3.add_axes([0.5,0.1,0.3,0.3])
-im = axis.plot(X_top,Y_top,'o') #,[0,100],[0,100],'--')
+im = axis.plot(X_top,Y_top,'.') #,[0,100],[0,100],'--')
 axis.set_xlim( 1000, xmax )
-axis.set_ylim(0, 1000)
-axis.set_xticks([ 1000, (xmax+1000)/ 2,  xmax ])
+axis.set_ylim(-2, 1000)
+#axis.set_xticks([ 1000, (xmax+1000)/ 2,  xmax ])
 axis.set_yticks([0, 500 ,1000])
 
 axis = fig3.add_axes([0.1,0.5,0.3,0.3])
-im = axis.plot(X_top,Y_top,'o') #,[0,100],[0,100],'--')
-axis.set_xlim( 0, 1000)
+im = axis.plot(X_top,Y_top,'.') #,[0,100],[0,100],'--')
+axis.set_xlim( -2, 1000)
 axis.set_ylim( 1000, ymax )
 axis.set_xticks([0, 500 ,1000])
-axis.set_yticks([ 1000, (ymax+1000)/2,  ymax ])
+#axis.set_yticks([ 1000, (ymax+1000)/2,  ymax ])
 
 axis = fig3.add_axes([0.5,0.5,0.3,0.3])
 #mk_venn( count_Xlte1000_Ylte1000, count_Xonly, count_Yonly)
@@ -422,18 +440,12 @@ circle2=matplotlib.pyplot.Circle((0.5,0.7),.3,color='b',alpha=0.5)
 axis.add_artist(circle1)
 axis.add_artist(circle2)
 #fig.gca().add_artist(circle3)
+print ("count_Xonly = %d\ncount_Xlte1000_Ylte1000 = %d\n count_Yonly = %d\n"%(count_Xonly, count_Xlte1000_Ylte1000, count_Yonly))
 axis.text(0.4, 0.3,str(count_Xonly))
 axis.text(0.4, 0.5,str(count_Xlte1000_Ylte1000))
 axis.text(0.4, 0.7,str(count_Yonly))
 axis.set_xticks([])
 axis.set_yticks([])
-
-
-#fig.show()
-fig.savefig('fig.png',dpi=600)
-
-#fig2.show()
-fig2.savefig('fig2.png',dpi=600)
 
 #fig3.show()
 fig3.savefig('fig3.png',dpi=600)

@@ -8,6 +8,7 @@ import sys
 import copy
 import math
 import matplotlib
+matplotlib.use('Agg')  # allows you to not have an x-server running
 import scipy
 import numpy
 import pylab
@@ -325,7 +326,7 @@ im = axis.plot(midbin2, n2,'b-') #,[0,100],[0,100],'--')
 axis = fig2.add_axes([0.5,0.7,0.3,0.2])
 im = axis.plot(midbin1, n1,'r-',midbin2, n2,'b-') #,[0,100],[0,100],'--')
 
-axis = fig3.add_axes([0.5,0.5,0.3,0.3])
+axis = fig2.add_axes([0.5,0.5,0.3,0.3])
 #mk_venn( count_Xlte1000_Ylte1000, count_Xonly, count_Yonly)
 circle1=matplotlib.pyplot.Circle((0.5,0.5),.2,color='r')
 circle2=matplotlib.pyplot.Circle((0.5,0.8),.2,color='b')

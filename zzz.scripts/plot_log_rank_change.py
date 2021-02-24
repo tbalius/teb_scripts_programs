@@ -7,7 +7,10 @@
 import sys
 import copy
 import math
+
 import matplotlib
+matplotlib.use('Agg')  # allows you to not have an x-server running
+
 import scipy
 import numpy
 import pylab
@@ -44,6 +47,28 @@ def read_extract_file(filename):
         idDict_score[id] = score
         count = count + 1
     return idDict_rank, idDict_score 
+
+def mk_matrix(array1,array2,m):
+
+    if (len(array1) != len(array2)):
+        print "Arrays are not the same length..."
+        exit()
+
+    matrix = scipy.zeros([m,m])
+    amin = min([min(array1), min(array2)])
+    amax = max([max(array1), max(array2)])
+
+    for ind in range(len(array1)):
+        a1 = array1[ind]
+        a2 = array2[ind]
+        j = int(round((a1 - amin)/(amax - amin)*(m-1)))
+        i = int(round((a2 - amin)/(amax - amin)*(m-1)))
+        if (i == 0) or (j == 0):
+           print i,j
+        matrix[i,j] = matrix[i,j] + 1
+
+    return matrix
+
 
 if len(sys.argv) != 3:
    print "error:  this program takes 2 input extrct filename.  "    
@@ -133,7 +158,7 @@ for entry in dict1.keys():
 file1.close()
 file2.close()
 
-exit()
+#exit()
 
 Xmax = max(X)
 Xmin = min(X)
