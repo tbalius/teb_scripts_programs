@@ -446,7 +446,8 @@ def write_mol2(molecule,filename):
                 #print atom_dic[molecule.atom_list[j].num], molecule.atom_list[j].num
         	outmol2.write("%-6d %-4s %9.4f %9.4f %9.4f %-5s %4s %6s %9.4f\n" % 
 		(atom_dic[molecule.atom_list[j].num], molecule.atom_list[j].name, molecule.atom_list[j].X, molecule.atom_list[j].Y, 
-		molecule.atom_list[j].Z, molecule.atom_list[j].type, resid_dic[molecule.atom_list[j].resnum], 
+		#molecule.atom_list[j].Z, molecule.atom_list[j].type, resid_dic[molecule.atom_list[j].resnum], 
+		molecule.atom_list[j].Z, molecule.atom_list[j].type, molecule.atom_list[j].resnum, 
 		molecule.atom_list[j].resname, molecule.atom_list[j].Q))
 
 	outmol2.write("@<TRIPOS>BOND\n")
