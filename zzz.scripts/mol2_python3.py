@@ -7,6 +7,7 @@
 ## 
 #################################################################################################################
 ## Modified by Trent Balius in the Shoichet Lab, UCSF in 2013
+## Modified by Trent Balius at FNLCR in 2020.
 #################################################################################################################
 
 
@@ -14,6 +15,7 @@ import math, sys
 import os.path
 import cmath
 from math import sqrt
+import gzip
 
 #################################################################################################################
 #################################################################################################################
@@ -72,6 +74,7 @@ def read_Mol2_lines(lines,startline):
     flag_mol     = False
     flag_getName = False
     
+    Name = ''
 
     #data = Mol('',[],[],[])
 
@@ -196,6 +199,8 @@ def read_Mol2_file(file):
     #flag_getName  = False
     flag_frist_mol = True
 
+    Name = ''
+
     i = 0  # i is the num of molecules read so far
     for line in lines:
          linesplit = line.split() #split on white space
@@ -311,12 +316,142 @@ def read_Mol2_file_head(file):
     #flag_getName  = False
     flag_frist_mol = True
 
+    Name = ''
+
     header1 = ''
     header2 = '' # we need two so we can recored the new header and print the perceding one. 
                  # we read in header i, then we read in mol i, then we read in header i+1 and then store mol i and header i.  
 
     i = 0  # i is the num of molecules read so far
     for line in lines:
+         if (line[0] == '#'): 
+             #print line
+             header1 = header1 + line
+             continue
+
+         linesplit = line.split() #split on white space
+         if (len(linesplit) == 1):
+            if(linesplit[0] == "@<TRIPOS>MOLECULE"):
+               if flag_frist_mol:
+                  flag_frist_mol = False
+               else: # when we have come to a new molecule put the pervious on on the list and reset arrays
+                  #print header2
+                  ID_heavy_atoms(atom_list)
+                  data = Mol(header2,Name,atom_list,bond_list,residue_list)
+                  mol_list.append(data)
+                  atom_list = [];bond_list = []
+               header2 = header1
+               header1 = ''
+               i = i + 1
+               #print "READING IN MOL #" + str(i)
+               #print "read in molecule info:"
+               line_num = 0
+               flag_mol = True
+               flag_atom = False
+               flag_bond = False
+               flag_substr = False
+
+            if(linesplit[0] == "@<TRIPOS>ATOM"):
+               #print "read in atom info:"
+               flag_atom = True
+               flag_bond = False
+               flag_substr = False
+               flag_mol = False
+
+            if(linesplit[0] == "@<TRIPOS>BOND"):
+               #print "read in bond info:"
+               flag_bond = True
+               flag_substr = False
+               flag_mol = False
+               flag_atom = False
+
+            if(linesplit[0] == "@<TRIPOS>SUBSTRUCTURE"):
+               #print "read in substructure info:"
+               flag_substr = True
+               flag_mol = False
+               flag_atom = False
+               flag_bond = False
+         if (flag_mol and  len(linesplit) >= 1 ):
+             if (line_num == 1):
+                #print line 
+                #print linesplit
+                #line_num = 0
+                Name = linesplit[0]
+                #flag_getName = True
+             line_num = line_num + 1
+
+         if ((len(linesplit) >= 9 )and (flag_atom)):
+             atom_num  = linesplit[0]
+             atom_name = linesplit[1]
+             X         = linesplit[2]
+             Y         = linesplit[3]
+             Z         = linesplit[4]
+             atom_type = linesplit[5]
+             res_num   = int(linesplit[6])
+             res_name  = linesplit[7]
+             Q         = linesplit[8]
+             #print X,Y,Z,Q,atom_type,atom_name,atom_num,res_num,res_name
+             temp_atom = atom(X,Y,Z,Q,atom_type,atom_name,atom_num,res_num,res_name)
+             atom_list.append(temp_atom)
+             #if residue_list.has_key(res_num):
+             if res_num in residue_list:
+                      residue_list[res_num].append(temp_atom)
+             else:
+                 residue_list[res_num] = [temp_atom]
+
+         elif (len(linesplit) == 4 and flag_bond):
+             bond_num  = linesplit[0]
+             a1_num    = linesplit[1]
+             a2_num    = linesplit[2]
+             bond_type = linesplit[3]
+             #print a1_num,a2_num,bond_num,bond_type
+             temp_bond = bond(a1_num,a2_num,bond_num,bond_type)
+             bond_list.append(temp_bond)
+
+         #elif (flag_substr):
+         #        ID_heavy_atoms(atom_list)
+         #        data = Mol(Name,atom_list,bond_list,residue_list)
+         #        mol_list.append(data)
+         #        #flag_getName = False
+         #        flag_substr = False
+         #        atom_list = [];bond_list = []
+    # for the last molecule.
+    ID_heavy_atoms(atom_list)
+    #print header2
+    data = Mol(header2,Name,atom_list,bond_list,residue_list)
+    mol_list.append(data)
+    atom_list = [];bond_list = []
+    return mol_list
+#################################################################################################################
+#################################################################################################################
+def read_Mol2_file_head_gz(file):
+    # reads in data from multi-Mol2 file.
+
+    file1 = gzip.open(file,'rt')
+    lines  =  file1.readlines()
+    file1.close()
+
+    atom_list = []
+    bond_list = []
+    residue_list = {}
+    mol_list = []
+
+    flag_atom      = False
+    flag_bond      = False
+    flag_substr    = False
+    flag_mol       = False
+    #flag_getName  = False
+    flag_frist_mol = True
+
+    Name = ''
+
+    header1 = ''
+    header2 = '' # we need two so we can recored the new header and print the perceding one. 
+                 # we read in header i, then we read in mol i, then we read in header i+1 and then store mol i and header i.  
+
+    i = 0  # i is the num of molecules read so far
+    for line in lines:
+         #print(line)
          if (line[0] == '#'): 
              #print line
              header1 = header1 + line
