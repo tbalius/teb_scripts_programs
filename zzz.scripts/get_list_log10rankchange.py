@@ -112,30 +112,37 @@ file2 = open("rankchangebeter1.txt",'w')
 
 file3 = open("rankonly2.txt",'w')
 file4 = open("rankonly1.txt",'w')
+file5 = open("ranks_all.txt",'w')
 
-for entry in dict1.keys():
+for entry in sorted(dict1.keys()):
+    log1 = -1.0
+    log2 = -1.0
+    difflog = -1000000.0
     if dict1[entry] == -1.0:
        #print entry
        file3.write('%s,%f,%d,%d\n'%(entry,0.0,dict1[entry],dict2[entry]))
-       continue
+       #continue
     if dict2[entry] == -1.0:
        file4.write('%s,%f,%d,%d\n'%(entry,0.0,dict1[entry],dict2[entry]))
-       continue
+       #continue
     #print entry
     #print entry, dict1[entry], dict2[entry]
-    log1 = math.log10(float(dict1[entry]+1.0))
-    log2 = math.log10(float(dict2[entry]+1.0))
-    difflog = (log1 - log2)
-    if abs(difflog) > 3.0: 
-       print entry, difflog, dict1[entry], dict2[entry]
-    if difflog > 3.0: 
-       file1.write('%s,%f,%d,%d\n'%(entry, difflog, dict1[entry], dict2[entry]))
-    elif difflog < -3.0: 
-       file2.write('%s,%f,%d,%d\n'%(entry, difflog, dict1[entry], dict2[entry]))
+    if dict1[entry] != -1.0 and dict2[entry] != -1.0:
+       log1 = math.log10(float(dict1[entry]+1.0))
+       log2 = math.log10(float(dict2[entry]+1.0))
+       difflog = (log1 - log2)
+       if abs(difflog) > 3.0: 
+          print entry, difflog, dict1[entry], dict2[entry]
+       if difflog > 3.0: 
+          file1.write('%s,%f,%d,%d\n'%(entry, difflog, dict1[entry], dict2[entry]))
+       elif difflog < -3.0: 
+          file2.write('%s,%f,%d,%d\n'%(entry, difflog, dict1[entry], dict2[entry]))
+    file5.write('%s,%f,%d,%d\n'%(entry, difflog, dict1[entry], dict2[entry]))
 
 file1.close()
 file2.close()
 file3.close()
 file4.close()
+file5.close()
 
 

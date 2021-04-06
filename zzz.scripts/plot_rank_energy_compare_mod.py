@@ -184,6 +184,7 @@ fileh.close()
 rp  = stats.pearsonr(X,Y)
 rps = stats.pearsonr(Xscore,Yscore)
 rs  = stats.spearmanr(X,Y)
+norm = numpy.linalg.norm(X-Y)
 
 Xmax = max(X)
 Xmin = min(X)
@@ -196,6 +197,7 @@ print (Ymax, Ymin)
 print ("pearson correlation: r = %6.3f, p-value = %6.3e" % (rp))
 print ("pearson correlation: r = %6.3f, p-value = %6.3e" % (rps))
 print ("spearma correlation: r = %6.3f, p-value = %6.3e" % (rs))
+print ("norm: d = %6.3f " % (norm))
 
 '''*************************
 ppprint "run optimization"
