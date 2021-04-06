@@ -71,9 +71,11 @@ def main():
    for line in fh: # read in a line, which contains a smiles
        splitline = line.split()
        smi2 = splitline[0]
+       #print (smi2)
        name = splitline[1]
        plist = reaction(smarts,smi1,smi2) # products list
        for p in plist:
+           #print (p)
            fho.write('%s %s\n'%(p, name+'_'+str(count)))
            count = count+1
 main()

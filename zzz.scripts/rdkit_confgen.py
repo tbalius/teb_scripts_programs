@@ -1,45 +1,35 @@
-# this was otained from here http://www.rdkit.org/docs/Cookbook.html on April 13, 2016
 
-""" contribution from Andrew Dalke """
-# modifed by Trent Balius
-import sys
+
 from rdkit import Chem
 from rdkit.Chem import AllChem
 
-# Download this from http://pypi.python.org/pypi/futures
-#from concurrent import futures
 
+def confgen(smi,num):
 
-# The parameters (molecule and number of conformers) are passed via a Python
-def generateconformations(m, n, maxAttempts=1000, pruneRmsThresh=0.1, useExpTorsionAnglePrefs=True, useBasicKnowledge=True, enforceChirality=True):
-    m = Chem.AddHs(m)
-    #ids=AllChem.EmbedMultipleConfs(m, numConfs=n)
-    ids=AllChem.EmbedMultipleConfs(m, numConfs=n,maxAttempts=maxAttempts, pruneRmsThresh=pruneRmsThresh, useExpTorsionAnglePrefs=useExpTorsionAnglePrefs, useBasicKnowledge=useBasicKnowledge, enforceChirality=enforceChirality, numThreads=0)
-    for cid in ids:
-        #AllChem.UFFOptimizeMolecule(m, confId=cid)
-        AllChem.MMFFOptimizeMolecule(m, confId=cid)
-    # EmbedMultipleConfs returns a Boost-wrapped type which
-    # cannot be pickled. Convert it to a Python list, which can.
-    #rmslist =[]
-    #AllChem.AlignMolConformers(m, RMSlist=rmslist)
-    AllChem.AlignMolConformers(m)
-    #rms = AllChem.GetConformerRMS(m, 1, 9, prealigned=True)
+  # this includes addtional small ring torsion potentials
+  params = AllChem.srETKDGv3()
 
-    return m, list(ids)
+  # this includes additional macrocycle ring torsion potentials and macrocycle-specific handles
+  params = AllChem.ETKDGv3()
 
-smi_input_file  = sys.argv[1]
-sdf_output_file = sys.argv[2]
+  # to use the two in conjunction, do:
+  params = AllChem.ETKDGv3()
+  params.useSmallRingTorsions = True
 
-n = int(sys.argv[3])
+  sdf_output_file = "temp.sdf"
+  writer = Chem.SDWriter(sdf_output_file)
 
-writer = Chem.SDWriter(sdf_output_file)
+  # a macrocycle attached to a small ring
+  mol = Chem.MolFromSmiles(smi)
+  mol = Chem.AddHs(mol)
+  molc = AllChem.EmbedMultipleConfs(mol, numConfs = num , params = params)
+  print(molc)
+  for moln in molc: 
+    print(moln)
+    writer.write(mol,confId=moln)
+  writer.close() 
 
-suppl = Chem.SmilesMolSupplier(smi_input_file, titleLine=False)
-i = 0
-for mol in suppl:
-    print i
-    molc,ids = generateconformations(mol, n)
-    for id in ids:
-        writer.write(molc, confId=id)
-    i=i+1
-writer.close()
+smi2 = "C(OC(CCCCCCC(OCCSC(CCCCCC1)=O)=O)OCCSC1=O)N1CCOCC1"
+num2 = 10
+confgen(smi2,num2)
+
