@@ -29,10 +29,10 @@ class phi(object):
           junk = struct.unpack('4s', phiFile.read(4))
           (check,) = struct.unpack('4s', phiFile.read(4))
           if check == "now ":  # this changed, but this is now correct
-            #print "32bit phimap"
+            #print ("32bit phimap")
             pass
           else:
-            #print "64bit phimap"
+            #print ("64bit phimap")
             is64 = True
           if not is64:
             (temptop,) = struct.unpack('16s', phiFile.read(16))
@@ -42,14 +42,14 @@ class phi(object):
             (temptop,) = struct.unpack('20s', phiFile.read(20))
             self.toplabel = temptop
 	    #print(self.toplabel)
-          #print "toplabel:", self.toplabel
+          #print ("toplabel:", self.toplabel)
           junk = struct.unpack('8s', phiFile.read(8))
           if is64:
             junk = struct.unpack('8s', phiFile.read(8))
           (self.head,) = struct.unpack('10s', phiFile.read(10))
-         # print "head:", self.head
+         # print ("head:", self.head)
           (self.title,) = struct.unpack('60s', phiFile.read(60))
-          #print "title:", self.title
+          #print ("title:", self.title)
           junk = struct.unpack('8s', phiFile.read(8))
           if is64:
             junk = struct.unpack('8s', phiFile.read(8))
@@ -70,7 +70,7 @@ class phi(object):
         except EOFError:
           phiFile.close()
       (self.botlabel,) = struct.unpack('16s', phiFile.read(16))
-      #print "botlabel:", self.botlabel
+      #print ("botlabel:", self.botlabel)
       junk = struct.unpack('8s', phiFile.read(8))
       if is64:
         junk = struct.unpack('8s', phiFile.read(8))
@@ -181,12 +181,12 @@ def construct_box(dx_file_name, origin, spacing, gridSize, phi_list):
 
 def calculate_box_parameters(scale, oldmid, gridSize):
 
-        grid_spacing = float(1/scale)
+        grid_spacing = float(1.0/scale)
         side_len = float(grid_spacing*gridSize)
 
-        x = float(oldmid[0]-(side_len/2))
-        y = float(oldmid[1]-(side_len/2))
-        z = float(oldmid[2]-(side_len/2))
+        x = float(oldmid[0]-(side_len/2.0))
+        y = float(oldmid[1]-(side_len/2.0))
+        z = float(oldmid[2]-(side_len/2.0))
 
         origin = [x, y, z]
 
@@ -210,7 +210,7 @@ def determine_grid_size(input_phi_file):
 def main():
 
         if (len(sys.argv) != 3):
-           print "Error. this script takes 2 arguments: grid filename and dx_file_name. "
+           print ("Error. this script takes 2 arguments: grid filename and dx_file_name. ")
            exit()
 	dx_file_name = sys.argv[2]
 	phiSize = determine_grid_size(sys.argv[1])
