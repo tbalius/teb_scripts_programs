@@ -1,0 +1,19 @@
+
+Trent got the parms from gaff2 and change the names, for disulfide
+MASS
+
+BOND
+ss-S   166.0    2.038       JCC,7,(1986),230; CYX   (SCHERAGA)
+
+ANGLE
+c3-ss-S     68.0      103.70    AA cyx             (SCHERAGA  JPC 79,1428)
+2C-S -ss    68.0      103.70    AA cyx             (SCHERAGA  JPC 79,1428)
+
+DIHE
+2C-S -ss-c3   1    3.50          0.0            -2.         JCC,7,(1986),230
+2C-S -ss-c3   1    0.60          0.0             3.         JCC,7,(1986),230
+
+IMPROPER
+
+NONBON
+

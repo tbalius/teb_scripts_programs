@@ -1,10 +1,14 @@
 import requests
-import os
+import os,sys
 #import wget
 
 def main():
 
-  zindid = 'ZINC000001546066'
+#  zindid = 'ZINC000001546066'
+ filename = sys.argv[1]
+ print ('filename=%s'%filename)
+ fh = open(filename,'r')
+ for zindid in fh:
   #search_url = 'http://zinc15.docking.org/substances/ZINC000001546066/'
   search_url = 'http://zinc15.docking.org/substances/'+zindid+'/'
   response = requests.get(search_url)

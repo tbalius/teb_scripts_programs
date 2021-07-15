@@ -614,7 +614,8 @@ def coord_reader(filename,size):
        print (line)
        # we expect this header if restart:
        # Cpptraj Generated Restart                                                       
-       if "Restart" in line: 
+       if "Restart" in line or "default_name" in line: 
+           print ("file %s is a restart file.  "%filename)
            # we want to skipe two lines continue with out incrementing the count
            continue 
    if line_count > 0:

@@ -1,0 +1,22 @@
+
+Nir and trent got the parms from gaff and change the names, for thio-ether
+MASS
+
+BOND
+c3-SH  225.8    1.8210       SOURCE1     358   0.0075
+C -SH  225.8    1.8210       SOURCE1     358   0.0075
+
+ANGLE
+2C-SH-c3   60.63       99.92   SOURCE3           14    2.0723
+CT-SH-c3   60.63       99.92   SOURCE3           14    2.0723
+c3-c3-SH   61.10      112.69   SOURCE3           24    2.1842
+hc-c3-SH   42.51      108.76   SOURCE2            3    1.6891
+SH-c3-h1   42.51      108.76   SOURCE2            3    1.6891
+
+DIHE
+X -c3-SH-X    3    1.000         0.000           3.000      JCC,7,(1986),230
+
+IMPROPER
+
+NONBON
+
