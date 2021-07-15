@@ -36,8 +36,8 @@ print ("this file requiers the mol2 libary writen by trent balius and sudipto mu
 
 print ("syntex: mol2_replace_atomtype_bonds.py input_file output_file, a1_ori,a2_rep,a3_search, [a2_name] ")
 
-if (len(sys.argv) != 7 or len(sys.argv) != 6):
-   print ("wrong number of arguments. there must be 5 or 6, not %d. ",len(sys.argv))
+if (len(sys.argv) != 7 and len(sys.argv) != 6):
+   print ("wrong number of arguments. there must be 5 or 6, not %d. "%len(sys.argv))
    exit()
 
 
