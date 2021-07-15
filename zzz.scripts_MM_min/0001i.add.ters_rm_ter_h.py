@@ -76,17 +76,20 @@ for line in lines:
         if (last != key and flag_ter_h): 
             #print "I AM HERE"
             flag_end = True
+            flag_ter_h = False
         if (flag_end):
            fileout.write("TER\n")
            flag_end = False
         if key in keys:
            if dic_bool[key]:
+              print key
               flag_ter_h = True
               dic_bool[key] = False
         last = key
         #print last
         if (flag_ter_h):
             if (line[13:16] == 'H  '):
+                #print "I AM HERE"
                 print line 
                 count = count +1
                 if (count == 2): # here we count howmeny h we incountered, but this might brake if for some reason the residue after the ter has no h.  
