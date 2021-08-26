@@ -10,14 +10,15 @@ import pdb_lib, sph_lib
 import water_clustering as wc
 
 def run_spheregen(num,maxradius,minradius,proberadius):
-    DOCKPATH = "/nfs/home/tbalius/zzz.github/DOCK"
+    #DOCKPATH = "/nfs/home/tbalius/zzz.github/DOCK"
+    DOCKPATH = "/home/baliuste/zzz.github/DOCK"
     ligfile = "xtal-lig.mol2"
     recdms = "rec.dms"
     recpdb = "rec.pdb"
     recsph = "rec.sph"
     recsphp = "rec_mod.sph"
     #recsphpdb = "rec.sph.pdb"
-    recsphpdb = "rec.sph."
+    recsphpdb = "rec.sph"
     name = "rec"
 
     if not (os.path.isfile("./rec_ori.pdb")):
@@ -30,7 +31,7 @@ def run_spheregen(num,maxradius,minradius,proberadius):
     # -w is the probe radius
     #proberadius = 1.2
     dmscmd = DOCKPATH+"/proteins/dms/bin/dms "+recpdb+" -a -d 0.2 -g dms.log -p -n -w "+str(proberadius)+" -o "+recdms
-    print "Run dms"
+    print "Run dms \n "+dmscmd
     os.system(dmscmd)
 
 
@@ -43,7 +44,8 @@ def run_spheregen(num,maxradius,minradius,proberadius):
     #minradius = 1.2
 
     file1 = open('INSPH','w')
-    file1.write("%s\nR\nX\n0.0\n%3.1f\n%3.1f\n%s\n"%(recdms,maxradius,minradius,recsph))
+    #file1.write("%s\nR\nX\n0.0\n%3.1f\n%3.1f\n%s\n"%(recdms,maxradius,minradius,recsph))
+    file1.write("%s\nR\nX\n-0.1\n%3.1f\n%3.1f\n%s\n"%(recdms,maxradius,minradius,recsph))
     file1.close()
     print "Run Sphgen"
     os.system(SPH)
@@ -72,11 +74,12 @@ def run_spheregen(num,maxradius,minradius,proberadius):
     os.system(ShSPH)
 
     os.system("cp rec.pdb rec.pdb_num"+str(num))
-    os.system("cat "+recsphpdb+"*.pdb | sed -e 's/C/O/g' -e 's/SPH/HOH/g' | grep -v 'TER' >> rec.pdb")
-    num_waters = int(os.popen("cat "+recsphpdb+"*.pdb | sed -e 's/C/O/g' -e 's/SPH/HOH/g' | grep -v 'TER' | wc -l ").readlines()[0])
+    #os.system("cat "+recsphpdb+"_1.pdb | sed -e 's/C/O/g' -e 's/SPH/HOH/g' | grep -v 'TER' >> rec.pdb")
+    num_waters = int(os.popen("cat "+recsphpdb+"_1.pdb | sed -e 's/C/O/g' -e 's/SPH/HOH/g' | grep -v 'TER' | wc -l ").readlines()[0])
     #print num_waters
     os.system("touch waters.pdb")
-    os.system("cat "+recsphpdb+"*.pdb | sed -e 's/C/O/g' -e 's/SPH/HOH/g' | grep -v 'TER' >> waters.pdb")
+    os.system("cat "+recsphpdb+"_1.pdb | sed -e 's/C/O/g' -e 's/SPH/HOH/g' | grep -v 'TER' >> waters.pdb")
+    os.system("cat waters.pdb >> rec.pdb")
     os.system("mkdir dir%d ; mv %s*.pdb dir%d/;cp rec* dir%d/"%(num,recsphpdb,num,num))
     os.system("mv INSPH OUTSPH dir%d"%(num))
     
@@ -96,7 +99,8 @@ def run_energy_cal(waterspdb):
     if not (os.path.isfile("./tleap.in")):
          #os.system('cp rec.pdb rec_ori.pdb'
          file1 = open("tleap.in",'w')
-         file1.write(" set default PBradii mbondi2 \n source leaprc.ff14SB \n \n REC = loadpdb rec_ori.pdb \n WAT = loadpdb "+waterspdb+" \n COM = combine {REC WAT} \n saveamberparm REC rec.leap.prm7 rec.leap.rst7 \n saveamberparm COM rec.wat.leap.prm7 rec.wat.leap.rst7 \n charge REC \n quit \n")
+         #file1.write(" set default PBradii mbondi2 \n source leaprc.ff14SB \n \n REC = loadpdb rec_ori.pdb \n WAT = loadpdb "+waterspdb+" \n COM = combine {REC WAT} \n saveamberparm REC rec.leap.prm7 rec.leap.rst7 \n saveamberparm COM rec.wat.leap.prm7 rec.wat.leap.rst7 \n charge REC \n quit \n")
+         file1.write(" set default PBradii mbondi2 \n # load the protein force field\n source leaprc.protein.ff14SB \n # load water \n source leaprc.water.tip3p \n \n REC = loadpdb rec_ori.pdb \n WAT = loadpdb "+waterspdb+" \n COM = combine {REC WAT} \n saveamberparm REC rec.leap.prm7 rec.leap.rst7 \n saveamberparm COM rec.wat.leap.prm7 rec.wat.leap.rst7 \n charge REC \n quit \n")
          file1.close()
     else:
          print "using pre-existing tleap.in"
@@ -120,14 +124,16 @@ def run_energy_cal(waterspdb):
 #    fh.write(lines[0])
 #    fh.close()
 
-    os.system("setenv AMBERHOME = /nfs/soft/amber/amber14")
+    #os.system("setenv AMBERHOME = /nfs/soft/amber/amber14")
+    #os.system("setenv AMBERHOME = /home/baliuste/programs/amber/amber18")
+    os.environ["AMBERHOME"] = "/home/baliuste/zzz.programs/amber/amber18"
     #os.system("$AMBERHOME/bin/tleap -s -f tleap.in >! tleap.out")
     os.system("$AMBERHOME/bin/tleap -s -f tleap.in > tleap.out")
 
     ## minimize the receptor alone. 
     #os.system("$AMBERHOME/bin/sander -O -i min.in -o min.out -p rec.leap.prm7 -c rec.leap.rst7 -ref rec.leap.rst7 -x min.mdcrd -inf min.info -r min.rst7")
     os.system("$AMBERHOME/bin/sander -O -i min.in -o min.out -p rec.wat.leap.prm7 -c rec.wat.leap.rst7 -ref rec.wat.leap.rst7 -x min.mdcrd -inf min.info -r min.rst7")
-    os.system("$AMBERHOME/bin/ambpdb -p rec.wat.leap.prm7 < min.rst7 > min.pdb")
+    os.system("$AMBERHOME/bin/ambpdb -p rec.wat.leap.prm7 -c min.rst7 > min.pdb")
 
 #radius_max = 2.0
 radius_max = 1.5 
@@ -145,7 +151,7 @@ os.system("cp rec.pdb rec.pdb_ori")
 
 num_waters = 0
 
-for i in range(10):
+for i in range(3):
    num_waters = run_spheregen(i,radius_max,radius_min,probe_radius)
    print "\n"
    print "number of waters generated: ", num_waters

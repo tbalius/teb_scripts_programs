@@ -31,8 +31,21 @@ def read_vec(filehandel):
 
     return vec #,label1,label2
 
+def mean_std(X):
+    sumx  = 0
+    sumx2 = 0
+    NX = len(X)
+    for x in X:
+        sumx = sumx + x
+        sumx2 = sumx2 + x**2
+    mean = sumx / NX
+    # Var[X] = E[X^2] - E[X]^2
+    std = (sumx2/NX - mean**2)**(0.5)
+    print ("mean = %f \n std = %f"%(mean,std))
 
-def plot_data(vec1,filename,lab1file):
+    return mean, std
+
+def plot_data(vec1,filename,lab1file,scale):
 #def plot_data(vec1,filename):
      m = len(vec1)
 
@@ -52,11 +65,14 @@ def plot_data(vec1,filename,lab1file):
      #ax2 = fig.add_axes([0.3,0.75,0.6,0.2])
      ax2 = fig.add_axes([0.05,0.5,0.9,0.4])
      print vec1
+
+     #scale = 0.5
+     mean1,std1 = mean_std(vec1)
      matplotlib.pyplot.plot(range(0,m),vec1,'k-') # draws a datshed line where dendogram is cut.
      #ax2.set_xticks([])
      #ax2.set_yticks([])
      ax2.set_xlim(-0.5, m-0.5)
-     #ax2.set_ylim(cmin,cmax)
+     ax2.set_ylim(mean1-(scale*std1),mean1+(scale*std1))
         
      ax2.set_xticks(range(0,m))
      ax2.set_xticklabels(xlabel)
@@ -84,16 +100,17 @@ def plot_data(vec1,filename,lab1file):
 
 
 def main():
-  if len(sys.argv) != 3: # if no input
+  if len(sys.argv) != 4: # if no input
   #if len(sys.argv) != 2: # if no input
-     print "syntax:  filename_prefix, label1_filename"
+     print "syntax:  filename_prefix, label1_filename, scale"
      #print "syntax:  filename_prefix"
      print "Error:  you have entered the wrong number of inputs:"
      print len(sys.argv)
 
   print "You have entered in 3 inputs:"
   file1name  = sys.argv[1] 
-  lab1               = sys.argv[2] 
+  lab1               = sys.argv[2]
+  scale              = float(sys.argv[3]) 
   #heatmap_threshold  = float(sys.argv[2])
   #vmin               = float(sys.argv[3])
   #vmax               = float(sys.argv[4])
@@ -103,7 +120,7 @@ def main():
   file1handel = open(file1name+'.txt','r')
   m = read_vec(file1handel)
   file1handel.close()
-  plot_data(m,file1name+'.png',lab1)
+  plot_data(m,file1name+'.png',lab1, scale)
   return
   #SimlesToFingerPrint("CCC") 
   #SimlesToFingerPrint("C[C@@H](C(=O)Nc1ccccc1)Sc2nnc(n2C)c3cccnc3") 
