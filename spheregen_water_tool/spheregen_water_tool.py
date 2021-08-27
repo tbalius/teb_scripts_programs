@@ -139,12 +139,13 @@ def run_energy_cal(waterspdb):
 radius_max = 1.5 
 #radius_max = 1.6 
 
-#radius_min = 1.3 
+radius_min = 1.3 
 #radius_min = 1.2 
-radius_min = 1.1 
+#radius_min = 1.1 
 #radius_min = 1.0 
 
-probe_radius = 1.2
+#probe_radius = 1.2
+probe_radius = 1.4
 
 os.system("rm -rf dir*")
 os.system("cp rec.pdb rec.pdb_ori")
