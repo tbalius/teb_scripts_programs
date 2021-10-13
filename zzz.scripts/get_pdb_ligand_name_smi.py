@@ -21,21 +21,24 @@ def get_lig_from_pdbcode(pdb):
     url = 'https://files.rcsb.org/header/%s.pdb'%pdb
     webfile = urllib.request.urlopen(url)
     flag = False
-    lignames = []
+    #lignames = []
+    lignames = {}
     for line in webfile:
     #     print(line)
          #if flag: # this line contains smi.
          #   smiles=str(line).strip().replace("'"," ").split()[1].replace('\\n','')
          #   break
-         if "HET " in str(line):
+         #print (str(line)[0:4])
+         if "b'HET " == str(line)[0:6]:
              print(line)
              print(str(line).split()[1])
-             lignames.append(str(line).split()[1])
+             #lignames.append(str(line).split()[1])
+             lignames[str(line).split()[1]]=0
              flag = True
 
     webfile.close()
     print(lignames)
-    return lignames
+    return lignames.keys()
 
 
 def get_smiles(ligresid):
