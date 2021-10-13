@@ -32,7 +32,8 @@ def main():
   
   writeMol2(model, output_prefix+"before_dockprep.mol2")
 
-  prep(model)
+  #prep(model)
+  prep(model,delSolvent=False)
 
   runCommand("write 0 "+output_prefix+".pdb")
   writeMol2(model, output_prefix+".mol2")
