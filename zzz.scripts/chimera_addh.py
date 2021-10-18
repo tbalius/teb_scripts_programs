@@ -20,7 +20,10 @@ def main():
 
   input_pdb     = sys.argv[1]
   output_prefix = sys.argv[2]
-  hflag         = sys.argv[3]
+  if (len(sys.argv) == 4):
+     hflag         = sys.argv[3]
+  else: 
+     hflag = "no"
 
   print "pdb input = " + input_pdb 
   print "output prefix = " + output_prefix

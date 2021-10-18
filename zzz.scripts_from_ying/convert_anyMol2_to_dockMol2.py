@@ -11,11 +11,17 @@ def anyMol2_to_dockMol2(infile, name):
     for i in range(len(in_lines)):
         oneline = in_lines[i]
         if oneline.startswith("@<TRIPOS>MOLECULE"):
+            out_lines.append("##########\n")
             natom = int( in_lines[i+2].split()[0] )
             nbond = int( in_lines[i+2].split()[1] )
             out_lines.append(oneline)
             out_lines.append('%17s      none\n' % name)
-            out_lines.append(in_lines[i+2])
+#   30    30     1     0     0
+            ele = in_lines[i+2].strip().split()
+            #out_lines.append(in_lines[i+2])
+            print (len(ele))
+            print (ele)
+            out_lines.append("%5s %5s %5s %5s %5s\n"%(ele[0],ele[1],ele[2],ele[3],ele[4]))
             out_lines.append('\n\n\n')
         elif oneline.startswith("@<TRIPOS>ATOM"):
             out_lines.append(oneline)
@@ -41,7 +47,7 @@ zincID   = sys.argv[3]
 out_lines = anyMol2_to_dockMol2(in_mol2, zincID)
 
 with open(out_mol2, "w") as fo:
-    fo.write("##########\n")
+    #fo.write("##########\n")
     for line in out_lines:
         fo.write(line)
 
