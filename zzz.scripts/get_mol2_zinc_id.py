@@ -18,12 +18,13 @@ def read_multi_mol2file(filename,molname,text1):
     for line in lines:
          linesplit = line.split() #split on white space
          if (len(linesplit) > 0):
-             #if ( molname in line and "  Name:" in line):
-             if ( molname in line ):
-                #print molname
-                print_flag =  True
-             elif ("  Name:" in line):
-                print_flag = False
+             if ( len(linesplit) > 2):
+               if ( (molname == linesplit[2]) and ("  Name:" in line) ):
+               #if ( (molname in line) and ("  Name:" in line) ):
+                  #print molname
+                  print_flag =  True
+               elif ("  Name:" in line):
+                  print_flag = False
              #if (line[0] == "#"):
              #   continue 
  
