@@ -9,14 +9,21 @@ import sys
 
 
 def main():
-   if len(sys.argv) != 2: 
+   if len(sys.argv) != 4: 
       print "Error. not the right number of arguments."
-      print "one input: fasta file name"
+      print "inputs: fasta file name, window size, window offset"
+      exit()
    
    
    filename = sys.argv[1]
+   window_size   = int(sys.argv[2])
+   window_offset = int(sys.argv[3])
 
-   print("filename = %s\n"%filename)
+   print("filename = %s\nwindow_size=%i\nwindow_offset=%i\n"%(filename,window_size,window_offset))
+
+   if (window_size < window_offset): 
+       print "window_size must be bigger than window_offset. "
+       exit()
 
    # make a new file name with out fasta at the end.   
    filename_prefix = ''
@@ -58,9 +65,10 @@ def main():
    #fh2.write(resabbstr+'\n')
    #fh2.close()
 
-   window_size = 1000
-   window_offset = 200
+   #window_size = 1000
+   #window_offset = 200
 
+   
    start = 0
    end = start + window_size   
 
@@ -68,6 +76,7 @@ def main():
    while end <= len(arr):  
       fastafilename = "%s.%03i.%04i-%04i.fasta"%(filename_prefix,count,start,end)
       fh3 = open(fastafilename,'w')
+      fh3.write('%s%s'%(name,'\n'))
       count2 = 0
       for i in range(start,end):
           if count2 == 60: 
