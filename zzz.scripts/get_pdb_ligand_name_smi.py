@@ -57,7 +57,9 @@ def get_smiles(ligresid):
     for line in webfile:
          #print(line)
          if flag: # this line contains smi.
-            smiles=str(line).strip().replace("'"," ").split()[1].replace('\\n','') 
+            print (line.strip())
+            #smiles=str(line).strip().replace("'"," ").split()[1].replace('\\n','') 
+            smiles=str(line).strip().replace("'"," ").split()[1].replace('\\n','').replace('\\\\','\\')
             break
          if "OPENEYE_ISO_SMILES" in str(line): 
              flag = True
