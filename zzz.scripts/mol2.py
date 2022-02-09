@@ -463,7 +463,7 @@ def write_mol2(molecule,filename):
 		#outmol2.write("%-3d %-5s %-5d RESIDUE    1   A     %-5s 1\n" % (resnum, 
 		outmol2.write("%-3d %-5s %-5d RESIDUE    1   A     %-5s 1\n" % (resid_dic[resnum], 
 		molecule.residue_list[resnum][0].resname, # residue name 
-		atom_dic[molecule.residue_list[resnum][0].num], molecule.residue_list[resnum][0].resname[0:3]))   # atom num of first atom in this residue
+		molecule.residue_list[resnum][0].num, molecule.residue_list[resnum][0].resname[0:3]))   # atom num of first atom in this residue
                 count = count + 1
 	outmol2.close()
     	return
@@ -513,10 +513,13 @@ def append_mol2(molecule,filename):
         outmol2.write("@<TRIPOS>SUBSTRUCTURE\n")
         count = 1
         for resnum in molecule.residue_list.keys():
+                #print (molecule.residue_list[resnum][0].resname[0:3])
+                #print (molecule.residue_list[resnum][0].num)
+                #print (atom_dic[molecule.residue_list[resnum][0].num])
                 #outmol2.write("%-3d %-5s %-5d RESIDUE    1   A     %-5s 1\n" % (resnum, 
                 outmol2.write("%-3d %-5s %-5d RESIDUE    1   A     %-5s 1\n" % (resid_dic[resnum],
                 molecule.residue_list[resnum][0].resname, # residue name 
-                atom_dic[molecule.residue_list[resnum][0].num], molecule.residue_list[resnum][0].resname[0:3]))   # atom num of first atom in this residue
+                molecule.residue_list[resnum][0].num, molecule.residue_list[resnum][0].resname[0:3]))   # atom num of first atom in this residue
                 count = count + 1
         outmol2.close()
         return

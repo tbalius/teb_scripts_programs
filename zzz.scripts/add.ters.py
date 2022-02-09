@@ -27,16 +27,24 @@ for line in lines:
    #print line
     if line[0:4] == 'ATOM':
       if line[13:16] == 'C  ' :
-        x = float(line[31:39])
-        y = float(line[39:46])
-        z = float(line[46:54])
+        #x = float(line[31:39])
+        #y = float(line[39:46])
+        #z = float(line[46:54])
+        x = float(line[31:38])
+        y = float(line[39:45])
+        z = float(line[46:53])
         print [x,y,z]
         dic_C[line[17:26]] = [x,y,z]
         resid.append(line[17:26])
       if line[13:16] == 'N  ' :
-        x = float(line[31:39])
-        y = float(line[39:46])
-        z = float(line[46:54])
+        #x = float(line[31:39])
+        #y = float(line[39:46])
+        #z = float(line[46:54])
+        print line[31:39]
+        print line[31:38]
+        x = float(line[31:38])
+        y = float(line[39:45])
+        z = float(line[46:53])
         print [x,y,z]
         dic_N[line[17:26]] = [x,y,z]
 

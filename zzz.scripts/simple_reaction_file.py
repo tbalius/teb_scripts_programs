@@ -68,6 +68,7 @@ def main():
    fh = open(inputsmi,'r')  # open up for reading,  file of reactants
    fho = open(outputsmi,'w') # open up for writting, file of products
    count = 1
+   dic_prod = {} # check to make sure you have not sent it already. 
    for line in fh: # read in a line, which contains a smiles
        splitline = line.split()
        smi2 = splitline[0]
@@ -77,6 +78,10 @@ def main():
        #print (len(plist))
        for p in plist:
            #print (p)
+           if p in dic_prod: 
+              print("%s is already present, reacting portion of %s is simular to that of %s."%(p,name,dic_prod[p]))
+              continue
+           dic_prod[p]=name # add to to dic to make sure you write it only once. 
            fho.write('%s %s\n'%(p, name+'_'+str(count)))
            count = count+1
 main()

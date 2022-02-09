@@ -56,7 +56,8 @@ def read_pdb(pdb_file):
             if (linesplit[0] == "ATOM" or linesplit[0] == "HETATM"):
                    chainid  = line[21]
                    resname  = line[17:20]
-                   resnum   = line[23:26]
+                   #resnum   = line[23:26]
+                   resnum   = line[22:26]
                    atomname = line[12:16]
                    atomnum  = line[9:12]
                    X        = float(line[30:38])
@@ -104,6 +105,15 @@ def output_pdb(pdb,filename):
         file1.write("ATOM  %5d %2s %3s %1s%4d%12.3f%8.3f%8.3f%6.2f%6.2f           %s\n" % (int(atom.atomnum), atom.atomname, atom.resname, atom.chainid, int(atom.resnum), atom.X, atom.Y, atom.Z, atom.occ, atom.bfact, atom.atomname[1:2]) )
 
     file1.close()
+
+#################################################################################################################
+#################################################################################################################
+# this function will add a value to every residue 
+# val should be an interger
+def renumber_residue(pdb_mol,val):
+    for i in range(len(pdb_mol)):
+        pdb_mol[i].resnum = str(int(pdb_mol[i].resnum) + int(val))
+
 
 #################################################################################################################
 #################################################################################################################
