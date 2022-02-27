@@ -30,7 +30,7 @@ for line in lines:
         #x = float(line[31:39])
         #y = float(line[39:46])
         #z = float(line[46:54])
-        x = float(line[31:38])
+        x = float(line[30:38])
         y = float(line[39:45])
         z = float(line[46:53])
         print [x,y,z]
@@ -40,9 +40,9 @@ for line in lines:
         #x = float(line[31:39])
         #y = float(line[39:46])
         #z = float(line[46:54])
-        print line[31:39]
-        print line[31:38]
-        x = float(line[31:38])
+        print line[30:39]
+        print line[30:38]
+        x = float(line[30:38])
         y = float(line[39:45])
         z = float(line[46:53])
         print [x,y,z]

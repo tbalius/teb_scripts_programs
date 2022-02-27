@@ -198,4 +198,19 @@ def write_sph(filename,spheres):
                           #spheres[i].radius,i+1,0,0) )
                           #spheres[i].radius,spheres[i].atomnum,0,0) )
                           spheres[i].radius,spheres[i].atomnum,0,spheres[i].sphere_color) )
-
+##
+## With header for colors. 
+## 
+def write_sph_header(filename,spheres,header):
+    outsph = open(filename,'w')
+    outsph.write("DOCK spheres generated from read_write_sph.py\n")
+    outsph.write(header)
+    outsph.write("cluster     1   number of spheres in cluster %3d\n" % len(spheres))
+    for i in range(len(spheres)):
+        outsph.write("%5d%10.5f%10.5f%10.5f%8.3f%5d%2d%3d\n" %
+                     (i+1,round(spheres[i].X,3),
+                          round(spheres[i].Y,3),
+                          round(spheres[i].Z,3),
+                          #spheres[i].radius,i+1,0,0) )
+                          #spheres[i].radius,spheres[i].atomnum,0,0) )
+                          spheres[i].radius,spheres[i].atomnum,0,spheres[i].sphere_color) )
