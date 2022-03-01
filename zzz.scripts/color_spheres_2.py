@@ -35,10 +35,13 @@ def color_spheres(spheres,pdb_atoms):
     dt = 3.0
     spheres_mod = []
     for sph in spheres: 
+        print("sphere index = %4d"%sph.index)
+        #print("sphere color start = %3d"%sph.sphere_color)
         for atom in pdb_atoms: 
             breakflag = False; # 
-            d2 = (atom.X - sph.X)**2 + (atom.Y - sph.Y)**2 + (atom.Z - sph.Z)**2 - sph.radius**2 # here we calculate the distance to the surface of the sphere.
-            if d2 < float(dt)**2.0:
+            #d2 = (atom.X - sph.X)**2 + (atom.Y - sph.Y)**2 + (atom.Z - sph.Z)**2 - sph.radius**2 # here we calculate the distance to the surface of the sphere.
+            d2 = (atom.X - sph.X)**2 + (atom.Y - sph.Y)**2 + (atom.Z - sph.Z)**2  
+            if d2 <= float(dt)**2.0:
                 #print "***%s*****%s*****%6.3f****"%(atom.resname, atom.atomname, d2)
                 if ((atom.resname == "ASP" and atom.atomname == ' OD1') or 
                     (atom.resname == "ASP" and atom.atomname == ' OD2') or
@@ -46,46 +49,46 @@ def color_spheres(spheres,pdb_atoms):
                     (atom.resname == "GLU" and atom.atomname == ' OE2') ): 
                     #if (atom.atomname ==  # O
                     print atom.resname, atom.atomname, d2
-                    sph.sphere_color = 2 # acceptor
-                    breakflag = True; # conitue to next sphere
+                    if (sph.sphere_color == 0 or sph.sphere_color == 1):
+                        sph.sphere_color = 2 # acceptor
+                    elif (sph.sphere_color == 3):
+                       sph.sphere_color = 4 # polar
+                    #breakflag = True; # conitue to next sphere
+                if ( atom.atomname == ' N  ' or 
+                    (atom.resname == "SER" and atom.atomname == ' OG ') or 
+                    (atom.resname == "THR" and atom.atomname == ' OG1') or 
+                    (atom.resname == "TYR" and atom.atomname == ' OH ') or 
+                    (atom.resname == "ASN" and atom.atomname == ' ND2') or 
+                    (atom.resname == "GLN" and atom.atomname == ' NE2')): 
+                    print "rec atom donor", atom.resname, atom.atomname, d2
+                    if (sph.sphere_color == 0 or sph.sphere_color == 1):
+                       sph.sphere_color = 2 # acceptor
+                    elif (sph.sphere_color == 3):
+                       sph.sphere_color = 4 # polar
                 if ((atom.resname == "ARG" and atom.atomname == ' NE ') or 
                     (atom.resname == "ARG" and atom.atomname == ' NH1') or
                     (atom.resname == "ARG" and atom.atomname == ' NH2') or
                     (atom.resname == "LYS" and atom.atomname == ' NZ ')): 
                     #if (atom.atomname ==  # N
-                    print atom.resname, atom.atomname, d2
-                    if (sph.sphere_color == 0):
+                    #print atom.resname, atom.atomname, d2
+                    print "rec atom donor", atom.resname, atom.atomname, d2
+                    if (sph.sphere_color == 0 or sph.sphere_color == 1):
                        sph.sphere_color = 3 # donor
                     elif (sph.sphere_color == 2):
                        sph.sphere_color = 4 # polar
-                    breakflag = True; # conitue to next sphere
-                if ( atom.atomname == ' HN ' or 
-                    (atom.resname == "SER" and atom.atomname == ' HG ') or 
-                    (atom.resname == "THR" and atom.atomname == ' HG1') or 
-                    (atom.resname == "TYR" and atom.atomname == ' HH ') or 
-                    (atom.resname == "ASN" and atom.atomname == 'HD21') or 
-                    (atom.resname == "ASN" and atom.atomname == 'HD22') or 
-                    (atom.resname == "GLN" and atom.atomname == 'HE21') or 
-                    (atom.resname == "GLN" and atom.atomname == 'HE22')):
-                    print atom.resname, atom.atomname, d2
-                    if (sph.sphere_color == 0):
-                       sph.sphere_color = 2 # acceptor
-                    breakflag = True; # conitue to next sphere
                 if ( atom.atomname == ' O  ' or  
                     (atom.resname == "ASN" and atom.atomname == ' OD1') or
                     (atom.resname == "GLN" and atom.atomname == ' OE1')):
-                    print atom.resname, atom.atomname, d2
-                    if (sph.sphere_color == 0):
+                    print "rec atom acceptor", atom.resname, atom.atomname, d2
+                    if (sph.sphere_color == 0 or sph.sphere_color == 1):
                        sph.sphere_color = 3 # donor
-                    elif (sph.sphere_color == 3):
+                    elif (sph.sphere_color == 2):
                        sph.sphere_color = 4 # polar; acceptor and donor
-                    breakflag = True; # conitue to next sphere
+                if ( atom.atomname[1:2] == 'C'):
+                    print "Hydrophobic", atom.resname, atom.atomname, d2
                 if ( atom.atomname[1:2] == 'C' and sph.sphere_color == 0 ):
-                     sph.sphere_color = 1
-                if (breakflag):
-                    break; # conitue to next sphere
-        #print ("I AM HERE") 
-        #print (sph.sphere_color) 
+                    sph.sphere_color = 1
+        #print("sphere color end = %3d"%sph.sphere_color)
         spheres_mod.append(sph)
     return spheres_mod
     
