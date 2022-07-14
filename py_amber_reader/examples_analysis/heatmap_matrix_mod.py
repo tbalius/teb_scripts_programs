@@ -74,7 +74,16 @@ def mat_larger_mag(mat,lab1,lab2,thrsmax,thrsmin):
              if mat[i][j]>thrsmax or mat[i][j]<thrsmin : 
                 #print "%s %s %6.2f\n"%(lab1[i],lab2[j], mat[i][j])
                 #print lab1[i],lab2[j], mat[i][j]
-                print "%s %s %6.2f"%(lab1[i],lab2[j], mat[i][j])
+                if (i == j ):
+                    lpair = "self"
+                elif (i == j+1 ):
+                    lpair = "near"
+                elif (i+1 == j ):
+                    lpair = "near"
+                else: 
+                    lpair = "non_near"                
+
+                print "%s %s %6.2f %s"%(lab1[i],lab2[j], mat[i][j], lpair)
 
 
 #def heatmap(Mat,label,filename,threshold,heatmap_threshold):
@@ -90,9 +99,15 @@ def heatmap(Mat0,filename,heatmap_threshold,cmin,cmax,lab1file,lab2file):
      flabel2 = open(lab2file,'r')
      xlabel = []
      for line in flabel2:
+          temp = len(line.split())
+          if temp == 0:
+              continue
           xlabel.append(line.split()[0])
      ylabel = []
      for line in flabel1:
+          temp = len(line.split())
+          if temp == 0:
+              continue
           ylabel.append(line.split()[0])
      flabel1.close()
      flabel2.close()

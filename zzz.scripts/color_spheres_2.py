@@ -32,7 +32,10 @@ import sys
 
 def color_spheres(spheres,pdb_atoms):
 
-    dt = 3.0
+    #dt = 2.5
+    #dt = 3.0
+    dt = 3.5
+    #dt = 4.0
     spheres_mod = []
     for sph in spheres: 
         print("sphere index = %4d"%sph.index)
@@ -42,7 +45,7 @@ def color_spheres(spheres,pdb_atoms):
             #d2 = (atom.X - sph.X)**2 + (atom.Y - sph.Y)**2 + (atom.Z - sph.Z)**2 - sph.radius**2 # here we calculate the distance to the surface of the sphere.
             d2 = (atom.X - sph.X)**2 + (atom.Y - sph.Y)**2 + (atom.Z - sph.Z)**2  
             if d2 <= float(dt)**2.0:
-                #print "***%s*****%s*****%6.3f****"%(atom.resname, atom.atomname, d2)
+                print "***%s*****%s*****%6.3f****"%(atom.resname, atom.atomname, d2)
                 if ((atom.resname == "ASP" and atom.atomname == ' OD1') or 
                     (atom.resname == "ASP" and atom.atomname == ' OD2') or
                     (atom.resname == "GLU" and atom.atomname == ' OE1') or 
@@ -84,6 +87,7 @@ def color_spheres(spheres,pdb_atoms):
                        sph.sphere_color = 3 # donor
                     elif (sph.sphere_color == 2):
                        sph.sphere_color = 4 # polar; acceptor and donor
+                print atom.atomname + " "+ atom.atomname[1:2] 
                 if ( atom.atomname[1:2] == 'C'):
                     print "Hydrophobic", atom.resname, atom.atomname, d2
                 if ( atom.atomname[1:2] == 'C' and sph.sphere_color == 0 ):
