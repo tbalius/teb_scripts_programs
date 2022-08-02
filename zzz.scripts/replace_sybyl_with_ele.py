@@ -34,7 +34,7 @@ def read_mol2(filename,text1):
                 atom_flag = False
              if (atom_flag):
                 atom_type = line[47:51] 
-                print atom_type
+                print (atom_type)
                 ele = sybyl_to_ele(atom_type) 
                 line_mod = '%s%-5s%s\n'%(line[0:47],ele,line[52:-1])
                 #text1 = text1+line
@@ -51,8 +51,8 @@ def read_mol2(filename,text1):
 #################################################################################################################
 def main():
     if (len(sys.argv) != 3): # if no input
-        print " (1) mol2 file name," 
-        print " (3) output mol2 ";
+        print (" (1) mol2 file name,") 
+        print (" (3) output mol2 ")
         return
 
     filename    = sys.argv[1]
