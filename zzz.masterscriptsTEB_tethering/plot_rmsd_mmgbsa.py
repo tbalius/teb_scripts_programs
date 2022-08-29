@@ -93,8 +93,15 @@ def mk_matrix(array1,array2,m):
         if (i == 0) or (j == 0): 
            print i,j 
         matrix[i,j] = matrix[i,j] + 1
-
-    return matrix
+    
+    l1 = []
+    l1.append("%6.2f"%a1min)
+    l1.append("%6.2f"%a1max)
+    l2 = []
+    l2.append("%6.2f"%a2min)
+    l2.append("%6.2f"%a2max)
+    #return matrix, [a1min,a1max], [a2min,a2max]
+    return matrix, l1, l2
 
 ZERRO = 0.0
 
@@ -162,7 +169,8 @@ im = axis.plot(X,Y,'.') #,[0,100],[0,100],'--')
 ## new subplot
 axis = fig.add_axes([0.1,0.5,0.3,0.3])
 
-matrix = mk_matrix(X,Y,50)
+msize = 50
+matrix,lab1,lab2 = mk_matrix(X,Y,msize)
 
 
 cdict = {'red': [(0.0,      1.0, 1.0),
@@ -186,6 +194,13 @@ cdict = {'red': [(0.0,      1.0, 1.0),
 my_cmap = matplotlib.colors.LinearSegmentedColormap('my_colormap',cdict,150)
 
 im = axis.imshow(matrix, aspect='auto', origin='lower',interpolation='nearest', cmap=my_cmap)
+
+val_yticks = axis.get_yticks()
+print val_yticks
+axis.set_xticks([0,msize-1])
+axis.set_yticks([0,msize-1])
+axis.set_xticklabels(lab1)
+axis.set_yticklabels(lab2)
 
 #fig.show()
 fig.savefig('fig.png',dpi=600)

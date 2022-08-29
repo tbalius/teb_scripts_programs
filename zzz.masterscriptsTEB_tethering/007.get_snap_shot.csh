@@ -1,4 +1,16 @@
 
+set mountdir_ori = `pwd`
+set mut = E37C 
+#set lig = DL2040 
+set lig = DL2078 
+#set lig = DL1314_Protomer1 
+
+foreach pose (   \
+               1 \
+               2 \
+               3 \
+)
+
 
 
 # grep "3\." analysis/006.rmsd/K5A_0/lig2.dat | sort -k2
@@ -15,18 +27,31 @@
  #set name = 5VBE_min_old
  set name = "."
  #set name = "_min"
-  set seed = "0"
+ #set seed = "0"
+ #set seed = "5"
+ #set seed = "50"
+ #set seed = "mod_0"
  #set seed = "5"
  #set seed = "50"
  #set seed = "no_restaint_0"
+foreach seed ( \
+  "0"  \
+  "5"  \
+  "50" \
+)
+
+ set mountdir = ${mountdir_ori}/${mut}/${lig}/pose${pose}/
+ cd $mountdir
+ pwd
+ echo "${name}/006.rmsd_${seed}/lig1.dat"
 
  wc -l ${name}/006.rmsd_${seed}/lig1.dat 
  set lnum = `wc -l ${name}/006.rmsd_${seed}/lig1.dat | awk '{print $1}'` 
  echo "$lnum - 10000" 
  echo "$lnum - 10000"|bc
  set offset = `echo "$lnum - 10000"|bc`
-  awk 'BEGIN{frist=1}{if(frist==1){frist=0}else if($2>3.0 && $1 > '$offset'){print $0}}' ${name}/006.rmsd_${seed}/lig1.dat | sort -n -k2 | tail -5
- set list = ` awk 'BEGIN{frist=1}{if(frist==1){frist=0}else if($2>3.0 && $1 > '$offset'){print $0}}' ${name}/006.rmsd_${seed}/lig1.dat | sort -n -k2 | tail -5 | awk '{print $1-'$offset'}' | xargs `
+  awk 'BEGIN{frist=1}{if(frist==1){frist=0}else if($2>2.0 && $1 > '$offset'){print $0}}' ${name}/006.rmsd_${seed}/lig1.dat | sort -n -k2 | tail -5
+ set list = ` awk 'BEGIN{frist=1}{if(frist==1){frist=0}else if($2>2.0 && $1 > '$offset'){print $0}}' ${name}/006.rmsd_${seed}/lig1.dat | sort -n -k2 | tail -5 | awk '{print $1-'$offset'}' | xargs `
  awk 'BEGIN{frist=1}{if(frist==1){frist=0}else if($2<10.0 && $1 > '$offset'){print $0}}' ${name}/006.rmsd_${seed}/lig1.dat | sort -nr -k2 | tail -5  
  #awk 'BEGIN{frist=1}{if(frist==1){frist=0}else if($2<4.0 && $1 > '$offset'){print $0}}' ${name}/006.rmsd_${seed}/lig1.dat | sort -n -k2 | tail -5  
  set list2 = ` awk 'BEGIN{frist=1}{if(frist==1){frist=0}else if($2<10.0 && $1 > '$offset'){print $0}}' ${name}/006.rmsd_${seed}/lig1.dat | sort -nr -k2 | tail -5 | awk '{print $1-'$offset'}' | xargs `
@@ -34,7 +59,7 @@
  echo $list2
 
 # exit
-set mountdir = `pwd`
+#set mountdir = `pwd`
 
    #set seed = "0"
 
@@ -76,3 +101,5 @@ $AMBERHOME/bin/cpptraj -i make.snapshot.in > ! make.snapshot.log
 $AMBERHOME/bin/ambpdb -p ../003md_tleap/com.leap.prm7 < snapshot.${num}.rst > snapshot.${num}.pdb 
 
 end #num
+end #seeds
+end # poses

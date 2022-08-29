@@ -1,15 +1,38 @@
 
 
 
-set pwd = `pwd`
+#set pwd = `pwd`
+set mountdir_ori = `pwd`
+set mut = E37C
+#set lig = DL2040
+set lig = DL2078
+#set lig = DL1314_Protomer1 
+
+foreach pose (   \
+#               1 \
+               2 \
+               3 \
+)
+set mountdir = ${mountdir_ori}/${mut}/${lig}/pose${pose}/
+cd $mountdir
+set pwd = $mountdir
 
 # set seed = "0"
 # set seed = "5"
-  set seed = "50"
+# set seed = "50"
 # set seed = "500"
 # set seed = "no_restaint_0"
 # set seed = "no_restaint_5"
 # set seed = "no_restaint_50"
+
+foreach seed ( \
+ "0"      \
+ "5"      \
+ "50"     \
+#"mod_0"  \
+#"mod_5"  \
+#"mod_50" \
+)
 
 
   #cd  analysis/008_mmgbsa_momomer/
@@ -28,5 +51,7 @@ set pwd = `pwd`
 
   paste rmsd_lig.txt mmgbsa.txt |awk '{print $2, $3}' > rmsd_vs_mmgbsa.txt
 
-  python ${pwd}/plot_rmsd_mmgbsa.py rmsd_vs_mmgbsa.txt
+  python ${mountdir_ori}/plot_rmsd_mmgbsa.py rmsd_vs_mmgbsa.txt
 
+end # seed
+end # pose

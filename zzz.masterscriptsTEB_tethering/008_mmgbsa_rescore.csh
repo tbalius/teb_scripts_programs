@@ -2,18 +2,42 @@
 
 set amberexe = "$AMBERHOME/bin/sander"
 
-set pwd = `pwd`
+#set pwd = `pwd`
+set mountdir_ori = `pwd`
+set mut = E37C
+#set lig = DL2040
+set lig = DL2078 
+#set lig = DL1314_Protomer1 
 
- set seed = "0"
+foreach pose (   \
+#               1 \
+               2 \
+               3 \
+)
+set mountdir = ${mountdir_ori}/${mut}/${lig}/pose${pose}/
+cd $mountdir
+set pwd = $mountdir
+
+#set seed = "0"
 #set seed = "5"
 #set seed = "50"
 #set seed = "500"
 #set seed = "no_restaint_0"
 
+foreach seed ( \
+ "0"      \
+ "5"      \
+ "50"     \
+#"mod_0"  \
+#"mod_5"  \
+#"mod_50" \
+)
 
 #set ligori = ${lig}
 #set lig = ${lig}_${seed}
 
+#set com_parm = ${pwd}/003md_tleap/com.nowat.leap.prm7
+#set com_crd  = ${pwd}/003md_tleap/com.nowat.leap.rst7
 set com_parm = ${pwd}/003md_tleap/com.leap.prm7
 set com_crd  = ${pwd}/003md_tleap/com.leap.rst7
 
@@ -103,8 +127,11 @@ EOF4
 
 #exit
 sbatch mmgbsa_cal_com.csh 
-sbatch mmgbsa_cal_rec.csh 
+sbatch mmgbsa_cal_rec.csh
+sleep 5 
 sbatch mmgbsa_cal_lig.csh 
 
 #end # subtraj
 #end # lig in complex
+end #seed 
+end # poses

@@ -4,12 +4,39 @@
 ## TEB / MF comments -- March 2017
 
 
-set mountdir = `pwd`
+#set mountdir = `pwd`
+set mountdir_ori = `pwd`
+set mut = E37C 
+#set lig = DL2040 
+set lig = DL2078 
+#set lig = DL1314_Protomer1 
+
+foreach pose (   \
+#               1 \
+               2 \
+               3 \
+)
+set mountdir = ${mountdir_ori}/${mut}/${lig}/pose${pose}/
+cd $mountdir
+
 
    #set seed = "0"
    #set seed = "5"
-    set seed = "50"
+   #set seed = "50"
+   #set seed = "mod_0"
+   #set seed = "mod_5"
+   #set seed = "mod_50"
    #set seed = "no_restaint_0"
+
+foreach seed ( \
+ "0"      \
+ "5"      \
+ "50"     \
+#"mod_0"  \
+#"mod_5"  \
+#"mod_50" \
+)
+
 
  set pdb = ""
  #set pdb = "_min"
@@ -52,31 +79,46 @@ trajin $jobId/17md.mdcrd 1 10000
 trajin $jobId/18md.mdcrd 1 10000
 reference $jobId/com.watbox.leap.rst7 [startframe]
 strip :WAT
-autoimage :1-183
-rms backbone :1-180@CA,N,C,O ref [startframe] out bb_fit.dat
+autoimage :1-172
+rms backbone :1-169@CA,N,C,O ref [startframe] out bb_fit.dat
 trajout com.nowat.mdcrd nobox novelocity notemperature notime noreplicadim
 EOF
 
-$AMBERHOME/bin/cpptraj -i make.com.nowat.in > ! make.com.nowat.log 
 
 # now write out the receptor as dimer
+#parm ../003md_tleap/com.leap.prm7
+#parm ../003md_tleap/com.nowat.leap.prm7
 cat << EOF >! make.rec.in
 parm ../003md_tleap/com.leap.prm7
 trajin ./com.nowat.mdcrd 1 1000000
-strip :181
+strip :170
 trajout rec.mdcrd nobox novelocity notemperature notime noreplicadim
 go
 EOF
-$AMBERHOME/bin/cpptraj -i make.rec.in > ! make.rec.log &
 
 # now write out the receptor as dimer
+#parm ../003md_tleap/com.leap.prm7
+#parm ../003md_tleap/com.nowat.leap.prm7
 cat << EOF >! make.lig.in
 parm ../003md_tleap/com.leap.prm7
 trajin ./com.nowat.mdcrd 1 1000000
-strip :1-180,182-183
+strip :1-169,171-172
 trajout lig.mdcrd nobox novelocity notemperature notime noreplicadim
 go
 EOF
-$AMBERHOME/bin/cpptraj -i make.lig.in > ! make.lig.log &
+
+cat << EOF > qsub.csh 
+#!/bin/csh
+
+cd $workdir
+$AMBERHOME/bin/cpptraj -i make.com.nowat.in > ! make.com.nowat.log 
+$AMBERHOME/bin/cpptraj -i make.rec.in > ! make.rec.log 
+$AMBERHOME/bin/cpptraj -i make.lig.in > ! make.lig.log 
+
+EOF
+
+sbatch qsub.csh
 
 #end # lig <- this is actually the mutant
+end # seed 
+end # poses

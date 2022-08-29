@@ -112,7 +112,7 @@ def main():
        axis = fig.add_axes(subpanel[i])
        #lim_min = min(math.floor(Ymin),math.floor(Xmin))
        # lim_max = max(math.ceil(Ymax), math.ceil(Xmax))
-       im = axis.plot(time,desc,'k-o') #,[0,100],[0,100],'--')
+       im = axis.plot(time,desc,'k-') #,[0,100],[0,100],'--')
        axis.set_xlabel("time (ps)")
        axis.set_ylabel(header[i])
        #axis.set_title('file='+xyfilename)
@@ -189,7 +189,7 @@ def main():
     for i in range(len(data[1])):
          el.append(data[1][i]+data[2][i])
     time = range(1,len(el)+1)
-    im = axis.plot(time,el,'k-o') #,[0,100],[0,100],'--')
+    im = axis.plot(time,el,'k-') #,[0,100],[0,100],'--')
     axis.set_xlabel("time (ns)")
     axis.set_ylabel("electrostatics(coul+gb)")
     fig.savefig(filenamepng+".es.gb.png",dpi=600) 

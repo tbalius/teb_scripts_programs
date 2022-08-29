@@ -6,6 +6,21 @@
 
 #set pdb = "5VBE"
 #cd ${pdb}/004.min  
+set mountdir_ori = `pwd`
+set mut = E37C
+#set lig = DL2040
+#set lig = DL2078 
+set lig = DL1314_Protomer1 
+
+foreach pose (   \
+               1 \
+               2 \
+               3 \
+)
+set pwd = ${mountdir_ori}/${mut}/${lig}/pose${pose}/
+cd $pwd
+
 cd 004.min  
    $AMBERHOME/bin/ambpdb -p com.leap.prm7 -c 01mi.rst7 > 01mi.pdb
 #   $AMBERHOME/bin/ambpdb -p lig.leap.prm7 < 01mi.lig.rst7 > 01mi.lig.pdb
+end # pose

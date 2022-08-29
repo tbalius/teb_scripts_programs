@@ -2,8 +2,21 @@
 
 #set pdb = "5VBE"
 
-set workdir = `pwd`
+set pwd = `pwd`
+#set workdir = `pwd`
 #set filedir = "$workdir/$pdb/prep"
+
+  set mut = E37C
+  #set lig = DL2040
+  #set lig = DL2078 
+  set lig = DL1314_Protomer1 
+  foreach pose ( 1 2 3 )
+  #foreach pose ( 2 3 )
+
+  #set workdir = $pwd/${mut}/${lig}/pose${pose}/0001.pdb_files
+  set workdir = $pwd/${mut}/${lig}/pose${pose}
+  cd $workdir
+
 set filedir = "$workdir/0001.pdb_files"
 #cd $workdir/$pdb/
 
@@ -16,7 +29,11 @@ rm 002_cof_prep; mkdir 002_cof_prep; cd 002_cof_prep
 #cp $workdir/xtal-lig.pdb lig.pdb
 #cp $filedir/lig_aduct_mod.pdb lig.pdb
 #grep GDP $filedir/cof_man.pdb >> lig.pdb
-grep GCP $filedir/cof.pdb | grep -v "H2G" >> lig.pdb
+ grep GCP $filedir/cof.pdb | grep -v "H2G" >> lig.pdb
+#grep GNP $filedir/cof.pdb | grep  "H2G" 
+#grep GNP $filedir/cof.pdb | grep -v "H2G" >> lig.pdb
+#grep GCP $filedir/cof.pdb >> lig.pdb
+#grep GNP $filedir/cof.pdb  >> lig.pdb
 
 #grep GNP $filedir/cof.pdb >> lig.pdb
 #sed -i 's/<0> /LIG/g' lig1.mol2
@@ -41,3 +58,5 @@ $AMBERHOME/bin/parmchk2 -i lig.ante.charge.prep -f  prepi -o lig.ante.charge.frc
 # replace force constant. 
 sed -e 's/cd-hn-nh-hn         1.1/cd-hn-nh-hn        10.5/g' lig.ante.charge.frcmod > lig.ante.charge_man_mod.frcmod
 
+#exit 
+end

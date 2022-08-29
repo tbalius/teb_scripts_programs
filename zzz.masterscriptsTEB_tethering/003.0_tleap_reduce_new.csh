@@ -14,7 +14,19 @@ setenv DOCKBASE "/home/baliuste/zzz.github/DOCK"
 #setenv LD_LIBRARY_PATH "/usr/local/cuda-6.0/lib64/:$LD_LIBRARY_PATH"
 
 #set pdb = "5VBE"
-set mountdir = `pwd`
+set mountdir_ori = `pwd`
+
+  set mut = E37C 
+  #set lig = DL2040 
+  #set lig = DL2078 
+  set lig = DL1314_Protomer1 
+  foreach pose (   \
+                 1 \
+                 2 \
+                 3 \
+   )
+
+set mountdir = ${mountdir_ori}/${mut}/${lig}/pose${pose}/
 set filedir = $mountdir/0001.pdb_files  ## modify this line!
 set parmdir = $mountdir/001_files  ## modify this line!
 #set prepdir = $mountdir/002_gtp_prep  ## modify this line!
@@ -23,10 +35,15 @@ set workdir = $mountdir/003md_tleap
 #set workdir = $mountdir/003md_tleap_new
 set scriptdir = /home/baliuste/zzz.github/teb_scripts_programs/zzz.scripts 
 
+# copy over disulfide parameters. 
+cp -r ${mountdir_ori}/../D153C/DL00329/pose1/001_files/ $mountdir
 
 #set resnum = " 37" 
+set resnum = " 38" 
 #set resnum = "153"
-set resnum = "165"
+#set resnum = "165"
+#set resnum = " 65"
+#set resnum = " 59"
 
 # check if workdir exists
 if ( -s $workdir ) then
@@ -49,11 +66,23 @@ cd ${workdir}
 #cat $mountdir/rosetta_build_loop/rec_loop_add_loop_0001_man.pdb | grep " MG " > ion.pdb 
 
 #cat $mountdir/5VBE/lig.2.pdb | grep "HETATM" | sed -e 's/HETATM/ATOM  /g' -e 's/92V/LIG/g' | grep -v '^.............................................................................H'   > lig.pdb
-cat $filedir/rec.pdb | grep -v '^.............................................................................H' | grep -v " MG " > rec.pdb
+#cat $filedir/rec.pdb | grep -v '^.............................................................................H' | grep -v " MG " > rec.pdb
+#cat $filedir/rec.pdb | sed -e "s/CD  ILE/CD1 ILE/g" -e "s/OT1/O  /g" -e "s/OT2/OXT/g"| grep -v '^.............................................................................H' | grep -v " MG " > rec.pdb
 
+cp $filedir/rec.pdb .
 cat $filedir/ion.pdb | grep " MG " > ion.pdb 
 
 cat $filedir/lig.pdb | grep "HETATM" | sed -e 's/HETATM/ATOM  /g' -e 's/UNK/LIG/g' | grep -v '^.............................................................................H'   > lig.pdb
+#cp $filedir/lig.pdb .
+#
+#sed -i 's/UNK/LIG/g' lig.pdb
+
+#cat $filedir/lig.pdb | sed -e "s/CL1/Cl1/g" -e "s/CL2/Cl2/g" | grep "HETATM" | sed -e 's/HETATM/ATOM  /g' -e 's/UNK/LIG/g' | grep -v '^.............................................................................H'   > lig.pdb
+
+#cp ../wat.pdb .
+#cp ../mg2_wat.pdb .
+#cp ../mg2.pdb .
+#cp ../wat2.pdb .
 #python $scriptdir/add.ters.py rec.ori.pdb rec.pdb
 #echo "TER" >> rec.pdb
 #cat $mountdir/5VBE/prep/rec.pdb | grep " MG " >> rec.pdb 
@@ -101,6 +130,8 @@ python $scriptdir/replace_his_with_hie_hid_hip.py rec.nowat.reduce_clean.pdb rec
 python $scriptdir/replace_cys_to_cyx.py rec.nowat.1his.pdb rec.nowat.2cys.pdb
 python $scriptdir/add.ters.py rec.nowat.2cys.pdb rec.nowat.3ter.pdb
 
+#cp rec.nowat.3ter.pdb rec.nowat.final.pdb
+#
 #sed -i "s/ATOM   5004 MG /TER\nATOM   5004 MG /g" rec.nowat.3ter.pdb 
 
 # add TER to file rec.nowat.H_mod2.pdb before HEM
@@ -117,10 +148,14 @@ python $scriptdir/which_cys_to_lig.py rec.nowat.3ter.pdb lig.pdb rec.lig.ssbond
 
 # add this function to script: 
 #cat rec.nowat.3ter.pdb | sed -e 's/CYS   '${resnum}'/CYX   '${resnum}'/g' | grep -v "HG  CYX   ${resnum}" > rec.nowat.final.pdb
-cat rec.nowat.3ter.pdb | sed -e  "s/CYS   ${resnum}/CYX   ${resnum}/g" |     grep -v "HG  CYX   ${resnum}" > rec.nowat.final.pdb
+#cat rec.nowat.3ter.pdb | sed -e  "s/CYS   ${resnum}/CYX   ${resnum}/g" |     grep -v "HG  CYX   ${resnum}" > rec.nowat.final.pdb
 
+# add this function to script:
+ cat rec.nowat.3ter.pdb | sed -e "s/CYS   ${resnum}/CYX   ${resnum}/g" | grep -v "HG  CYX   ${resnum}" > rec.nowat.final.pdb
+#
 
 # produces tleap input file in 3 steps, first script based instruction file (loading FF and rec file), then pipes disulphide info into middle and final instructions (write just rec, solvated in TIP3P water box of 10A about rec boundaries, write rec in water-box parameters and coordinates) for complete tleap input file
+#loadamberparams ${parmdir}/disulfide.frcmod
 cat << EOF >! tleap.rec.in 
 
 set default PBradii mbondi2
@@ -145,8 +180,9 @@ loadamberprep ${mountdir}/002_cof_prep/lig.ante.charge.prep
 
 REC = loadpdb rec.nowat.final.pdb
 LIG = loadpdb ./lig.pdb
-ION = loadpdb ion.pdb 
+#LIG = loadpdb ${mountdir}/002_lig_prep/lig.ante.pdb
 COF = loadpdb ${mountdir}/002_cof_prep/lig.ante.pdb
+ION = loadpdb ion.pdb 
 EOF
 
 if (-e rec.nowat.2cys.pdb.for.leap ) then
@@ -154,8 +190,8 @@ if (-e rec.nowat.2cys.pdb.for.leap ) then
 endif
 
 cat << EOF >> tleap.rec.in
-COM = combine {REC LIG ION COF} 
-CNL = combine {REC ION COF} 
+COM = combine {REC LIG COF ION} 
+RE2 = combine {REC COF ION} 
 
 
 EOF
@@ -165,7 +201,7 @@ cat rec.lig.ssbond.for.leap >> tleap.rec.in
 cat << EOF >> tleap.rec.in
 
 saveamberparm COM com.leap.prm7 com.leap.rst7
-saveamberparm CNL rec.leap.prm7 rec.leap.rst7
+saveamberparm RE2 rec.leap.prm7 rec.leap.rst7
 saveamberparm LIG lig.leap.prm7 lig.leap.rst7
 solvateBox COM TIP3PBOX 10.0
 saveamberparm COM com.watbox.leap.prm7 com.watbox.leap.rst7
@@ -185,4 +221,4 @@ echo "Look at com.leap.pdb in pymol. May have to delete last column in pdb file 
 
 # inspect tleap.rec.out and the leap.log file
 # visually inspect (VMD) rec.10wat.leap.prm7, rec.10wat.leap.rst7 and rec.watbox.leap.prm7, rec.watbox.leap.rst7
-
+end # poses

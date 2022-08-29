@@ -10,6 +10,20 @@
 #set pdb = "5VBE"
 #mkdir ${pdb}/004.min
 #cd ${pdb}/004.min
+set mountdir_ori = `pwd`
+set mut = E37C 
+#set lig = DL2040 
+#set lig = DL2078 
+set lig = DL1314_Protomer1 
+
+foreach pose (   \
+               1 \
+               2 \
+               3 \
+)
+set pwd = ${mountdir_ori}/${mut}/${lig}/pose${pose}/
+cd $pwd
+
 mkdir 004.min
 cd 004.min
 
@@ -37,26 +51,28 @@ EOF1
 set pwd = `pwd`
 #cd $pwd
 
-echo "running: sinfo -p gpu"
+#echo "running: sinfo -p gpu"
 
-sinfo -p gpu
+#sinfo -p gpu
 
-echo cn072
+#echo cn072
 
 #SBATCH --nodelist=cn049
 #SBATCH --nodelist=cn050
 #SBATCH --nodelist=cn051
+#SBATCH --nodelist=cn052
 #SBATCH --nodelist=cn072
 #SBATCH --nodelist=cn073
 #SBATCH --nodelist=cn076
+#SBATCH --nodelist=cn051
 cat << EOF > ! qsub.sander.csh
 #!/bin/tcsh
 #SBATCH -t 48:00:00
 #SBATCH -p gpu
-#SBATCH --nodelist=cn050
+#SBATCH --gres=gpu:1
 #SBATCH --output=stdout
 
-  source ${pwd}/../pickGPU.csh
+  source ${mountdir_ori}/pickGPU.csh
   echo \${CUDA_VISIBLE_DEVICES}
   cd $pwd
   
@@ -65,3 +81,5 @@ cat << EOF > ! qsub.sander.csh
 EOF
 
   sbatch qsub.sander.csh 
+
+end # poses

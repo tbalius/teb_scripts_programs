@@ -1,5 +1,5 @@
 # TEB/ MF comments -- March2017
-# This script renames atom for a GTP analog.
+# This script renames CYS according to reduce protonation as required by tleap/ amber.
 
 import sys, os
 

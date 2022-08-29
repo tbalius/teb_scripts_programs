@@ -4,20 +4,46 @@
 ## TEB / MF comments -- March 2017
 
 
-  set mountdir  = `pwd`
+# set mountdir  = `pwd`
+set mountdir_ori = `pwd`
+set mut = E37C 
+#set lig = DL2040 
+set lig = DL2078 
+#set lig = DL1314_Protomer1 
 
-    set seed = "0"
+foreach pose (   \
+#               1 \
+               2 \
+               3 \
+)
+set mountdir = ${mountdir_ori}/${mut}/${lig}/pose${pose}/
+#cd $pwd
+
+
+   #set seed = "0"
    #set seed = "5"
    #set seed = "50"
+   #set seed = "mod_0"
+   #set seed = "mod_5"
+   #set seed = "mod_50"
    #set seed = "no_restaint_0"
+
+foreach seed ( \
+  "0"  \
+  "5"  \
+  "50" \
+)
 
  set pdb = ""
  #set pdb = "_min"
  #set pdb = "5VBE_min"
 
+#echo "ls ${mountdir}/${pdb}/004.MDrun_${seed}/*/01mi.rst7"
+
 set temp = `ls ${mountdir}/${pdb}/004.MDrun_${seed}/*/01mi.rst7 | head -1`
 set jobId = $temp:h:t
 echo $jobId
+#exit
 set jid = $jobId
 
 
@@ -60,17 +86,26 @@ trajin $jobId/18md.mdcrd 1 10000
 reference $jobId/com.watbox.leap.rst7 [startframe] 
 #autoimage :1-169
 #autoimage :1-166
-autoimage :1-183
+autoimage :1-172
 strip :WAT
-rms backbone :1-180@CA,N,C,O ref [startframe] out bb_fit.dat 
-rms receptor :1-180,182 ref [startframe] out rec_nofit.dat nofit 
-rms gtp1     :183 ref [startframe] out gtp1.dat nofit
-rms lig1     :181 ref [startframe] out lig1.dat nofit
-rms lig1f    :181 ref [startframe] out lig1_fit.dat
+rms backbone :1-169@CA,N,C,O ref [startframe] out bb_fit.dat 
+#rms receptor :1-168,171-172 ref [startframe] out rec_nofit.dat nofit 
+rms receptor :1-169,172 ref [startframe] out rec_nofit.dat nofit 
+rms gtp1     :171 ref [startframe] out gtp1.dat nofit
+rms lig1     :170 ref [startframe] out lig1.dat nofit
+rms lig1f    :170 ref [startframe] out lig1_fit.dat
 #trajout ref.pdb pdb
 go
 EOF
 
-$AMBERHOME/bin/cpptraj -i rmsd.equil.prod.in > ! rmsd.log &
+cat << EOF > qsub.csh 
+#!/bin/csh
+
+$AMBERHOME/bin/cpptraj -i rmsd.equil.prod.in > ! rmsd.log #&
+EOF
+
+sbatch qsub.csh
 
 #end
+end # seed 
+end # poses

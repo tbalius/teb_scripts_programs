@@ -8,6 +8,16 @@ import scipy
 import numpy
 import pylab
 
+# in amber if the entree has a stars then it is too big to show. 
+def check_stars( val ): 
+
+    if '**' in val: 
+        return 10000 
+#    if val > 100: cap
+#        return 100
+    return val
+
+
 def read_MD_outfile(filename,totE, kE, pE, time, temp, pres, vol):
 
     fileh = open(filename,'r')
@@ -38,9 +48,9 @@ def read_MD_outfile(filename,totE, kE, pE, time, temp, pres, vol):
            if "Etot" in line: 
               if (len(splitline)<8):
                   continue
-              t_totE = float(splitline[2])
-              t_kE   = float(splitline[5])
-              t_pE   = float(splitline[8])
+              t_totE = float(check_stars(splitline[2]))
+              t_kE   = float(check_stars(splitline[5]))
+              t_pE   = float(check_stars(splitline[8]))
               totE.append(t_totE)
               kE.append(t_kE)
               pE.append(t_pE)

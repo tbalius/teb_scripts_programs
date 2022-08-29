@@ -1,5 +1,17 @@
 
 
+set mountdir_ori = `pwd`
+set mut = E37C 
+set lig = DL2040 
+
+foreach pose (   \
+               1 \
+#              2 \
+#              3 \
+)
+set mountdir = ${mountdir_ori}/${mut}/${lig}/pose${pose}/
+cd $mountdir
+
 
 # grep "3\." analysis/006.rmsd/K5A_0/lig2.dat | sort -k2
 # tail analysis/006.rmsd/K5A_0/lig2.dat
@@ -15,15 +27,17 @@
  #set name = 5VBE_min_old
  set name = "."
  #set name = "_min"
-  set seed = "0"
+ #set seed = "0"
  #set seed = "5"
- #set seed = "50"
+  set seed = "50"
  #set seed = "no_restaint_0"
 
- awk -F, 'BEGIN{frist=1;count=0}{if(frist!=1){count=count+1};if(frist==1){frist=0}else if($5<-10.0){print count,$0}}' ${name}/008_mmgbsa/full_${seed}/mmgbsa_cal_processed_delta.csv | sed -e "s/,/ /g" | sort -rn -k6 | tail -10
- set list = `  awk -F, 'BEGIN{frist=1;count=0}{if(frist!=1){count=count+1};if(frist==1){frist=0}else if($5<-10.0){print count,$0}}' ${name}/008_mmgbsa/full_${seed}/mmgbsa_cal_processed_delta.csv | sed -e "s/,/ /g" | sort -rn -k6 | awk '{print $1}' | tail -10 | xargs `
- awk -F, 'BEGIN{frist=1;count=0}{if(frist!=1){count=count+1};if(frist==1){frist=0}else if($5>-10.0){print count,$0}}' ${name}/008_mmgbsa/full_${seed}/mmgbsa_cal_processed_delta.csv | sed -e "s/,/ /g" | sort -n -k6 | tail -10
- set list2 = `  awk -F, 'BEGIN{frist=1;count=0}{if(frist!=1){count=count+1};if(frist==1){frist=0}else if($5>-10.0){print count,$0}}' ${name}/008_mmgbsa/full_${seed}/mmgbsa_cal_processed_delta.csv | sed -e "s/,/ /g" | sort -n -k6 | awk '{print $1}' | tail -10 | xargs `
+ set th = -30
+
+ awk -F, 'BEGIN{frist=1;count=0}{if(frist!=1){count=count+1};if(frist==1){frist=0}else if($5<'${th}'){print count,$0}}' ${name}/008_mmgbsa/full_${seed}/mmgbsa_cal_processed_delta.csv | sed -e "s/,/ /g" | sort -rn -k6 | tail -10
+ set list = `  awk -F, 'BEGIN{frist=1;count=0}{if(frist!=1){count=count+1};if(frist==1){frist=0}else if($5<'${th}'){print count,$0}}' ${name}/008_mmgbsa/full_${seed}/mmgbsa_cal_processed_delta.csv | sed -e "s/,/ /g" | sort -rn -k6 | awk '{print $1}' | tail -10 | xargs `
+ awk -F, 'BEGIN{frist=1;count=0}{if(frist!=1){count=count+1};if(frist==1){frist=0}else if($5>'${th}'){print count,$0}}' ${name}/008_mmgbsa/full_${seed}/mmgbsa_cal_processed_delta.csv | sed -e "s/,/ /g" | sort -n -k6 | tail -10
+ set list2 = `  awk -F, 'BEGIN{frist=1;count=0}{if(frist!=1){count=count+1};if(frist==1){frist=0}else if($5>'${th}'){print count,$0}}' ${name}/008_mmgbsa/full_${seed}/mmgbsa_cal_processed_delta.csv | sed -e "s/,/ /g" | sort -n -k6 | awk '{print $1}' | tail -10 | xargs `
  echo $list 
  echo $list2
 

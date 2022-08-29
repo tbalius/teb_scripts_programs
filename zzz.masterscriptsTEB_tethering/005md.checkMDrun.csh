@@ -5,12 +5,31 @@
 # It then runs a python script that generates plots for analysis of the quality of the MD run in a separate directory.
 
 
-  set mountdir  = `pwd`
+ #set mountdir  = `pwd`
+
+set mountdir_ori = `pwd`
+set mut = E37C 
+#set lig = DL2040 
+set lig = DL2078 
+#set lig = DL1314_Protomer1 
+
+foreach pose (   \
+#               1 \
+               2 \
+               3 \
+)
+set mountdir = ${mountdir_ori}/${mut}/${lig}/pose${pose}/
+#cd $pwd
 
    #set seed = "0"
    #set seed = "5"
-    set seed = "50"
+   #set seed = "50"
    #set seed = "no_restaint_0"
+foreach seed ( \
+  "0"  \
+  "5"  \
+  "50" \
+)
 
  #set pdb = "5VBE"
   set pdb = ""
@@ -19,6 +38,7 @@
  #set lig = ${lig}_${seed}
 
 set temp = `ls ${mountdir}/${pdb}/004.MDrun_${seed}/*/01mi.rst7 | head -1`
+#set temp = `ls ${mountdir}/${pdb}/004.MDrun_mod_${seed}/*/01mi.rst7 | head -1`
 set jobId = $temp:h:t
 echo $jobId
 set jid = $jobId
@@ -26,6 +46,7 @@ set jid = $jobId
 
   #set jid = $1         #job id as specified by queue e.g. 5609039; this is also the directory name
   set workdir   = $mountdir/${pdb}/004.MDrun_${seed}/${jid}_plots
+  #set workdir   = $mountdir/${pdb}/004.MDrun_mod_${seed}/${jid}_plots
   #set workdir   = $mountdir/004.MDrun_lig/${jid}_plots
 
 #  if ($jid == "") then
@@ -51,8 +72,10 @@ set jid = $jobId
   ls ${jid}/09md.out ${jid}/10md.out ${jid}/11md.out ${jid}/12md.out ${jid}/13md.out ${jid}/14md.out ${jid}/15md.out ${jid}/16md.out ${jid}/17md.out ${jid}/18md.out > production.txt
 
 # runs python plotter <in> <out>
-  python ${mountdir}/for005md.py equil1.txt equil1.png
-  python ${mountdir}/for005md.py equil2.txt equil2.png
-  python ${mountdir}/for005md.py production.txt production.png
+  python ${mountdir_ori}/for005md.py equil1.txt equil1.png
+  python ${mountdir_ori}/for005md.py equil2.txt equil2.png
+  python ${mountdir_ori}/for005md.py production.txt production.png
 
 echo "\n   Now open png's: \n   gthumb MDrundir/MDrun/${jid}_plots/*png"
+end # seed
+end # pose
