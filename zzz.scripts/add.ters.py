@@ -21,12 +21,16 @@ dic_C = {}
 dic_N = {}
 resid = []
 
+
+flagCap = False
+
 # loops over pdb_reduce-file and looks for backbone carbon and nitrogen
 # puts it in a dictionary
 for line in lines:
    #print line
-    if line[0:4] == 'ATOM':
       if line[13:16] == 'C  ' :
+        #if flagCap:  # if we find a 'C' before an 'N' we don't need to skip distance calc 
+        #     flagCap = False
         #x = float(line[31:39])
         #y = float(line[39:46])
         #z = float(line[46:54])
@@ -57,6 +61,9 @@ dic_bool = {}
 for i in range(1,len(keys)):
     key1 = keys[i-1] 		# just looks at neighboring residues to calc distances
     key2 = keys[i]
+    if 'NME' in key1 or 'NME' in key2 or 'ACE' in key1 or 'ACE' in key2:
+        print ("Cap found ... skip distance calc. ") 
+        continue
     xyz1 = dic_C[key1]
     xyz2 = dic_N[key2]
     if line[0:4] == 'ATOM':

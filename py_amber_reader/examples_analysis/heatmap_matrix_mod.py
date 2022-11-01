@@ -140,6 +140,7 @@ def heatmap(Mat0,filename,heatmap_threshold,cmin,cmax,lab1file,lab2file):
      mp  = (heatmap_threshold - cmin) / (cmax - cmin)  # midpoint is where the white will appear
      tol = 0.02
      if mp > 0.9 or mp < 0.1:
+         print mp
          print "threshold = " + str(heatmap_threshold) + "is too high or low" 
          exit()
 
