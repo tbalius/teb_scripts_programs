@@ -85,6 +85,128 @@ def mat_larger_mag(mat,lab1,lab2,thrsmax,thrsmin):
 
                 print "%s %s %6.2f %s"%(lab1[i],lab2[j], mat[i][j], lpair)
 
+# this function will find the 3 weekest and strongest interactions
+def three_max_three_min_residues(Mat):
+     m = len(Mat)
+     n = len(Mat[0])
+
+     maxv = numpy.zeros(3)
+     minv = numpy.zeros(3)
+     maxi = numpy.zeros(3)
+     mini = numpy.zeros(3)
+     maxj = numpy.zeros(3)
+     minj = numpy.zeros(3)
+
+     maxv[0] = maxv[1] = maxv[2] = -10000.0
+     minv[0] = minv[1] = minv[2] =  10000.0
+
+     for i in range(m):
+         for j in range(n):
+
+             val = Mat[i][j]
+             # look to see if it val is biger then the max (0) if not check the next (1) and then the next (2)
+             if (maxv[0] < val):
+                 maxv[0] = val
+                 maxi[0] = i
+                 maxj[0] = j
+             elif (maxv[1] < val):
+                 maxv[1] = val
+                 maxi[1] = i
+                 maxj[1] = j
+             elif (maxv[2] < val):
+                 maxv[2] = val
+                 maxi[2] = i
+                 maxj[2] = j
+
+             if (minv[0] > val):
+                 minv[0] = val
+                 mini[0] = i
+                 minj[0] = j
+             elif (minv[1] > val):
+                 minv[1] = val
+                 mini[1] = i
+                 minj[1] = j
+             elif (minv[2] > val):
+                 minv[2] = val
+                 mini[2] = i
+                 minj[2] = j
+     # print out max and min
+     for i in range(3):
+          print ('%d ... %d -- %d :: val = %8.6f '%(i,maxi[i],maxj[i],maxv[i]))
+          print ('check val = %8.6f '%(Mat[int(maxi[i])][int(maxj[i])]))
+     for i in range(3):
+          print ('%d ... %d -- %d :: val = %8.6f '%(i,mini[i],minj[i],minv[i]))
+          print ('check val = %8.6f '%(Mat[int(mini[i])][int(minj[i])]))
+
+     return maxi, maxj, mini, minj
+
+# get a start and stop for a window, do not go out of bounds.
+# if point is at the edge then ajust not to go out of bounds.
+# dim is the max posible (size of the vector or matrix)
+def get_range_for_zoomin(crd,dim,windowsize):
+
+    if crd>dim: 
+       print ("error: crd > dim")
+       exit()
+
+    mod = windowsize % 2
+    print (mod)
+    if mod == 0:
+       print ("window is even, add 1")
+       #pad = windowsize/2
+       windowsize = windowsize + 1
+    #else: 
+    #   pad = (windowsize-1)/2
+    pad = (windowsize-1)/2
+
+    start = crd - pad
+    stop = crd + pad
+
+    if start < 0: 
+        print ("start < 0. ajust window")
+        stop = stop - start + 1
+        start = 0
+        print (stop - start, windowsize)
+    if stop > dim: 
+        pad = stop - dim
+        stop = dim
+        start = start - pad
+        print (stop - start, windowsize)
+
+    return start, stop
+
+# zoom in on xres and yres
+def heatmap_subplot(ax,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres):
+     m = len(Mat)
+     n = len(Mat[0])
+     im = ax.imshow(Mat, aspect='auto', origin='lower',interpolation='nearest', cmap=my_cmap)
+     im.set_clim(cmin,cmax)
+     ax.set_xlim(-0.5, n-0.5)
+     ax.set_ylim(-0.5, m-0.5)
+     ax.set_xticks(range(0,n))
+     ax.set_xticklabels(xlabel)
+     ax.set_yticks(range(0,m))
+     val_yticks = ax.get_yticks()
+     val_ylim = ax.get_ylim()
+     sel_ylabel = []
+     for i in val_yticks:
+           sel_ylabel.append(ylabel[i])
+     ax.set_yticklabels(sel_ylabel)
+     for item in (ax.get_yticklabels()):
+         item.set_fontsize(3)
+     for i in range(n):
+         labels = ax.xaxis.get_major_ticks()[i].label
+         labels.set_fontsize(3)
+         labels.set_rotation('vertical')
+
+     [xstart,xstop] = get_range_for_zoomin(xres,m,11)
+     #[ystart,ystop] = get_range_for_zoomin(yres,n,11)
+     [ystart,ystop] = get_range_for_zoomin(yres,n,10)
+
+     ax.set_xlim([xstart,xstop])
+     ax.set_ylim([ystart,ystop])
+     ax.plot(xres,yres,'k*')
+
 
 #def heatmap(Mat,label,filename,threshold,heatmap_threshold):
 def heatmap(Mat0,filename,heatmap_threshold,cmin,cmax,lab1file,lab2file):
@@ -176,15 +298,13 @@ def heatmap(Mat0,filename,heatmap_threshold,cmin,cmax,lab1file,lab2file):
      axmatrix.set_ylim(-0.5, m-0.5)
      axmatrix.set_xticks(range(0,n))
      axmatrix.set_xticklabels(xlabel)
-     #axmatrix.set_yticks(range(0,m,50))
      axmatrix.set_yticks(range(0,m))
      val_yticks = axmatrix.get_yticks()
      val_ylim = axmatrix.get_ylim()
-     print val_yticks
-     print val_ylim
+     #print val_yticks
+     #print val_ylim
      sel_ylabel = []
      for i in val_yticks:
-     #      print i
            sel_ylabel.append(ylabel[i])
      axmatrix.set_yticklabels(sel_ylabel)
 
@@ -196,8 +316,8 @@ def heatmap(Mat0,filename,heatmap_threshold,cmin,cmax,lab1file,lab2file):
          labels.set_fontsize(3)
          labels.set_rotation('vertical')
      # write out vector to file
-     print len(vec1), len(ylabel)
-     print len(vec2), len(xlabel)
+     #print len(vec1), len(ylabel)
+     #print len(vec2), len(xlabel)
      fh = open(filename+'.vec2.txt','w')
      for i in range(len(vec2)):
          fh.write('%s,%f\n'%(xlabel[i],vec2[i]))
@@ -211,8 +331,48 @@ def heatmap(Mat0,filename,heatmap_threshold,cmin,cmax,lab1file,lab2file):
      # Plot colorbar.
      axcolor = fig.add_axes([0.91,0.1,0.02,0.6])
      pylab.colorbar(im, cax=axcolor)
-     fig.show()
-     fig.savefig(filename,dpi=600)
+     #fig.show()
+     fig.savefig(filename+'_1.png',dpi=600)
+     fig.clear()
+
+     # max zoomin plot around three max and three min pairs: 
+
+     [t_max_i, t_max_j, t_min_i, t_min_j] = three_max_three_min_residues(Mat)
+
+     fig = matplotlib.pyplot.figure(1,[15,15])
+
+     ax11 = matplotlib.pyplot.axes([ 0.1, 0.1, 0.2, 0.2])
+     yres = t_max_i[0]
+     xres = t_max_j[0]
+     heatmap_subplot(ax11,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres)
+
+     ax12 = matplotlib.pyplot.axes([ 0.4, 0.1, 0.2, 0.2])
+     yres = t_max_i[1]
+     xres = t_max_j[1]
+     heatmap_subplot(ax12,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres)
+
+     ax13 = matplotlib.pyplot.axes([ 0.7, 0.1,  0.2, 0.2])
+     yres = t_max_i[2]
+     xres = t_max_j[2]
+     heatmap_subplot(ax13,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres)
+
+     ax21 = matplotlib.pyplot.axes([ 0.1, 0.4, 0.2, 0.2])
+     yres = t_min_i[0]
+     xres = t_min_j[0]
+     heatmap_subplot(ax21,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres)
+
+     ax22 = matplotlib.pyplot.axes([ 0.4, 0.4, 0.2, 0.2])
+     yres = t_min_i[1]
+     xres = t_min_j[1]
+     heatmap_subplot(ax22,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres)
+
+     ax23 = matplotlib.pyplot.axes([ 0.7, 0.4,  0.2, 0.2])
+     yres = t_min_i[2]
+     xres = t_min_j[2]
+     heatmap_subplot(ax23,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres)
+     
+
+     fig.savefig(filename+'_2.png',dpi=600)
 
      return
 
@@ -239,7 +399,7 @@ def main():
   m = readmatrix(file1handel)
   #write_matrix(file2handel,m)
   file1handel.close()
-  heatmap(m,file1name+'.png',heatmap_threshold,vmin,vmax,lab1,lab2)
+  heatmap(m,file1name+'_out',heatmap_threshold,vmin,vmax,lab1,lab2)
   return
   #SimlesToFingerPrint("CCC") 
   #SimlesToFingerPrint("C[C@@H](C(=O)Nc1ccccc1)Sc2nnc(n2C)c3cccnc3") 

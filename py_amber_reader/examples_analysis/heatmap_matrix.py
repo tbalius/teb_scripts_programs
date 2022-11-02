@@ -99,7 +99,7 @@ def heatmap(Mat0,filename,heatmap_threshold,cmin,cmax):
          print "threshold = " + str(heatmap_threshold) + "is too high or low" 
          exit()
 
-     cdict = {'red': [(0.0,      1.0, 1.0),
+     cdict = {'blue': [(0.0,      1.0, 1.0),
                       ( mp-tol,  1.0, 1.0),
                       ( mp,      1.0, 1.0),
                       ( mp+tol,  0.7, 0.7),
@@ -111,7 +111,7 @@ def heatmap(Mat0,filename,heatmap_threshold,cmin,cmax):
                       ( mp+tol,  0.7, 0.7),
                       (1.0,      0.0, 0.0)],
            
-            'blue':  [(0.0,      0.0, 0.0),
+            'red':  [(0.0,      0.0, 0.0),
                       ( mp-tol,  0.7, 0.7),
                       ( mp,      1.0, 1.0),
                       ( mp+tol,  1.0, 1.0),
