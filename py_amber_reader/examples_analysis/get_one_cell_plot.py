@@ -4,8 +4,13 @@
 import sys
 import copy
 
-import math, matplotlib, scipy, pylab, numpy
+#import math, matplotlib, scipy, pylab, numpy
 
+import  matplotlib
+
+matplotlib.use('Agg')  # allows you to not have an x-server running
+
+import math, scipy, pylab, numpy
 
 ## Writen by Trent Balius in the Shoichet Group
 
@@ -67,7 +72,7 @@ def make_plot(val_array,title,filename,start,stop):
      #ax2.set_xticks([])
      ax2.set_yticks([])
      #ax2.set_xlim(-0.5, n-0.5)
-     fig.show()
+     #fig.show()
      fig.savefig(filename+'.png',dpi=600)   
      return
 

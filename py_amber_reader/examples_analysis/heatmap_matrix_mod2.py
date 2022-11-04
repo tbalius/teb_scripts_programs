@@ -152,7 +152,7 @@ def get_range_for_zoomin(crd,dim,windowsize):
     mod = windowsize % 2
     print (mod)
     if mod == 0:
-       print ("window is even, add 1")
+       #print ("window is even, add 1")
        #pad = windowsize/2
        windowsize = windowsize + 1
     #else: 
@@ -163,20 +163,21 @@ def get_range_for_zoomin(crd,dim,windowsize):
     stop = crd + pad
 
     if start < 0: 
-        print ("start < 0. ajust window")
+        #print ("start < 0. ajust window")
         stop = stop - start + 1
         start = 0
-        print (stop - start, windowsize)
+        #print (stop - start, windowsize)
     if stop > dim: 
         pad = stop - dim
         stop = dim
         start = start - pad
-        print (stop - start, windowsize)
+        #print (stop - start, windowsize)
 
     return start, stop
 
 # zoom in on xres and yres
-def heatmap_subplot(ax,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres):
+#def heatmap_subplot(ax,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres):
+def heatmap_subplot(ax,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres,syb):
      m = len(Mat)
      n = len(Mat[0])
      im = ax.imshow(Mat, aspect='auto', origin='lower',interpolation='nearest', cmap=my_cmap)
@@ -199,13 +200,14 @@ def heatmap_subplot(ax,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres):
          labels.set_fontsize(3)
          labels.set_rotation('vertical')
 
-     [xstart,xstop] = get_range_for_zoomin(xres,m,11)
-     #[ystart,ystop] = get_range_for_zoomin(yres,n,11)
-     [ystart,ystop] = get_range_for_zoomin(yres,n,10)
+     [xstart,xstop] = get_range_for_zoomin(xres,n,11)
+     [ystart,ystop] = get_range_for_zoomin(yres,m,11)
+     #[ystart,ystop] = get_range_for_zoomin(yres,n,10)
 
      ax.set_xlim([xstart,xstop])
      ax.set_ylim([ystart,ystop])
-     ax.plot(xres,yres,'k*')
+     #ax.plot(xres,yres,'k*')
+     ax.plot(xres,yres,syb)
 
 
 #def heatmap(Mat,label,filename,threshold,heatmap_threshold):
@@ -344,32 +346,32 @@ def heatmap(Mat0,filename,heatmap_threshold,cmin,cmax,lab1file,lab2file):
      ax11 = matplotlib.pyplot.axes([ 0.1, 0.1, 0.2, 0.2])
      yres = t_max_i[0]
      xres = t_max_j[0]
-     heatmap_subplot(ax11,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres)
+     heatmap_subplot(ax11,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres,'k*')
 
      ax12 = matplotlib.pyplot.axes([ 0.4, 0.1, 0.2, 0.2])
      yres = t_max_i[1]
      xres = t_max_j[1]
-     heatmap_subplot(ax12,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres)
+     heatmap_subplot(ax12,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres,'k*')
 
      ax13 = matplotlib.pyplot.axes([ 0.7, 0.1,  0.2, 0.2])
      yres = t_max_i[2]
      xres = t_max_j[2]
-     heatmap_subplot(ax13,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres)
+     heatmap_subplot(ax13,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres,'k*')
 
      ax21 = matplotlib.pyplot.axes([ 0.1, 0.4, 0.2, 0.2])
      yres = t_min_i[0]
      xres = t_min_j[0]
-     heatmap_subplot(ax21,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres)
+     heatmap_subplot(ax21,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres,'w*')
 
      ax22 = matplotlib.pyplot.axes([ 0.4, 0.4, 0.2, 0.2])
      yres = t_min_i[1]
      xres = t_min_j[1]
-     heatmap_subplot(ax22,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres)
+     heatmap_subplot(ax22,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres,'w*')
 
      ax23 = matplotlib.pyplot.axes([ 0.7, 0.4,  0.2, 0.2])
      yres = t_min_i[2]
      xres = t_min_j[2]
-     heatmap_subplot(ax23,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres)
+     heatmap_subplot(ax23,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres,'w*')
      
 
      fig.savefig(filename+'_2.png',dpi=600)
