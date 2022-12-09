@@ -545,25 +545,25 @@ def parm_reader(filename):
  for i in range(0,(NTYPES)):
     for j in range(0,(NTYPES)):
         index = NONBONDED_PARM_INDEX[(NTYPES)*(i)+j]
-        print (i,j,(NTYPES)*(i)+j,index)
+       #print (i,j,(NTYPES)*(i)+j,index)
         sys.stdout.flush()
-        print (LENNARD_JONES_ACOEF[index] )
+       #print (LENNARD_JONES_ACOEF[index] )
         M_index[i][j] = index
         M_LJA[i][j]   = LENNARD_JONES_ACOEF[index]
         M_LJB[i][j]   = LENNARD_JONES_BCOEF[index]
 
- print ("index:")
- print_matrix_d(M_index)
- print ("LENNARD_JONES_ACOEF:")
- print_matrix(M_LJA)
- print ("LENNARD_JONES_BCOEF:")
- print_matrix(M_LJB)
+#print ("index:")
+#print_matrix_d(M_index)
+#print ("LENNARD_JONES_ACOEF:")
+#print_matrix(M_LJA)
+#print ("LENNARD_JONES_BCOEF:")
+#print_matrix(M_LJB)
 
  # see Molecular Modelling prenciples and approches by Leach p. 207
  # ACOEF = eps*rm^12 and BCOEF = 2*eps*rm^6 
- print ("AMBER ATOM TYPE, ACOEF, BCOEF ")
- for i in range(0,len(atom_type_uniq)):
-    print (atom_type_uniq[i],M_LJA[i][i], M_LJB[i][i])
+#print ("AMBER ATOM TYPE, ACOEF, BCOEF ")
+#for i in range(0,len(atom_type_uniq)):
+#   print (atom_type_uniq[i],M_LJA[i][i], M_LJB[i][i])
 
 # print "\n test LJ mat is right" 
 #
@@ -609,7 +609,7 @@ def coord_reader(line_count_ori,fh,frame1,filename,size,remainder):
 #size = -1
 
 # frist read in numbers
- print remainder
+ #print remainder
  vals = copy.copy(remainder)
  del remainder[:]
  #print (remainder)
@@ -618,7 +618,7 @@ def coord_reader(line_count_ori,fh,frame1,filename,size,remainder):
  #print (ii) 
  #print (vals)
  for line in fh:
-   print line
+   #print line
    #print(line_count)
    more_cord_flag = True
    data = line.split()
@@ -637,7 +637,7 @@ def coord_reader(line_count_ori,fh,frame1,filename,size,remainder):
          #print(ii, 3*size)
          if (ii > 3*size-1):
             for j in range(i,len(data)): 
-               print(data[j])
+               #print(data[j])
                remainder.append(data[j])
             flag_break = True
             #print("break")
@@ -676,7 +676,7 @@ def coord_reader(line_count_ori,fh,frame1,filename,size,remainder):
  #frame1.clear()
  del frame1[:]
  #frame1 = []
- print ('remainder: ',len(remainder) )
+ #print ('remainder: ',len(remainder) )
  frame1.append(frame(cords))
  line_count_ori[0] = line_count
  #frame1 = frame(cords)
@@ -740,9 +740,9 @@ def intermolecular_Energy(parm_stuff,frameX,start1,stop1,start2,stop2):
     Evdw = 0
     Ees = 0 
     #print (start1, start2, stop1, stop2)
-    print (start1, stop1, start2, stop2)
+    #print (start1, stop1, start2, stop2)
 
-    print len(parm_stuff.CHARGE)
+    #print len(parm_stuff.CHARGE)
 
     if (stop1 > (len(parm_stuff.CHARGE)+1) ): 
        print ("WARNING. stop1 > (len(parm_stuff.CHARGE)+1)")
@@ -768,7 +768,7 @@ def intermolecular_Energy(parm_stuff,frameX,start1,stop1,start2,stop2):
              #print (i,j,A,B,q1,q2,r, Evdw, Ees, Eint)
              #print (i,j, parm_stuff.ATOM_TYPE_INDEX[i-1], parm_stuff.ATOM_TYPE_INDEX[j-1])
              #print (i,j, parm_stuff.AMBER_ATOM_TYPE[i-1], parm_stuff.AMBER_ATOM_TYPE[j-1])
-    print ("%f,%f,%f"%(Eint,Evdw,Ees))
+    #print ("%f,%f,%f"%(Eint,Evdw,Ees))
     return (Eint,Evdw,Ees)
 
 
@@ -789,7 +789,7 @@ def find_range(list):
         sys.exit(0)
       for i in range(len(tmp_int_list)):
          int_list.append(tmp_int_list[i])
-         print (tmp_int_list[i])
+         #print (tmp_int_list[i])
 
   #for i in range(len(int_list)):
   #    int_list[i] = int_list[i] - 1
@@ -902,7 +902,7 @@ def main():
          start1 = parm_stuff.RESIDUE_POINTER[resid1-1]
          stop1  = parm_stuff.RESIDUE_POINTER[resid1]
        # print "************" # for debuging
-       print "residue1 (resid = %d): atom start = %d, atom stop = %d"%(resid1, start1,stop1) 
+       # print "residue1 (resid = %d): atom start = %d, atom stop = %d"%(resid1, start1,stop1) 
        # print "************"
        for resid2 in int_list2:
  
@@ -917,7 +917,7 @@ def main():
             stop2  = parm_stuff.RESIDUE_POINTER[resid2]
 
          
-         print ( "residue2 (resid = %d): atom start = %d, atom stop = %d, number=%d"%(resid2, start2,stop2,(stop2-start2-1)) )# for debuging 
+         # print ( "residue2 (resid = %d): atom start = %d, atom stop = %d, number=%d"%(resid2, start2,stop2,(stop2-start2-1)) )# for debuging 
 
          (Eint,Evdw,Ees) = intermolecular_Energy(parm_stuff,frameX,start1,stop1,start2,stop2)
          avg_mat_int[j][k] = avg_mat_int[j][k]+Eint

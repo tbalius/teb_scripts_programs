@@ -17,10 +17,16 @@ def main():
     #search_url = 'http://zinc15.docking.org/substances/'+zindid+'/'
     search_url = 'https://zinc20.docking.org/substances/'+zincid+'/protomers.txt?count=all'
     response = requests.get(search_url)
-    #for line in response.content:
+    response_string =''
     for line in response:
         decodeline = line.decode('UTF-8')
-        strline = str(decodeline).strip()
+        response_string = response_string + decodeline 
+    #.split('\n')
+    #for line in response.content:
+    for line in response_string.split('\n'):
+        #decodeline = line.decode('UTF-8')
+        #strline = str(decodeline).strip()
+        strline = str(line).strip()
         print (strline.split('\t'))
         protid = strline.split('\t')[0] 
         num1 = protid[-6:-4]

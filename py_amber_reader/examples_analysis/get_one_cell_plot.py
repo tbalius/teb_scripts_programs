@@ -76,6 +76,23 @@ def make_plot(val_array,title,filename,start,stop):
      fig.savefig(filename+'.png',dpi=600)   
      return
 
+def mean_var(array):
+    sum1 = 0.0
+    sum2 = 0.0
+    count = 0
+    for ele in array: 
+        e = float(ele)
+        sum1=sum1+e
+        sum2=sum2+(e**2.0)
+        count=count+1
+
+    mean=sum1/float(count)
+    mea2=sum2/float(count)
+    var =mea2-mean**2.0
+    print('mean=%f,var=%f'%(mean,var))
+
+        
+
 
 def main():
   if len(sys.argv) != 8: # if no input
@@ -101,6 +118,7 @@ def main():
       file1handel.close()
       val_array.append(val)
   make_plot(val_array,title,output,start,stop)
+  mean_var(val_array)
   #heatmap(m,file1name+'.png',heatmap_threshold,vmin,vmax,lab1,lab2)
   return
   #SimlesToFingerPrint("CCC") 
