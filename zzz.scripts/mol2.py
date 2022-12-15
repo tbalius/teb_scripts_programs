@@ -453,6 +453,12 @@ def write_mol2(molecule,filename):
 	outmol2.write("@<TRIPOS>BOND\n")
         count = 1
 	for m in range(0,len(molecule.bond_list)):
+		if not atom_dic.has_key(molecule.bond_list[m].a1_num):
+			print("skip bond with atom %d, not in atom_dic"%molecule.bond_list[m].a1_num)
+			continue
+		if not atom_dic.has_key(molecule.bond_list[m].a2_num):
+			print("skip bond with atom %d, not in atom_dic"%molecule.bond_list[m].a2_num)
+			continue
         	outmol2.write("%-5d %-5d %-5d %s\n" % (count, 
 		atom_dic[molecule.bond_list[m].a1_num], atom_dic[molecule.bond_list[m].a2_num], molecule.bond_list[m].type))
                 count = count + 1
@@ -506,6 +512,12 @@ def append_mol2(molecule,filename):
         outmol2.write("@<TRIPOS>BOND\n")
         count = 1
         for m in range(0,len(molecule.bond_list)):
+		if not atom_dic.has_key(molecule.bond_list[m].a1_num):
+			print("skip bond with atom %d, not in atom_dic"%molecule.bond_list[m].a1_num)
+			continue
+		if not atom_dic.has_key(molecule.bond_list[m].a2_num):
+			print("skip bond with atom %d, not in atom_dic"%molecule.bond_list[m].a2_num)
+			continue
                 outmol2.write("%-5d %-5d %-5d %s\n" % (count,
                 atom_dic[molecule.bond_list[m].a1_num], atom_dic[molecule.bond_list[m].a2_num], molecule.bond_list[m].type))
                 count = count + 1

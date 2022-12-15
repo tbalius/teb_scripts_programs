@@ -55,4 +55,4 @@ def main():
   runCommand("write 0 "+output_prefix+"_noH.pdb")
 
 main()
-
+#exit()

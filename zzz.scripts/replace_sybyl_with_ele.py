@@ -17,6 +17,7 @@ from math import sqrt
 def sybyl_to_ele(atom_type):
     atom_type=atom_type.replace(" ","")
     ele = atom_type.split('.')[0]
+    print(ele)
     return ele
 
 
@@ -27,16 +28,24 @@ def read_mol2(filename,text1):
 
     atom_flag = False;
 
+    #namestart = 47
+    #namestop  = 51
+
+    namestart = 42
+    namestop  = 46
+
     for line in lines:
          linesplit = line.split() #split on white space
          if (len(linesplit) > 0):
              if (linesplit[0] == "@<TRIPOS>BOND"):
                 atom_flag = False
              if (atom_flag):
-                atom_type = line[47:51] 
+                #atom_type = line[47:51] 
+                atom_type = line[namestart:namestop] 
                 print (atom_type)
                 ele = sybyl_to_ele(atom_type) 
-                line_mod = '%s%-5s%s\n'%(line[0:47],ele,line[52:-1])
+                #line_mod = '%s%-5s%s\n'%(line[0:47],ele,line[52:-1])
+                line_mod = '%s%-5s%s\n'%(line[0:namestart],ele,line[namestop+1:-1])
                 #text1 = text1+line
                 text1 = text1+line_mod
              elif (not atom_flag):
