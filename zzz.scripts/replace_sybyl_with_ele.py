@@ -28,11 +28,11 @@ def read_mol2(filename,text1):
 
     atom_flag = False;
 
-    #namestart = 47
-    #namestop  = 51
+    namestart = 47
+    namestop  = 51
 
-    namestart = 42
-    namestop  = 46
+    #namestart = 42
+    #namestop  = 46
 
     for line in lines:
          linesplit = line.split() #split on white space
