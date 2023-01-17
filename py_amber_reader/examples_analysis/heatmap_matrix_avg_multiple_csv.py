@@ -103,6 +103,69 @@ def mat_larger_mag(mat,lab1,lab2,thrsmax,thrsmin):
 
                 print "%s %s %6.2f %s"%(lab1[i],lab2[j], mat[i][j], lpair)
 
+def keep_three_max(maxv,maxi,maxj,i,j,val):
+
+   # skip if val is equal to start
+   if val == -10000.0 : 
+   #    print("In keep_three_max: skip if val is equal to start. this is likely true for the frist recurtions ")
+       return
+   #print("val = %f"%val)
+   #print("max three: %f,%f,%f"%(maxv[0],maxv[1],maxv[2]))
+
+   if (maxv[0] < val):
+       oldval = maxv[0]
+       oldi = maxi[0]
+       oldj = maxj[0]
+       maxv[0] = val
+       maxi[0] = i
+       maxj[0] = j
+       keep_three_max(maxv,maxi,maxj,oldi,oldj,oldval) # see if the oldval is should be in maxv[1] or maxv[2]
+   elif (maxv[1] < val):
+       oldval = maxv[1]
+       oldi = maxi[1]
+       oldj = maxj[1]
+       maxv[1] = val
+       maxi[1] = i
+       maxj[1] = j
+       keep_three_max(maxv,maxi,maxj,oldi,oldj,oldval) # see if the oldval should be in maxv[2]
+   elif (maxv[2] < val):
+       maxv[2] = val
+       maxi[2] = i
+       maxj[2] = j
+   return 
+ 
+def keep_three_min(minv,mini,minj,i,j,val):
+
+   # skip if val is equal to start
+   if val == 10000.0: 
+   #    print("In keep_three_min: skip if val is equal to start. this is likely true for the frist recurtions ")
+       return
+   #print("val = %f"%val)
+   #print("min three: %f,%f,%f"%(minv[0],minv[1],minv[2]))
+
+   if (minv[0] > val):
+       oldval = minv[0]
+       oldi = mini[0]
+       oldj = minj[0]
+       minv[0] = val
+       mini[0] = i
+       minj[0] = j
+       keep_three_min(minv,mini,minj,oldi,oldj,oldval) # see if the oldval is should be in minv[1] or minv[2]
+   elif (minv[1] > val):
+       oldval = minv[1]
+       oldi = mini[1]
+       oldj = minj[1]
+       minv[1] = val
+       mini[1] = i
+       minj[1] = j
+       keep_three_min(minv,mini,minj,oldi,oldj,oldval) # see if the oldval should be in minv[2]
+   elif (minv[2] > val):
+       minv[2] = val
+       mini[2] = i
+       minj[2] = j
+   return 
+
+
 # this function will find the 3 weekest and strongest interactions
 def three_max_three_min_residues(Mat):
      m = len(Mat)
@@ -117,37 +180,18 @@ def three_max_three_min_residues(Mat):
 
      maxv[0] = maxv[1] = maxv[2] = -10000.0
      minv[0] = minv[1] = minv[2] =  10000.0
+     #maxv[0] = maxv[1] = maxv[2] = Mat[0][0]
+     #minv[0] = minv[1] = minv[2] = Mat[0][0]
 
-     for i in range(m):
-         for j in range(n):
+     #for i in range(m):
+     #    for j in range(n):
+     for i in range(0,m):
+         for j in range(0,n):
 
              val = Mat[i][j]
              # look to see if it val is biger then the max (0) if not check the next (1) and then the next (2)
-             if (maxv[0] < val):
-                 maxv[0] = val
-                 maxi[0] = i
-                 maxj[0] = j
-             elif (maxv[1] < val):
-                 maxv[1] = val
-                 maxi[1] = i
-                 maxj[1] = j
-             elif (maxv[2] < val):
-                 maxv[2] = val
-                 maxi[2] = i
-                 maxj[2] = j
-
-             if (minv[0] > val):
-                 minv[0] = val
-                 mini[0] = i
-                 minj[0] = j
-             elif (minv[1] > val):
-                 minv[1] = val
-                 mini[1] = i
-                 minj[1] = j
-             elif (minv[2] > val):
-                 minv[2] = val
-                 mini[2] = i
-                 minj[2] = j
+             keep_three_max(maxv,maxi,maxj,i,j,val)
+             keep_three_min(minv,mini,minj,i,j,val)
      # print out max and min
      for i in range(3):
           print ('%d ... %d -- %d :: val = %8.6f '%(i,maxi[i],maxj[i],maxv[i]))
@@ -196,6 +240,9 @@ def get_range_for_zoomin(crd,dim,windowsize):
 # zoom in on xres and yres
 #def heatmap_subplot(ax,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres):
 def heatmap_subplot(ax,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres,syb):
+     #print("i=%d,j=%d"%(xres,yres))
+     #print("i=%d,j=%d,red(i)=%s,res(j)=%s"%(xres,yres,xlabel[int(xres)],ylabel[int(yres)]))
+     print("j=%d,i=%d,res(j)=%s,res(i)=%s,val[i,j]=%f"%(xres,yres,xlabel[int(xres)],ylabel[int(yres)],Mat[int(yres),int(xres)]))
      m = len(Mat)
      n = len(Mat[0])
      im = ax.imshow(Mat, aspect='auto', origin='lower',interpolation='nearest', cmap=my_cmap)
