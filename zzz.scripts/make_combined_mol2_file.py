@@ -83,6 +83,7 @@ def open_dock_mol2(list_text,filenamein,fho,score_txt,cutoff):
     # output the last pose.
     if score <= cutoff: # only keep things that are less than the cutoff
         list_text.append([score,name, moltext])
+        fho.write(moltext)
     fhi.close()
 
 def mySortFunc(e):

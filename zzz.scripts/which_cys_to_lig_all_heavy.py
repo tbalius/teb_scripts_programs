@@ -65,6 +65,7 @@ for line in lines_L:
       #print line
       #print line[13:16], line[17:20]
       #if line[77:79] == 'S ' and line[17:20] == 'LIG': # all Sulfur atoms 
+      print (line[77:79])
       if line[77:79] != 'H ' and line[17:20] == 'LIG': # all heavy ligand atoms
         print "*"+line[77:79] +"* #### "+ line[17:20]
         print line[13:16]

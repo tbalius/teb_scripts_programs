@@ -53,7 +53,7 @@ def remove_dullicates(list):
     for ele in list:
         remove_val(ele,index, list)
         index = index+1
-        #print len(list)
+        #print (len(list))
     
 
 #FORMAT: (I5, 3F10.5, F8.3, I5, I2, I3) 
@@ -72,8 +72,8 @@ def read_sph_cluster_list(filename):
           continue
        elif line[0:4]=='clus':
           cluster = int(line[7:16] )
-          #print cluster
-          print "cluster", cluster
+          #print (cluster)
+          print ("cluster", cluster)
           if flag_frist:
              flag_frist = False
              sphere_list = []
@@ -81,8 +81,8 @@ def read_sph_cluster_list(filename):
              sphere_clusters.append(sphere_list)
              sphere_list = []  
        elif not (line[0:5].replace(' ','').isdigit()):
-            #print line[0:5], line[0:5].replace(' ','').isdigit()
-            print line
+            #print (line[0:5], line[0:5].replace(' ','').isdigit())
+            print (line)
        else:
           index   = int(line[0:5])
           x       = float(line[5:15])
@@ -91,7 +91,7 @@ def read_sph_cluster_list(filename):
           r       = float(line[35:43])
           if (r == 0.0):
               r = 0.5
-              print "radius of 0.0 detected.  changed to 0.5."
+              print ("radius of 0.0 detected.  changed to 0.5.")
 
           atomnum = int(line[43:48])
           #print '\'' + line[48:50] + '\'' 
@@ -113,7 +113,7 @@ def read_sph_cluster_list(filename):
     remove_dullicates(sphere_list)
 
     if len(sphere_list) == 0:
-       print "there is a problem"
+       print ("there is a problem")
 
     sphere_clusters.append(sphere_list)
 
@@ -121,7 +121,7 @@ def read_sph_cluster_list(filename):
 
 
 
-def read_sph(filename,ccluster,color):
+def read_sph_r(filename,ccluster,color,radius_max,radius_min):
     sphere_list = []
     insph = open(filename,'r')
     flag_cluster = False # this flag determins if the sphere is writen to list
@@ -132,17 +132,17 @@ def read_sph(filename,ccluster,color):
           continue
        elif line[0:4]=='clus':
           cluster = int(line[7:16] )
-          #print cluster
+          #print (cluster)
           if ccluster == 'A': 
              flag_cluster = True
           elif int(ccluster) == cluster:
-             print "cluster", int(ccluster), cluster
+             print ("cluster", int(ccluster), cluster)
              flag_cluster = True
           else:
              flag_cluster = False
        elif not (line[0:5].replace(' ','').isdigit()):
             #print line[0:5], line[0:5].replace(' ','').isdigit()
-            print line
+            print (line)
        else:
           index   = int(line[0:5])
           x       = float(line[5:15])
@@ -151,10 +151,10 @@ def read_sph(filename,ccluster,color):
           r       = float(line[35:43])
           if (r == 0.0): 
               r = 0.5
-              print "radius of 0.0 detected.  changed to 0.5."
+              print ("radius of 0.0 detected.  changed to 0.5.")
           
           atomnum = int(line[43:48])
-          #print '\'' + line[48:50] + '\'' 
+          #print ('\'' + line[48:50] + '\'' )
           if (line[48:50] != '  '):
               clust = int(line[48:50])
           else: 
@@ -168,10 +168,21 @@ def read_sph(filename,ccluster,color):
              flag_color = True
           else:
              flag_color = False
+
+          #if radius_max == -1.0 or (r<radius_max): 
+          if (radius_max == -1.0 or (r <= radius_max)) and (radius_min == -1.0 or (r>=radius_min)): 
+             flag_radius = True
+          else:
+             flag_radius = False
+
+          #if radius_min == -1.0 or (r>radius_min): 
+          #   flag_radius = True
+          #else
+          #   flag_radius = False
           
           tmp_sphere = sphere(index,x,y,z,r,atomnum,clust,col,cluster)
 
-          if (flag_cluster and flag_color): 
+          if (flag_cluster and flag_color and flag_radius): 
           # only put sphere on list if it is in a cluster of instrested
           # and if the color is the same
              sphere_list.append(tmp_sphere)
@@ -182,8 +193,13 @@ def read_sph(filename,ccluster,color):
     remove_dullicates(sphere_list)
 
     if len(sphere_list) == 0:
-       print "there is a problem"
+       print ("there is a problem")
 
+    return sphere_list
+
+
+def read_sph(filename,ccluster,color):
+    sphere_list = read_sph_r(filename,ccluster,color,-1.0,-1.0)
     return sphere_list
 
 def write_sph(filename,spheres):
