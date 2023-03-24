@@ -1,4 +1,8 @@
 
+## Written by Trent Balius at FNLCR, 2023/03/24 
+## we use DUDEZ paper as insperation.  
+## https://pubs.acs.org/doi/full/10.1021/acs.jcim.0c00598
+
 import sys
 import copy
 import math
