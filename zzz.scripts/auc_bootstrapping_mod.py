@@ -96,12 +96,12 @@ def bootstrap_sample_pair(values,values2,arrays,arrays2,num):
 def sortSecond(val):
     return val[1]
 
-#def cal_auc_logauc_fromsamples(arraylig,arraydec,dirname):
+def cal_auc_logauc_fromsamples(arraylig,arraydec,dirname):
 #def cal_auc_logauc_fromsamples(arraylig,arraydec,lignames,decnames,ligfile,decfile,dirname):
-def cal_auc_logauc_fromsamples(arraylig,arraydec,lignames,decnames,dirname):
+#def cal_auc_logauc_fromsamples(arraylig,arraydec,lignames,decnames,dirname):
     text_score_array=[]
-    #lignames = []
-    #decnames = []
+    lignames = []
+    decnames = []
     count=0
 
     # check if the dir exists.  
@@ -112,20 +112,20 @@ def cal_auc_logauc_fromsamples(arraylig,arraydec,lignames,decnames,dirname):
     format_extract = "./AB/                     27991 %16s 1                    2702       2702    0.10  11         1      1612      1     1     0.00    0.00    0.00   0.00    0.00    0.00    0.00    0.00    0.00    %6.2f"
     # for ligands
     for i in range(len(arraylig)):
-        #name = "ligand%06d"%i
-        name = lignames[i]
+        name = "ligand%06d"%i
+        #name = lignames[i]
         #print (name)
         text_score = [format_extract%(name,arraylig[i]),arraylig[i]] 
         text_score_array.append(text_score)
-        #lignames.append(name)
+        lignames.append(name)
     # for decoys
     for i in range(len(arraydec)):
-        #name = "decoy%06d"%i
-        name = decnames[i]
+        name = "decoy%06d"%i
+        #name = decnames[i]
         #print (name)
         text_score = [format_extract%(name,arraydec[i]),arraydec[i]] 
         text_score_array.append(text_score)
-        #decnames.append(name)
+        decnames.append(name)
 
     #print(text_score_array[0][1])    
     text_score_array.sort(key=sortSecond)
@@ -305,10 +305,12 @@ def main():
         difflogauclist = []
 
      for i in range(num_boot):
-        cal_auc_logauc_fromsamples(lig_arrays[i],dec_arrays[i],ligands,decoys,"boot_%d"%i)
+        #cal_auc_logauc_fromsamples(lig_arrays[i],dec_arrays[i],ligands,decoys,"boot_%d"%i)
+        cal_auc_logauc_fromsamples(lig_arrays[i],dec_arrays[i],"boot_%d"%i)
         cmd = cmd+" -i ./boot_%d"%i 
         if flag_pair:
-            cal_auc_logauc_fromsamples(lig_arrays2[i],dec_arrays2[i],ligands2,decoys2,"boot2_%d"%i)
+            #cal_auc_logauc_fromsamples(lig_arrays2[i],dec_arrays2[i],ligands2,decoys2,"boot2_%d"%i)
+            cal_auc_logauc_fromsamples(lig_arrays2[i],dec_arrays2[i],"boot2_%d"%i)
             cmd2 = cmd2+" -i ./boot2_%d"%i 
 
         fh = open("./boot_%d/roc_own.txt"%i)
