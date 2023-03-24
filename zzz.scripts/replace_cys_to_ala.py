@@ -24,6 +24,7 @@ fileout = open(outfile,'w')
 # grep "HE2 HIS" rec.nowat.add_h.pdb
 #print lines
 
+ala_atom_names = ["C  ", "O  ","N  ","CA ", "CB ","H  "]
 
 for line in lines:
    #print line
@@ -33,9 +34,14 @@ for line in lines:
       fatomname = line[13:16]
       fresname  = line[17:20]
       fresnum  = line[23:26]
+
       if ( resname == fresname and resnum == fresnum ):
-         print ('*%s*,*%s*,*%s*\n'%( fatomname, fresname, fresnum  ))
-         fileout.write(line[0:17]+'ALA'+line[20:-1]+'\n')
+         if fatomname in ala_atom_names:
+            print ('*%s*,*%s*,*%s*\n'%( fatomname, fresname, fresnum  ))
+            fileout.write(line[0:17]+'ALA'+line[20:-1]+'\n')
+         else: 
+             print ("**%s**"%fatomname)
+             print(" warning... skip line: " + line)
       else:
          fileout.write(line)
 

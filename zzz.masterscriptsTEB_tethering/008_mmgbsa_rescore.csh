@@ -85,6 +85,7 @@ mmgbsa_cal.in: GBSA single point caclculations.
    cut=9999.0,
    igb=5,
    gbsa=2,
+   surften=1.0,
 /
 EOF1
 

@@ -1,4 +1,5 @@
 import mol2  ## this is a libary Trent Balius and Sudipto Mukherjee r. 
+#import mol2_python3
 import math, sys
 import os.path
 import gzip
@@ -186,13 +187,13 @@ def ajust_angle(mol,angle):
     v2= [atom3.X-atom2.X,atom3.Y-atom2.Y,atom3.Z-atom2.Z]
     cos_angle = calc_angle(v1,v2)
     radians = math.acos(cos_angle)
-    print cos_angle, radians, 180 * radians / math.pi
+    print (cos_angle, radians, 180 * radians / math.pi)
     radians_delta = radians_input -radians
-    print "delta", radians_delta, 180 * radians_delta / math.pi
+    print ("delta", radians_delta, 180 * radians_delta / math.pi)
     sign = 1.0
     if radians_delta < 0.0: 
        sign = -1.0
-       print sign
+       print (sign)
 
     three_atoms = [atom1,atom2,atom3]
     for a in three_atoms:
@@ -228,11 +229,11 @@ def ajust_angle(mol,angle):
     print (M)
     print (inverseM)
     #rotate(three_atoms,M)
-    print "start"
+    print ("start")
     for a in three_atoms:
         print_atom(a)
 
-    print "rotate"
+    print ("rotate")
     rotate(three_atoms,inverseM)
     for a in three_atoms:
         print_atom(a)
@@ -256,7 +257,7 @@ def ajust_angle(mol,angle):
     v2= [atom3.X-atom2.X,atom3.Y-atom2.Y,atom3.Z-atom2.Z]
     cos_angle = calc_angle(v1,v2)
     radians = math.acos(cos_angle)
-    print cos_angle, radians, 180 * radians / math.pi
+    print (cos_angle, radians, 180 * radians / math.pi)
 
 
 #################################################################################################################
@@ -372,10 +373,10 @@ def modify_mol2_file(mol2file, outputprefix, ang):
 #################################################################################################################
 def main():
     if len(sys.argv) != 4: # if no input
-        print " This script needs the following:"
-        print " (1) input mol2 file"
-        print " (2) output mol2 file"
-        print " (3) angle"
+        print (" This script needs the following:")
+        print (" (1) input mol2 file"             )
+        print (" (2) output mol2 file"            )
+        print (" (3) angle"                       )
         return
 
     mol2file       = sys.argv[1]
