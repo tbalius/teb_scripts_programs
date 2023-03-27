@@ -201,8 +201,59 @@ def max_value(dic):
      #exit()
      return max_val_ten
 
+def makehist(data,delta,filename):
+     ## calculate the bins to use for the histogram and the mid bin value to use in ploting the overlay of the histograms
+     #delta = 1.0
+     max_d = max(data)      
+     min_d = min(data)      
+
+     fig = matplotlib.pyplot.figure(figsize=(8, 8), dpi=600)
+
+     ax = matplotlib.pyplot.axes([0.1, 0.1, 0.8, 0.2])
+
+     size = 50
+     bin_d = numpy.linspace(min_d-delta, max_d+delta, num=size)
+     mid_bin_d = numpy.zeros(size-1)
+     for i in range(1,size):
+         mid_bin_d[i-1] = (bin_d[i]+bin_d[i-1])/2
+     #print(data[0:10])
+     p,temp1,temp2 = ax.hist(data,bin_d)
+     fig.savefig(filename,dpi=600)
+     
+def makehist_two(data1,data2,delta,filename):
+     ## calculate the bins to use for the histogram and the mid bin value to use in ploting the overlay of the histograms
+     #delta = 1.0
+     max_d = max(max(data1),max(data2))      
+     min_d = min(min(data1),min(data2))      
+
+     fig = matplotlib.pyplot.figure(figsize=(8, 8), dpi=600)
+
+     ax1 = matplotlib.pyplot.axes([0.1, 0.1, 0.8, 0.2])
+
+     print(min_d, max_d)
+     size = 50
+     bin_d = numpy.linspace(min_d-delta, max_d+delta, num=size)
+     mid_bin_d = numpy.zeros(size-1)
+     for i in range(1,size):
+         mid_bin_d[i-1] = (bin_d[i]+bin_d[i-1])/2
+     #print(data[0:10])
+     p1,temp1,temp2 = ax1.hist(data1,bin_d)
+     
+     ax2 = matplotlib.pyplot.axes([0.1, 0.4, 0.8, 0.2])
+
+     p2,temp1,temp2 = ax2.hist(data2,bin_d)
+     #
+     ax3 = matplotlib.pyplot.axes([0.1, 0.7, 0.8, 0.2])
+     for i in range(size-1):
+         p1[i] = p1[i]/len(data1)
+         p2[i] = p2[i]/len(data2)
+     ax3.plot(mid_bin_d,p1,'r-',mid_bin_d,p2,'b-')
+     fig.savefig(filename,dpi=600)
+    
+
 def main(): 
      import statistics as stat
+     from scipy import stats
      CNUM = 22
      #MAXSCORE = 100.0
      MAXSCORE_pad = 10.0
@@ -355,51 +406,42 @@ def main():
      if flag_pair: 
         print ("AUC2 mean = %f\n"%stat.mean(auclist2) )
         print ("AUC2 stdev = %f\n"%stat.stdev(auclist2) )
+        auc_pval = stats.ttest_ind(auclist,auclist2)
+        print ("AUC pval (1 & 2 are different) = %e\n"%auc_pval.pvalue ) 
         print ("logAUC2 mean = %f\n"%stat.mean(logauclist2) )
         print ("logAUC2 stdev = %f\n"%stat.stdev(logauclist2) )
+        logauc_pval = stats.ttest_ind(logauclist,logauclist2)
+        print ("logAUC pval (1 & 2 are different) = %e\n"%logauc_pval.pvalue ) 
         print ("diffAUC mean = %f\n"%stat.mean(diffauclist) )
         print ("diffAUC stdev = %f\n"%stat.stdev(diffauclist) )
         print ("difflogAUC mean = %f\n"%stat.mean(difflogauclist) )
         print ("difflogAUC stdev = %f\n"%stat.stdev(difflogauclist) )
+        auc_pval_diff = stats.ttest_1samp(diffauclist, popmean=0.0)
+        print ("AUC diff pval (mean at 0.0) = %e\n"%auc_pval_diff.pvalue ) 
+        logauc_pval_diff = stats.ttest_1samp(difflogauclist, popmean=0.0)
+        print ("logAUC diff pval (mean at 0.0) = %e\n"%logauc_pval_diff.pvalue ) 
+        
+
+     # make histograms. 
+     if not flag_pair:
+        delta=1.0
+        makehist(auclist,delta,'hist1auc.png')
+        makehist(logauclist,delta,'hist1logauc.png')
+     if flag_pair:
+        delta=1.0
+        makehist_two(auclist,auclist2,delta,'hist2auc.png')
+        makehist_two(logauclist,logauclist2,delta,'hist2logauc.png')
+        makehist(diffauclist,delta,'hist2diffauc.png')
+        makehist(difflogauclist,delta,'hist2difflogauc.png')
+         
      
      os.system('python ~/zzz.github/DOCK_dev_2020_12_01/ucsfdock/analysis/plots.py'+cmd)
      
+
      if flag_pair: 
          #os.system('python ~/zzz.github/DOCK_dev_2020_12_01/ucsfdock/analysis/plots.py'+cmd2)
          print('python ~/zzz.github/DOCK_dev_2020_12_01/ucsfdock/analysis/plots.py'+cmd2)
      
      
 
-     #max_e = max(max(elig),max(edec))      
-     #min_e = min(min(elig),min(edec))      
-     #
-     ## calculate the bins to use for the histogram and the mid bin value to use in ploting the overlay of the histograms
-     #delta = 1.0
-     #print(min_e, max_e)
-     #size = 50
-     #bin_e = numpy.linspace(min_e-delta, max_e+delta, num=size)
-     #mid_bin_e = numpy.zeros(size-1)
-     #for i in range(1,size):
-     #    mid_bin_e[i-1] = (bin_e[i]+bin_e[i-1])/2
-     #     
-     #
-     #fig = matplotlib.pyplot.figure(figsize=(8, 8), dpi=600)
-     ##ax = matplotlib.pyplot.axes([0.2, 0.3, 0.7, 0.6])
-     #ax = matplotlib.pyplot.axes([0.1, 0.1, 0.8, 0.2])
-     #print(elig[0:10])
-     #pl,temp1,temp2 = ax.hist(elig,bin_e)
-     
-     #ax = matplotlib.pyplot.axes([0.1, 0.4, 0.8, 0.2])
-     #print(edec[0:10])
-     #pd,temp1,temp2 = ax.hist(edec,bin_e)
-     ##print(pl) 
-     ##print(pd) 
-
-     #ax = matplotlib.pyplot.axes([0.1, 0.7, 0.8, 0.2])
-     #for i in range(size-1):
-     #    pl[i] = pl[i]/len(elig)
-     #    pd[i] = pd[i]/len(edec)
-     #ax.plot(mid_bin_e,pl,'r-',mid_bin_e,pd,'b-')
-     #fig.savefig('fig_hist.png',dpi=600)
-    
 main() 
