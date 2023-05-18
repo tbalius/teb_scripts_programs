@@ -1,4 +1,5 @@
-
+#!/bin/python2
+# this is in python2
 # Written by Trent E. Balius, B. Shoichet Lab at UCSF
 # this get the database from the autodude webpage
 

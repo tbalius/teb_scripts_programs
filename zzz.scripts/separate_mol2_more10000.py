@@ -61,9 +61,9 @@ def read_dock_multimol2_file_printmol2_files(file,outputprefix):
 #################################################################################################################
 def main():
     if len(sys.argv) != 3: # if no input
-        print " This script needs the following:"
-        print " (1) mol2filename, "
-        print " (2) outputprefix "
+        print (" This script needs the following:")
+        print (" (1) mol2filename, ")
+        print (" (2) outputprefix ")
         return
 
     filename       = sys.argv[1]

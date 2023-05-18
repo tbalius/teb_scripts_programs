@@ -18,7 +18,7 @@ class frame:
 
 def coord_writer(filename,cords,name):
 
- print "OUT coord_writer"
+ print ("OUT coord_writer")
  filec = open(filename,'w')
  filec.write('%s\n'%(name))
  filec.write('%7d\n'%(len(cords)))
@@ -41,9 +41,9 @@ def coord_writer(filename,cords,name):
 def main():
 
     if (len(sys.argv) != 4): # if no input
-        print " (1) pdb file name,"
-        print " (1) crd file name,"
-        print " (2) output file  ";
+        print (" (1) pdb file name,")
+        print (" (1) crd file name,")
+        print (" (2) output file  ");
         return
 
     pdbfilename    = sys.argv[1]
@@ -51,12 +51,13 @@ def main():
     output         = sys.argv[3]
 
     #cl = pdb_lib.read_pdb(pdb_file)
-    pdb = pdb_lib.read_pdb(pdbfilename)[0]
-    size = len(pdb) 
+    pdblist = pdb_lib.read_pdb(pdbfilename)
 
     j = 0
     crds = []
-    for i in range(size):
+    for pdb in pdblist:
+       size = len(pdb) 
+       for i in range(size):
             #print "j=",j,"i=",i 
             x = pdb[i].X 
             y = pdb[i].Y 

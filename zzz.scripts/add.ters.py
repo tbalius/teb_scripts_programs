@@ -37,19 +37,19 @@ for line in lines:
         x = float(line[30:38])
         y = float(line[39:45])
         z = float(line[46:53])
-        print [x,y,z]
+        print ([x,y,z])
         dic_C[line[17:26]] = [x,y,z]
         resid.append(line[17:26])
       if line[13:16] == 'N  ' :
         #x = float(line[31:39])
         #y = float(line[39:46])
         #z = float(line[46:54])
-        print line[30:39]
-        print line[30:38]
+        print (line[30:39])
+        print (line[30:38])
         x = float(line[30:38])
         y = float(line[39:45])
         z = float(line[46:53])
-        print [x,y,z]
+        print ([x,y,z])
         dic_N[line[17:26]] = [x,y,z]
 
 keys = resid # dic_C.keys()
@@ -71,7 +71,7 @@ for i in range(1,len(keys)):
         #print key1, key2, dist2
 # checks whether pairs are above sqrt(5)A threshold and puts them into boolean dictionary 
         if (dist2>5.0):
-           print key1, key2, dist2 
+           print (key1, key2, dist2 )
            dic_bool[key2] = True
         #else:
         #   dic_bool[key2] = False

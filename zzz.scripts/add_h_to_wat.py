@@ -12,16 +12,16 @@ pdb_file = sys.argv[1]
 
 wat_o = pdb_lib.read_pdb(pdb_file)
 
-print len(wat_o)
+print (len(wat_o))
 
 fh = open(pdb_file+".rst7",'w')
 
 new_wat = []
 count = 0
 for c in wat_o:
-  print c.X
-  print c.Y
-  print c.Z
+  print (c.X)
+  print (c.Y)
+  print (c.Z)
   new_wat.append(c)
   #count = count+1
   c1 = copy.copy(c)
@@ -45,5 +45,5 @@ pdb_lib.output_pdb(new_wat,pdb_file+"_new")
 
 #  len(c)
 #  for a in c:
-#      print a
+#      print (a)
 

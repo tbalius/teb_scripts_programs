@@ -53,13 +53,15 @@ def read_pdb(pdb_file):
     for line in lines:
          linesplit = line.split() #split on white space
          if (len(linesplit) >= 1):
-            if (linesplit[0] == "ATOM" or linesplit[0] == "HETATM"):
+            #if (linesplit[0] == "ATOM" or linesplit[0] == "HETATM"):
+            if (line[0:6] == "ATOM  " or line[0:6] == "HETATM"):
                    chainid  = line[21]
                    resname  = line[17:20]
                    #resnum   = line[23:26]
                    resnum   = line[22:26]
                    atomname = line[12:16]
-                   atomnum  = line[9:12]
+                   atomnum  = line[6:12]
+                   #print(atomnum)
                    X        = float(line[30:38])
                    Y        = float(line[38:46])
                    Z        = float(line[46:54])
@@ -71,7 +73,8 @@ def read_pdb(pdb_file):
                       tempfac  = float(line[60:66])
                    else: 
                       tempfac = 0.0
-                   boolhet  = (linesplit[0] == "HETATM")
+                   #boolhet  = (linesplit[0] == "HETATM")
+                   boolhet  = (line[0:6] == "HETATM")
                    temp_atom_info = PDB_atom_info('',chainid,resname,resnum,atomname,atomnum,X,Y,Z,occ,tempfac,boolhet)
                    temp_atom_list.append(temp_atom_info)
             elif (linesplit[0] == "TER" or linesplit[0] == "END"):
@@ -105,6 +108,19 @@ def output_pdb(pdb,filename):
         file1.write("ATOM  %5d %2s %3s %1s%4d%12.3f%8.3f%8.3f%6.2f%6.2f           %s\n" % (int(atom.atomnum), atom.atomname, atom.resname, atom.chainid, int(atom.resnum), atom.X, atom.Y, atom.Z, atom.occ, atom.bfact, atom.atomname[1:2]) )
 
     file1.close()
+
+#################################################################################################################
+#################################################################################################################
+def output_pdbchains(pdbchains,filename):
+#
+    file1 = open(filename,'w')
+    for pdb in pdbchains:
+        for atom in pdb:
+            file1.write("ATOM  %5d %2s %3s %1s%4d%12.3f%8.3f%8.3f%6.2f%6.2f           %s\n" % (int(atom.atomnum), atom.atomname, atom.resname, atom.chainid, int(atom.resnum), atom.X, atom.Y, atom.Z, atom.occ, atom.bfact, atom.atomname[1:2]) )
+        file1.write("TER\n")
+
+    file1.close()
+
 
 #################################################################################################################
 #################################################################################################################

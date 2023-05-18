@@ -1,5 +1,6 @@
 # TEB/ MF comments -- March2017
-# This script renames CYS according to reduce protonation as required by tleap/ amber.
+# modified by TEB in 2020.
+# This script changes an atom from one element to another and adjusts the name accordingly.
 
 import sys, os
 
@@ -27,7 +28,9 @@ name_line = ''
 fileout = open(outfile,'w')
 
 for line in lines:
-    if line[0:4] == 'ATOM':
+    #if line[0:4] == 'ATOM':
+    #if line[0:6] == 'HETATM':
+    if line[0:6] == 'HETATM' or line[0:6] == 'ATOM  ':
       #print line[13:16], line[23:26], line[17:20]
       if line[13:16] == name:
         print "line:"+line

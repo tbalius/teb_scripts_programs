@@ -10,10 +10,10 @@ def read_write_mol2_file(filename1,fileval,valtype,output,nameval):
     # now lets read in the rmsds.
     file1 = open(fileval,'r')
     dict_val = {}
-    print 
+    print ("") 
     for line in file1: 
          splitline = line.split()
-         print splitline
+         print (splitline)
          name = splitline[0].replace(':','')
          val = splitline[1]
          if valtype == "float":
@@ -26,7 +26,7 @@ def read_write_mol2_file(filename1,fileval,valtype,output,nameval):
          else: 
             print ("valtype %s is not valid"%(valtype))
          
-    #print dict_val     
+    #print (dict_val)
     file1.close()
 
     if valtype == "float":
@@ -49,7 +49,7 @@ def read_write_mol2_file(filename1,fileval,valtype,output,nameval):
          if (len(linesplit) > 0):
              if ("@<TRIPOS>MOLECULE" in line):
                  #name = linesplit[2].split('.')[0]
-                 #print name dict_val[name]
+                 #print (name dict_val[name])
                  #print name, dict_val
                  #exit()
                  #if name in dict_val: 
@@ -69,11 +69,11 @@ def read_write_mol2_file(filename1,fileval,valtype,output,nameval):
 #################################################################################################################
 def main():
     if (len(sys.argv) != 6): # if no input
-        print " (1) mol2 file name," 
-        print " (2) file name with stuff to add(formate: 'name value')";
-        print " (3) value type: float, int, string"
-        print " (4) output prefix ";
-        print " (5) tc name ";
+        print (" (1) mol2 file name," )
+        print (" (2) file name with stuff to add(formate: 'name value')");
+        print (" (3) value type: float, int, string");
+        print (" (4) output prefix ");
+        print (" (5) tc name ");
         return
 
     filename1 = sys.argv[1]
@@ -85,7 +85,7 @@ def main():
     print(" filename1 = %s\nfileval   = %s\nvaltype   = %s\noutput    = %s\nname      = %s\n"%(filename1,fileval,valtype,output,name))
 
     if valtype != "float" and valtype != "int" and valtype != "str":
-       print "valtype must be one of the following: float, int, or str. " 
+       print ("valtype must be one of the following: float, int, or str. " )
        exit()
        #print "we will use valtype of string."
        #valtype = "str"
