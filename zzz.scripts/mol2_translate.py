@@ -1,4 +1,5 @@
-import sys, mol2_python3
+import sys 
+import mol2_python3 as mol2
 import copy
 
 ## Writen by Trent Balius in the Shoichet Group

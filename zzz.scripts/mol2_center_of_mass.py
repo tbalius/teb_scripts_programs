@@ -1,6 +1,6 @@
 
 #import mol2
-import mol2_python3
+import mol2_python3 as mol2
 import sys
 
 print ("this file requiers the mol2 libary writen by trent balius and sudipto mukherjee")

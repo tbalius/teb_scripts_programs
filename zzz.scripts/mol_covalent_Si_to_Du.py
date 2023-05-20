@@ -1,5 +1,5 @@
 #import mol2  ## this is a libary Trent Balius and Sudipto Mukherjee r. 
-import mol2_python3
+import mol2_python3 as mol2
 import math, sys
 import os.path
 import gzip
