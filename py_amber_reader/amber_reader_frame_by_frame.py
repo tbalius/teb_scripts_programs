@@ -753,7 +753,7 @@ def intermolecular_Energy(parm_stuff,frameX,start1,stop1,start2,stop2):
     for i in range(start1,stop1):
         for j in range(start2,stop2):
              if i == j:
-                print "i==j. skip"
+                print ("i==j. skip")
                 continue
              q1 = parm_stuff.CHARGE[i-1]
              q2 = parm_stuff.CHARGE[j-1]

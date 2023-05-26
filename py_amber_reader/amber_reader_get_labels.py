@@ -633,14 +633,14 @@ def main():
   parm_stuff =  parm_reader(parmfile)
 
   fh = open(output+'.label1.txt','w')
-  print "list 1"
+  print ("list 1")
   for i in int_list1:
       #print (i) 
       print ("%s %d"%(parm_stuff.RESIDUE_ARRAY[parm_stuff.RESIDUE_POINTER[i-1]-1].strip(),i))
       fh.write("%s%d\n"%(parm_stuff.RESIDUE_ARRAY[parm_stuff.RESIDUE_POINTER[i-1]-1].strip(),i))
   fh.close()
   fh = open(output+'.label2.txt','w')
-  print "list 2"
+  print ("list 2")
   for i in int_list2:
       #print (i) 
       #print (parm_stuff.RESIDUE_ARRAY[i])

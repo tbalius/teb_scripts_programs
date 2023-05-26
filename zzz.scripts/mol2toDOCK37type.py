@@ -1,4 +1,6 @@
-import sys, mol2
+#import sys, mol2
+import sys
+import mol2_python3 as mol2
 
 ## Writen by Trent Balius in the Shoichet Group, 2014
 ## converts a mol2 to spheres. 
@@ -76,7 +78,7 @@ def pad_string(string):
 
 def main():
   if len(sys.argv) != 3: # if no input
-     print "ERORR"
+     print ("ERORR")
      return
   namemol2 = sys.argv[1]
   namedocktype = sys.argv[2]
@@ -86,7 +88,7 @@ def main():
   mol  = mol2.read_Mol2_file(namemol2)[0]
   dt   = mol2.convert_sybyl_to_dock(mol)
   for i in range(len(mol.atom_list)):
-      print i+1, mol.atom_list[i].type, dt[i]
+      print (i+1, mol.atom_list[i].type, dt[i])
       fh.write('%2d %4s %4s %4s %-6s %2s\n' % (i+1, mol.atom_list[i].name, mol.atom_list[i].resname, upper_to_lower(mol.atom_list[i].resname), mol.atom_list[i].type, dt[i]))
       fh1.write('%-4s %4s       %6.3f\n' % (mol.atom_list[i].name, upper_to_lower(mol.atom_list[i].resname),  mol.atom_list[i].Q))
       fh2.write('%4s  %4s       %6.3f %2s\n' % (  pad_string(mol.atom_list[i].name), mol.atom_list[i].resname, mol.atom_list[i].Q, dt[i]))
