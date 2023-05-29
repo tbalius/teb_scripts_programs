@@ -44,12 +44,32 @@ def write_matrix(Mat,filename):
 
 def main():
 
-    name = "vdwrst_fp_"
+
+    print ("syntax: python script num_subset_rows num_subset_columns type")
+    print ("        example input:")
+    print ("          num_subset_rows = 7")
+    print ("          num_subset_columns = 128")
+    print ("          type = vdw, ele, or tot")
+    if (len(sys.argv) != 4):
+       print ("Error.  Wrong number of inputs.  this script requiers 3 inputs")
+       exit()
+
+    M           = sys.argv[1]
+    N           = sys.argv[2]
+    type_name   = sys.argv[3]
+
+    print("M     = %d"%M )
+    print("N     = %d="%N )
+    print("prm   = "+type_name)
+
+
+    #name = "vdwrst_fp_"
+    name = name+"rst_fp_"
     ext  = "avg" # extention
     #M = 64
     #N = 64
-    M = 7
-    N = 128
+    #M = 7
+    #N = 128
     
     #fh = os.popen('ls vdwrst_fp_*.avg')
     fh = os.popen('ls %s*.%s'%(name,ext))
