@@ -4,7 +4,9 @@ import sys
 import copy
 import  matplotlib
 matplotlib.use('Agg')  # allows you to not have an x-server running
-import math, scipy, pylab, numpy
+#import math, scipy, pylab, numpy
+import math, scipy, numpy
+import matplotlib.pyplot as pylab
 
 
 ## Writen by Trent Balius in the Shoichet Group
@@ -37,7 +39,7 @@ def readmatrix(filehandel):
         #print "\n"
         #label1.append(splitline[0])
         #label2.append(splitline[1])
-    print "min, max = ",minval, maxval
+    print ("min, max = ",minval, maxval)
 
     return matrix #,label1,label2
 
@@ -81,10 +83,10 @@ def mat_larger_mag(mat,lab1,lab2,thrsmax,thrsmin):
      n = len(mat[0])
      lm = len(lab1)
      ln = len(lab2)
-     print n,m,ln,lm
+     print (n,m,ln,lm)
 
-     print "thrsmax = %f"%thrsmax
-     print "thrsmin = %f"%thrsmin
+     print ("thrsmax = %f"%thrsmax)
+     print ("thrsmin = %f"%thrsmin)
 
      for i in range(m):
          for j in range(n):
@@ -101,7 +103,7 @@ def mat_larger_mag(mat,lab1,lab2,thrsmax,thrsmin):
                 else: 
                     lpair = "non_near"                
 
-                print "%s %s %6.2f %s"%(lab1[i],lab2[j], mat[i][j], lpair)
+                print ("%s %s %6.2f %s"%(lab1[i],lab2[j], mat[i][j], lpair))
 
 def keep_three_max(maxv,maxi,maxj,i,j,val):
 
@@ -261,7 +263,8 @@ def heatmap_subplot(ax,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres,syb):
      for item in (ax.get_yticklabels()):
          item.set_fontsize(3)
      for i in range(n):
-         labels = ax.xaxis.get_major_ticks()[i].label
+         #labels = ax.xaxis.get_major_ticks()[i].label
+         labels = ax.get_xticklabels()[i]
          labels.set_fontsize(3)
          labels.set_rotation('vertical')
 
@@ -279,7 +282,7 @@ def heatmap_subplot(ax,Mat,my_cmap,cmin,cmax,xlabel,ylabel,xres,yres,syb):
 def heatmap(Mat0,filename,heatmap_threshold,cmin,cmax,lab1file,lab2file):
      m = len(Mat0)
      n = len(Mat0[0])
-     print m,n
+     print (m,n)
 
      Mat, vec1, vec2 = mat_to_mat(Mat0) 
      #flabel1 = open('../resnames.1.txt','r')
@@ -315,7 +318,7 @@ def heatmap(Mat0,filename,heatmap_threshold,cmin,cmax,lab1file,lab2file):
      #ax1.set_xlim(cmin,cmax)
         
      ax2 = fig.add_axes([0.3,0.75,0.6,0.2])
-     print vec2
+     print (vec2)
      matplotlib.pyplot.plot(range(0,n),vec2,'k-') # draws a datshed line where dendogram is cut.
      ax2.set_xticks([])
      #ax2.set_yticks([])
@@ -331,8 +334,8 @@ def heatmap(Mat0,filename,heatmap_threshold,cmin,cmax,lab1file,lab2file):
      mp  = (heatmap_threshold - cmin) / (cmax - cmin)  # midpoint is where the white will appear
      tol = 0.02
      if mp > 0.9 or mp < 0.1:
-         print mp
-         print "threshold = " + str(heatmap_threshold) + "is too high or low" 
+         print (mp)
+         print ("threshold = " + str(heatmap_threshold) + "is too high or low") 
          exit()
 
      cdict = {'blue': [(0.0,      1.0, 1.0),
@@ -381,7 +384,8 @@ def heatmap(Mat0,filename,heatmap_threshold,cmin,cmax,lab1file,lab2file):
          item.set_fontsize(3)
 
      for i in range(n):
-         labels = axmatrix.xaxis.get_major_ticks()[i].label
+         #labels = axmatrix.xaxis.get_major_ticks()[i].label
+         labels = axmatrix.get_xticklabels()[i]
          labels.set_fontsize(3)
          labels.set_rotation('vertical')
      # write out vector to file
@@ -448,11 +452,11 @@ def heatmap(Mat0,filename,heatmap_threshold,cmin,cmax,lab1file,lab2file):
 
 def main():
   if len(sys.argv) != 7: # if no input
-     print "syntax:  text file with name and weights (lenth of simulation), heatmap_threshold heatmap_min heatmap_max label1_filename label2_filename"
-     print "Error:  you have entered the wrong number of inputs:"
-     print len(sys.argv)
+     print ("syntax:  text file with name and weights (lenth of simulation), heatmap_threshold heatmap_min heatmap_max label1_filename label2_filename")
+     print ("Error:  you have entered the wrong number of inputs:")
+     print (len(sys.argv))
 
-  print "You have entered in 3 inputs:"
+  print ("You have entered in 3 inputs:")
   file1name  = sys.argv[1] 
   heatmap_threshold  = float(sys.argv[2])
   vmin               = float(sys.argv[3])
@@ -461,9 +465,9 @@ def main():
   lab2               = sys.argv[6] 
 
   if (vmin > vmax): 
-     print "error:heatmap_min > heatmap_max" 
+     print ("error:heatmap_min > heatmap_max")
      exit()
-  print "input matrix file = " + file1name
+  print ("input matrix file = " + file1name)
   txtfilehandel = open(file1name,'r')
   count = 0
   w_sum = 0.0

@@ -54,17 +54,17 @@ def main():
        print ("Error.  Wrong number of inputs.  this script requiers 3 inputs")
        exit()
 
-    M           = sys.argv[1]
-    N           = sys.argv[2]
+    M           = int(sys.argv[1])
+    N           = int(sys.argv[2])
     type_name   = sys.argv[3]
 
     print("M     = %d"%M )
     print("N     = %d="%N )
-    print("prm   = "+type_name)
+    print("type  = "+type_name)
 
 
     #name = "vdwrst_fp_"
-    name = name+"rst_fp_"
+    name = type_name+"rst_fp_"
     ext  = "avg" # extention
     #M = 64
     #N = 64
@@ -72,11 +72,14 @@ def main():
     #N = 128
     
     #fh = os.popen('ls vdwrst_fp_*.avg')
-    fh = os.popen('ls %s*.%s'%(name,ext))
+    #fh = os.popen('ls %s*.%s'%(name,ext))
+    #fh = os.popen('ls */*/%s*.%s'%(name,ext))
+    fh = os.popen('ls */%s*.%s'%(name,ext))
     
     filelist = []
     filenum = []
     for line in fh:
+        print(line)
         linestrip = line.strip()
         filelist.append(linestrip)
         #temp = linestrip.split('.')[0]
@@ -100,7 +103,8 @@ def main():
     
     # we need to read in the files in the right order. 
     for i in range(M*N):
-         filename = '%s%d.%s'%(name,i,ext)
+         #filename = '%s%d.%s'%(name,i,ext)
+         filename = 'job_%05d/%s%d.%s'%(i+1,name,i,ext)
          print(filename)
          filelist.append(filename)
     
@@ -147,6 +151,6 @@ def main():
                 printstring =  printstring + " " + str(all_mat[k][i][j])
                 stiched_M[i_n][j_n] = all_mat[k][i][j]
             print(printstring)
-    write_matrix(stiched_M,'stiched.csv')
+    write_matrix(stiched_M,type_name+'_stiched.csv')
 
 main()    

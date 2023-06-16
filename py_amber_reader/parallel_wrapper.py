@@ -94,13 +94,13 @@ def submit_jobs(list1,list2,prm,crd):
 
     jobnum = 0
 
+    current = cwd = os.getcwd()
     #for li in range(len(list1)):
     #    si = make_str(list1[li])
     for li in list1:
         si = make_str(li)
         for lj in list2:
             sj = make_str(lj)
-    
             # write a shell script
             txt = ''
             txt = txt+'#!/bin/csh\n'
@@ -111,12 +111,17 @@ def submit_jobs(list1,list2,prm,crd):
             txt = txt+ ('python ${script}/amber_reader_frame_by_frame.py %s %s "%s" "%s" rst_fp_%d > rst_fp_%d.log\n'%(prm,crd,si,sj,jobnum,jobnum))
             jobnum = jobnum+1
 
+            workdir = current+"/job_%05d"%jobnum
+            os.mkdir(workdir)
+            os.chdir(workdir)
+
             filename = 'submit_%05d.csh'%jobnum
             fh = open(filename,'w')
             fh.write(txt)
             fh.close()
             cmd = "sbatch "+filename
             os.system(cmd)
+    os.chdir(current)
             
 def main():
      

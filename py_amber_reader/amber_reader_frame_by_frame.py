@@ -750,6 +750,24 @@ def intermolecular_Energy(parm_stuff,frameX,start1,stop1,start2,stop2):
     if (stop2 > (len(parm_stuff.CHARGE)+1) ): 
        print ("WARNING. stop2 > (len(parm_stuff.CHARGE)+1)")
 
+  # #for debugging start
+  # # variables totq1 and totq2 are for checking charge on residue for debuging
+  # totq1 = 0.0
+  # print("%d %d"%(start1,stop1))
+  # for i in range(start1,stop1):
+  #      q1 = parm_stuff.CHARGE[i-1]
+  #      totq1 = totq1 + q1 
+  # print ("charge1=%6.4f"%(totq1/18.2223))
+
+  # totq2 = 0.0
+  # print("%d %d"%(start2,stop2))
+  # for j in range(start2,stop2):
+  #      q2 = parm_stuff.CHARGE[j-1]
+  #      totq2 = totq2 + q2
+  # print ("charge2=%6.4f"%(totq2/18.2223))
+  # #for debugging stop
+
+    #print ("%f,%f,%f"%(Eint,Evdw,Ees))
     for i in range(start1,stop1):
         for j in range(start2,stop2):
              if i == j:
@@ -802,7 +820,7 @@ def main():
 
   ##RESIDUE_ARRAY, ATOM_NAME, AMBER_ATOM_TYPE, ATOM_TYPE_INDEX, CHARGE,MASS, M_LJA, M_LJB =  parm_reader("active_gefitinib.rec.gas.leap.parm")
 
-  if len(sys.argv) != 6: # if no input
+  if len(sys.argv) != 7: # if no input
         print ("Input:");
         print ("amber prmtop filename")
         print ("amber mdcrd filename")
@@ -810,13 +828,23 @@ def main():
         print ("residues list examples: 1-4,7-10,34-59")
         print ("residues list2 for species 2 ( if species 2 is more than one residue generates a matrix)")
         print ("output filename")
+        print ("outputflag: timestep (output matrix for every time step in addition to averge) or justavg")
         return
 
-  parmfile  = sys.argv[1]
-  crdfile   = sys.argv[2]
-  list1     = sys.argv[3]
-  list2     = sys.argv[4]
-  output    = sys.argv[5]
+  parmfile      = sys.argv[1]
+  crdfile       = sys.argv[2]
+  list1         = sys.argv[3]
+  list2         = sys.argv[4]
+  output        = sys.argv[5]
+  outputflagstr = sys.argv[6]
+
+  oflag = False
+  if outputflagstr =='timestep':
+     oflag = True
+  elif outputflagstr !='justavg':
+     print("output_flag must be either timestep or justavg")
+     exit()
+     
 
   int_list1 = find_range(list1)
   int_list2 = find_range(list2)
@@ -874,6 +902,10 @@ def main():
   fh = open(crdfile,'r')
   numatoms = len(parm_stuff.AMBER_ATOM_TYPE)
   linecount = [0]
+  if oflag:
+    vdwfileh = open("vdw"+output+'.frames','w')
+    elefileh = open("ele"+output+'.frames','w')
+    intfileh = open("tot"+output+'.frames','w')
   while(coord_reader(linecount,fh,frameL,crdfile,numatoms,remainder_data)):
   #fileh = open(output,'w')
   #for i in range(len(frames)):
@@ -883,18 +915,19 @@ def main():
     frameX = frameL[0]
     del frameL[:]
     j = 0
-    vdwfileh = open("vdw"+output+'.'+str(i),'w')
-    elefileh = open("ele"+output+'.'+str(i),'w')
-    intfileh = open("tot"+output+'.'+str(i),'w')
-    vdwfileh.write("Frame%d\n"%i)
-    elefileh.write("Frame%d\n"%i)
-    intfileh.write("Frame%d\n"%i)
+    if oflag:
+      #vdwfileh = open("vdw"+output+'.'+str(i),'w')
+      #elefileh = open("ele"+output+'.'+str(i),'w')
+      #intfileh = open("tot"+output+'.'+str(i),'w')
+      vdwfileh.write("Frame%d\n"%i)
+      elefileh.write("Frame%d\n"%i)
+      intfileh.write("Frame%d\n"%i)
     for resid1 in int_list1:
        k = 0
        if resid1 == len(parm_stuff.RESIDUE_POINTER):
          start1 = parm_stuff.RESIDUE_POINTER[resid1-1]
-         #stop1  = len(parm_stuff.ATOM_NAME)+1
-         stop1  = len(parm_stuff.ATOM_NAME)
+         stop1  = len(parm_stuff.ATOM_NAME)+1
+         #stop1  = len(parm_stuff.ATOM_NAME)
        elif resid1 > len(parm_stuff.RESIDUE_POINTER):
          print("Error.")
          exit()
@@ -908,8 +941,8 @@ def main():
  
          if resid2 == len(parm_stuff.RESIDUE_POINTER):
             start2 = parm_stuff.RESIDUE_POINTER[resid2-1]
-            #stop2  = len(parm_stuff.ATOM_NAME)+1
-            stop2  = len(parm_stuff.ATOM_NAME)
+            stop2  = len(parm_stuff.ATOM_NAME)+1
+            #stop2  = len(parm_stuff.ATOM_NAME)
          elif resid2 > len(parm_stuff.RESIDUE_POINTER):
             print ("Error.") 
          else: 
@@ -924,27 +957,35 @@ def main():
          avg_mat_vdw[j][k] = avg_mat_vdw[j][k]+Evdw
          avg_mat_ele[j][k] = avg_mat_ele[j][k]+Ees
          #print resid1,Eint,Evdw,Ees
-         if k < (len(int_list2)-1): # print a comma
-           intfileh.write('%f,'%(Eint))
-           vdwfileh.write('%f,'%(Evdw))
-           elefileh.write('%f,'%(Ees))
-         elif k == (len(int_list2)-1): # don't print a comma after the last colomn
-           intfileh.write('%f'%(Eint))
-           vdwfileh.write('%f'%(Evdw))
-           elefileh.write('%f'%(Ees))
-         else:
-           print ("something has gone wrong. ")
-           exit()
+         
+         if oflag:
+            if k < (len(int_list2)-1): # print a comma
+              intfileh.write('%f,'%(Eint))
+              vdwfileh.write('%f,'%(Evdw))
+              elefileh.write('%f,'%(Ees))
+            elif k == (len(int_list2)-1): # don't print a comma after the last colomn
+              intfileh.write('%f'%(Eint))
+              vdwfileh.write('%f'%(Evdw))
+              elefileh.write('%f'%(Ees))
+            else:
+              print ("something has gone wrong. ")
+              exit()
          k=k+1
-       intfileh.write('\n')
-       vdwfileh.write('\n')
-       elefileh.write('\n')
+       if oflag:
+          intfileh.write('\n')
+          vdwfileh.write('\n')
+          elefileh.write('\n')
        j=j+1
-    intfileh.close()
-    vdwfileh.close()
-    elefileh.close()
+    #if oflag:
+    #   intfileh.close()
+    #   vdwfileh.close()
+    #   elefileh.close()
     i=i+1
   fh.close()
+  if oflag:
+     intfileh.close()
+     vdwfileh.close()
+     elefileh.close()
   num_frames = i  
   # write out averge matrix
   vdwfileh = open("vdw"+output+".avg",'w')
