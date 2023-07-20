@@ -1,5 +1,6 @@
 
-import mol2
+#import mol2
+import mol2_python3 as mol2
 import sys
 
 # take a sybyl atom type and returns an element.
@@ -12,9 +13,8 @@ def sybyl_to_ele(atom_type):
     return ele
 
 
-print "this file requiers the mol2 libary writen by trent balius and sudipto mukherjee"
-
-print "syntex: mol2_replace_sybyl_to_ele.py input_file output_file"
+print ("this file requiers the mol2 libary writen by trent balius and sudipto mukherjee")
+print ("syntex: mol2_replace_sybyl_to_ele.py input_file output_file")
 
 infile = sys.argv[1]
 outfile = sys.argv[2]
