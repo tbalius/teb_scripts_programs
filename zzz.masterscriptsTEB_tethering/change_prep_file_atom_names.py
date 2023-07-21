@@ -34,19 +34,33 @@ for line in lines:
         #count = count + 1
         #continue
     if name == "SG" or name == "CB" or name == "HB1" or name == "HB2" or name == "HB3": 
+    #if name == "SG" or name == "CB" or name == "HC1" or name == "HC2" or name == "HC3": 
         #count = count + 1
         charge = charge + float(line[63:-1])
         continue
     new_lines.append(line)
       #print line[13:16], line[23:26], line[17:20]
+
+count = 0.0
+for line in new_lines: 
+    sline = line.split()
+    if (len(sline) == 11 and sline[1] != "DUMM"): 
+        count = count + 1.0
+
+print (count)
+       
 for line in new_lines:
     name = line[6:11].strip()
-    if name == "S1":  
+    sline = line.split()
+    if (len(sline) == 11 and name != "DUMM"): 
+    #if name == "C26":  
         #line = line.strip()
         print("charge = %6.4f"%charge)
-        newcharge = charge + float(line[63:-1])
+        #newcharge = charge + float(line[63:-1])
+        newcharge = charge/count + float(line[63:-1])
         #newline = line[0:20]+replacement+line[37:63]+"%8.6f"%newcharge+'\n' 
-        newline = line[0:63]+"%8.6f"%newcharge+'\n' 
+        #newline = line[0:63]+"%8.6f"%newcharge+'\n' 
+        newline = line[0:63]+"%9.6f"%newcharge+'\n' 
         print(newline)
         fileout.write(newline)
         newline = ''
