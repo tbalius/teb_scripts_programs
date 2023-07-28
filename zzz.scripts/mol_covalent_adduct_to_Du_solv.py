@@ -14,6 +14,7 @@ from math import sqrt
 # the one with 3 hydrogens becomes D2 with type Du.  
 # ajusts the bond angle between D1 (S), D2 (CB), and first atom of the ligand. 
 # This script is modified from the script for Si replacement
+# modifed by Y. Stanley Tan 07/2023. to not use Si, but use Du.  
 #################################################################################################################
 
 #def mag(v): 
@@ -253,41 +254,51 @@ def print_atom(atom):
 #################################################################################################################
 #################################################################################################################
 #def modify_mol2_file(mol2file, outputprefix, ang):
-def modify_mol2_file(mol2file, outputprefix):
+def modify_mol2_file(mol2file,solvfile,outputprefix):
     ## read in mol2 file
     frist = True
     mollist = mol2.read_Mol2_file(mol2file) 
-    for mol in mollist:
+    if len(mollist)>1:
+        print("We will only process 1 mol2")
+        print("this is because of adding Solv")
+    #for mol in mollist:
+    for mol in [mollist[0]]:
        ori_formal_charge = mol2.formal_charge(mol)
        n = len(mol.atom_list) 
-       Si_atoms_index = []
+       #Si_atoms_index = []
+       Du_atoms_index = []
        for i in range(n):
-           if mol.atom_list[i].name == 'CB' or mol.atom_list[i].name == 'SG':
-              print (mol.atom_list[i].type, mol.atom_list[i].name)
-              Si_atoms_index.append(i)
+           if (mol.atom_list[i].name == 'SG') or (mol.atom_list[i].name == 'CG') or (mol.atom_list[i].name == 'OG'):
+               print (mol.atom_list[i].type, mol.atom_list[i].name)
+               #Si_atoms_index.append(i)
+               Du_atoms_index.append(i)
+               Du1 = i
+           if (mol.atom_list[i].name == 'CB'):
+               Du_atoms_index.append(i)
+               Du2 = i
 
-       if len(Si_atoms_index) != 2:
+       if len(Du_atoms_index) != 2:
            print ("error")
            exit()
 
        count_h = [0,0] # remember how meny atoms are connected to the both Si
        Hlist = []  # remember which the atom index that are the connected bonds. 
-       Si1 = Si_atoms_index[0]
-       Si2 = Si_atoms_index[1]
+       #Si1 = Si_atoms_index[0]
+       #Si2 = Si_atoms_index[1]
        for bond in mol.bond_list:
-           if bond.a1_num-1 == Si1: 
+           if bond.a1_num-1 == Du1:
               if (mol.atom_list[bond.a2_num-1].type == 'H'):
                   count_h[0]=count_h[0]+1
                   Hlist.append(bond.a2_num)
-           if bond.a2_num-1 == Si1:
+           if bond.a2_num-1 == Du1:
               if (mol.atom_list[bond.a1_num-1].type == 'H'):
                   count_h[0]=count_h[0]+1
                   Hlist.append(bond.a1_num)
-           if bond.a1_num-1 == Si2:
+           if bond.a1_num-1 == Du2:
               if (mol.atom_list[bond.a2_num-1].type == 'H'):
                   count_h[1]=count_h[1]+1
                   Hlist.append(bond.a2_num)
-           if bond.a2_num-1 == Si2:
+           if bond.a2_num-1 == Du2:
               if (mol.atom_list[bond.a1_num-1].type == 'H'):
                   count_h[1]=count_h[1]+1
                   Hlist.append(bond.a1_num)
@@ -295,7 +306,7 @@ def modify_mol2_file(mol2file, outputprefix):
        print (count_h) 
 
        # (1) remove 5 hydrogen atoms, 
-       # (2) change Si to Du and the atom name, 
+       # (2) change adduct atoms and atom name to Du, 
 
        new_atomlist = []
        for i,atom in enumerate(mol.atom_list):
@@ -303,24 +314,26 @@ def modify_mol2_file(mol2file, outputprefix):
            #exit()
            if atom.num in Hlist: 
               continue
-           if atom.num-1 == Si1: 
+           if atom.num-1 == Du1: 
               atom.type = 'Du'
               atom.Q = 0.0
               print("Hcount ==", count_h[0])
-              if count_h[0] == 3: 
-                 atom.name = 'D2'
-              elif count_h[0] == 0: # SG will just have no H
+              atom.name = 'D1'
+              #if count_h[0] == 3: 
+              #   atom.name = 'D2'
+              #elif count_h[0] == 0: # SG will just have no H
               #elif count_h[0] == 2:
-                 atom.name = 'D1'
-           if atom.num-1 == Si2: 
+              #   atom.name = 'D1'
+           if atom.num-1 == Du2: 
               atom.type = 'Du'
               atom.Q = 0.0
               print("Hcount ==",count_h[1])
-              if count_h[1] == 3: 
-                 atom.name = 'D2'
+              atom.name = 'D2'
+              #if count_h[1] == 3: 
+              #   atom.name = 'D2'
               #elif count_h[1] == 2: # 
-              elif count_h[1] == 0: # SG will just have no H 
-                 atom.name = 'D1'
+              #elif count_h[1] == 0: # SG will just have no H 
+              #   atom.name = 'D1'
            
            new_atomlist.append(copy.copy(atom))
        # (3) generate mapping from old to new atom numbering to be used in the bond modification. 
@@ -360,6 +373,58 @@ def modify_mol2_file(mol2file, outputprefix):
           frist = False
        else:
           mol2.append_mol2(mol,filename)
+
+    fileh = open(solvfile,'r')
+    fileho = open(filename,'a')
+
+    print(Hlist)
+    print(Du_atoms_index)
+    count = 0
+    text = ''
+    lines = []
+    for line in fileh:
+         if count-1 in Du_atoms_index: # Si atom is the index not the so starts at 0
+            print ("Du line (%d):                %s"%(count,line.strip()))
+            temp = "%8.4f %7.2f %6.2f %7.2f %7.2f\n"%(0.0,0.0,0.0,0.0,0.0)
+            lines.append(temp)
+         elif count in Hlist: # H is the atom number and starts at 1.
+            print ("H connected to Du line (%d): %s"%(count,line.strip()))
+         else:
+            #text = text+line
+            lines.append(line)
+         count = count+1
+
+    print (len(lines))
+
+    count = 0
+    c1 = 0.0
+    c2 = 0.0
+    c3 = 0.0
+    c4 = 0.0
+    c5 = 0.0
+
+    for line in lines:
+        #print(line)
+        #exit()
+        if (count != 0):
+           text = text+line
+           #text = text+str(count)+" "+line
+           splitline = line.split()
+           #print(count, splitline)
+           c1 = c1+float(splitline[0])
+           c2 = c2+float(splitline[1])
+           c3 = c3+float(splitline[2])
+           c4 = c4+float(splitline[3])
+           c5 = c5+float(splitline[4])
+        count = count+1
+    #exit()
+    #print(lines[0])
+    text1 = "%-10s %3d %3.1f %8.2f %8.2f %8.2f %8.2f\n"%("name",count-1, c1,c2,c3,c4,c5)
+    #print (text1)
+    text = text1 + text
+
+    fileho.write("@<TRIPOS>SOLVATION\n")
+    fileho.write(text)
           
     return
     
@@ -367,18 +432,20 @@ def modify_mol2_file(mol2file, outputprefix):
 #################################################################################################################
 #################################################################################################################
 def main():
-    if len(sys.argv) != 3: # if no input
+    if len(sys.argv) != 4: # if no input
         print (" This script needs the following:")
         print (" (1) input mol2 file")
-        print (" (2) output mol2 file")
-        #print " (3) angle"
+        print (" (2) input solv file")
+        print (" (3) output mol2 file")
+        #print " (4) angle"
         return
 
     mol2file       = sys.argv[1]
-    outputprefix   = sys.argv[2]
-    #angle          = float(sys.argv[3])
+    solvfile       = sys.argv[2]
+    outputprefix   = sys.argv[3]
+    #angle          = float(sys.argv[4])
 
-    modify_mol2_file(mol2file, outputprefix) 
+    modify_mol2_file(mol2file,solvfile,outputprefix) 
 
     return 
 #################################################################################################################
