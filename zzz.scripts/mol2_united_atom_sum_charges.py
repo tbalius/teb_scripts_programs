@@ -1,5 +1,6 @@
 
-import mol2
+#import mol2
+import mol2_python3 as mol2
 import sys
 
 
@@ -33,7 +34,7 @@ def combine_q_and_remove_hydrogens(m):
                atom_keep_dict[bond.a1_num-1] = True
                atom_keep_dict[bond.a2_num-1] = True
                continue
-           print bond.a1_num, bond.a1_num,  m.atom_list[bond.a1_num-1].Q, m.atom_list[bond.a2_num-1].Q
+           print (bond.a1_num, bond.a1_num,  m.atom_list[bond.a1_num-1].Q, m.atom_list[bond.a2_num-1].Q)
            m.atom_list[bond.a1_num-1].Q = m.atom_list[bond.a1_num-1].Q + m.atom_list[bond.a2_num-1].Q
            m.atom_list[bond.a2_num-1].Q = 0 
            atom_keep_dict[bond.a1_num-1] = True
@@ -45,11 +46,11 @@ def combine_q_and_remove_hydrogens(m):
                atom_keep_dict[bond.a1_num-1] = True
                atom_keep_dict[bond.a2_num-1] = True
                continue
-           print bond.a1_num, bond.a1_num,  m.atom_list[bond.a1_num-1].Q, m.atom_list[bond.a2_num-1].Q
+           print (bond.a1_num, bond.a1_num,  m.atom_list[bond.a1_num-1].Q, m.atom_list[bond.a2_num-1].Q)
            m.atom_list[bond.a2_num-1].Q = m.atom_list[bond.a2_num-1].Q + m.atom_list[bond.a1_num-1].Q
            m.atom_list[bond.a1_num-1].Q = 0 
            atom_keep_dict[bond.a2_num-1] = True
-           atom_keep_dict[bond.a1_num-1] = False // hydrogen
+           atom_keep_dict[bond.a1_num-1] = False # hydrogen
 
     for atom_id in range(len(m.atom_list)):
        if (atom_keep_dict[atom_id]):
@@ -62,14 +63,14 @@ def combine_q_and_remove_hydrogens(m):
     return m2
 
 
-print "this file requiers the mol2 libary writen by trent balius and sudipto mukherjee"
+print ("this file requiers the mol2 libary writen by trent balius and sudipto mukherjee")
 
-print "syntex: mol2_removeH.py input_file output_file"
+print ("syntex: mol2_united_atom_sum_charges.py input_file output_file")
 
 infile = sys.argv[1]
 outfile = sys.argv[2]
 mol_list = mol2.read_Mol2_file(infile)
-print len(mol_list)
+print (len(mol_list))
 mol1 = combine_q_and_remove_hydrogens(mol_list[0])
 #mol = mol2.remove_hydrogens( mol1 )
 #mol2.write_mol2(mol,outfile)
