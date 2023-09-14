@@ -3,9 +3,9 @@
 
 import sys
 
-print "Written by Trent E. Balius, mod 2022/08/02"
+print ("Written by Trent E. Balius, mod 2022/08/02")
 
-print "syntax: python replace_cys_to_ala.py input output"
+print ("syntax: python replace_cys_to_ala.py input output")
 
 infile = sys.argv[1]
 resname = sys.argv[2]

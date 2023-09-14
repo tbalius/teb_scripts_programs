@@ -52,7 +52,7 @@ def add_bfactors(pdbatomlist, resids, bfile):
 
 def main():
     if len(sys.argv) != 5: # if no input
-       print "ERORR: there need to be 4 inputs: pdb inputfilename, bfactorfilename(2 colomn:resname,value)  residuelist, outputfileprefix."
+       print ("ERORR: there need to be 4 inputs: pdb inputfilename, bfactorfilename(2 colomn:resname,value)  residuelist, outputfileprefix.")
        return
 
     fileinputpdb = sys.argv[1]
@@ -62,18 +62,18 @@ def main():
 
     splitname = fileinputpdb.split('/')[-1].split('.') 
     if len(splitname) != 2:
-        print "error pdb file is weird. "
+        print ("error pdb file is weird. ")
         exit()
     prefix = splitname[0] 
 
-    print 'input_pdb =' + fileinputpdb
-    print 'sph prefix =' + prefix
-    print 'residue string =' + res_string
-    print 'output =' + fileoutput
+    print ('input_pdb =' + fileinputpdb)
+    print ('prefix =' + prefix)
+    print ('residue string =' + res_string)
+    print ('output =' + fileoutput)
 
     residlist = []
     res_string_split = res_string.split(',') 
-    print res_string_split
+    print (res_string_split)
 #   if len(res_string_split) == 1: 
 #       residlist.append(int(res_string_split[0]))
 #   else:
@@ -82,7 +82,7 @@ def main():
        if ('-' in s):
           s_split = s.split('-')
           if (len(s_split) != 2):
-             print "something is wrong with residue string."
+             print ("something is wrong with residue string.")
           else:
              start = int(s_split[0])
              stop  = int(s_split[1])+1
@@ -93,7 +93,7 @@ def main():
 
     for i in range(1,len(residlist)):
         if residlist[i-1] > residlist[i]:
-           print "uhoh. list is not monotonic"
+           print ("uhoh. list is not monotonic")
            exit()
 
     print residlist
