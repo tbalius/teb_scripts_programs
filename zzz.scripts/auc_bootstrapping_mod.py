@@ -12,6 +12,13 @@ import matplotlib.pyplot
 import numpy
 import os
 
+# set dockpath as a globle variable.  
+dockpath = os.environ.get("DOCKBASE")
+if (dockpath ==""): 
+    print ("DOCKBASE is not set ...")
+    exit()
+print (dockpath)
+
 def pos_neg(array,p_array,n_array): # pointer to arrays. 
 
     for i in range(len(array)):
@@ -155,7 +162,8 @@ def cal_auc_logauc_fromsamples(arraylig,arraydec,dirname):
         fh.write('%s\n'%string)
     fh.close()
 
-    os.system('python ~/zzz.github/DOCK_dev_2020_12_01/ucsfdock/analysis/enrich.py -i ./ -l ligand.name -d decoy.name')
+    #os.system('python /home/baliuste/zzz.github/DOCK_dev_2020_12_01/ucsfdock/analysis/enrich.py -i ./ -l ligand.name -d decoy.name')
+    os.system('python '+dockpath+'/analysis/enrich.py -i ./ -l ligand.name -d decoy.name')
     #print('python ~/zzz.github/DOCK_dev_2020_12_01/ucsfdock/analysis/enrich.py -i ./ -l %s/%s -d %s/%s'%(cwd,ligfile,cwd,decfile)
     #os.system('python ~/zzz.github/DOCK_dev_2020_12_01/ucsfdock/analysis/enrich.py -i ./ -l %s/%s -d %s/%s'%(cwd,ligfile,cwd,decfile)
 
@@ -435,12 +443,14 @@ def main():
         makehist(difflogauclist,delta,'hist2difflogauc.png')
          
      
-     os.system('python ~/zzz.github/DOCK_dev_2020_12_01/ucsfdock/analysis/plots.py'+cmd)
+     #os.system('python /home/baliuste/zzz.github/DOCK_dev_2020_12_01/ucsfdock/analysis/plots.py'+cmd)
+     os.system('python '+dockpath+'/analysis/plots.py'+cmd)
      
 
      if flag_pair: 
          #os.system('python ~/zzz.github/DOCK_dev_2020_12_01/ucsfdock/analysis/plots.py'+cmd2)
-         print('python ~/zzz.github/DOCK_dev_2020_12_01/ucsfdock/analysis/plots.py'+cmd2)
+         #print('python /home/baliuste/zzz.github/DOCK_dev_2020_12_01/ucsfdock/analysis/plots.py'+cmd2)
+         print('python '+dockpath+'/analysis/plots.py'+cmd2)
      
      
 

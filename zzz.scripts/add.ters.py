@@ -3,10 +3,10 @@
 
 import sys
 
-print "This script requires a pdb protonated with reduce"
-print "Written by Trent E. Balius, 2015/02/05"
+print ("This script requires a pdb protonated with reduce")
+print ("Written by Trent E. Balius, 2015/02/05")
 
-print "syntax: python 0001i.add.ters.py input output"
+print ("syntax: python 0001i.add.ters.py input output")
 
 infile = sys.argv[1]
 outfile = sys.argv[2]

@@ -3,12 +3,12 @@
 
 import sys
 
-print "This script requires a pdb protonated with reduce"
-print "Written by Trent E. Balius, 2015/02/05"
+print ("This script requires a pdb protonated with reduce")
+print ("Written by Trent E. Balius, 2015/02/05")
 
-print "syntax: python replace_cys_to_cyx.py input output"
-print "get script from webpage via:"
-print "curl docking.org/~tbalius/code/waterpaper2017/scripts/replace_cys_to_cyx.py > replace_cys_to_cyx.py"
+print ("syntax: python replace_cys_to_cyx.py input output")
+print ("get script from webpage via:")
+print ("curl docking.org/~tbalius/code/waterpaper2017/scripts/replace_cys_to_cyx.py > replace_cys_to_cyx.py")
 
 infile = sys.argv[1]
 outfile = sys.argv[2]
@@ -47,14 +47,15 @@ for line in lines:
         x = float(line[31:39])
         y = float(line[39:46])
         z = float(line[46:54])
-        print [x,y,z]
+        print ([x,y,z])
         dic_CYS[line[17:26]] = [x,y,z]
       if not (line[17:26] in dic_RES.keys()):
-        print line[17:26], rescount
+        print (line[17:26], rescount)
         dic_RES[line[17:26]] = rescount
         rescount = rescount + 1
 
-keys = dic_CYS.keys()
+#keys = dic_CYS.keys()
+keys = list(dic_CYS.keys())
 
 dic_CYX = {}
 
@@ -71,9 +72,9 @@ for i in range(0,len(keys)):
            dic_CYX[key1] = 1
            dic_CYX[key2] = 1
            # bond REC.11.SG REC.344.SG
-           print str(key1)+" "+str(key2)+" "+str(dist2)
+           print (str(key1)+" "+str(key2)+" "+str(dist2))
            #print "bond REC.%s.SG REC.%s.SG"%(key1.split()[2],key2.split()[2])
-           print "bond REC.%d.SG REC.%d.SG"%(dic_RES[key1],dic_RES[key2])
+           print ("bond REC.%d.SG REC.%d.SG"%(dic_RES[key1],dic_RES[key2]))
            #fileout2.write("bond REC.%s.SG REC.%s.SG\n"%(key1.split()[2],key2.split()[2]))
            fileout2.write("bond REC.%d.SG REC.%d.SG\n"%(dic_RES[key1],dic_RES[key2]))
 fileout2.close()
