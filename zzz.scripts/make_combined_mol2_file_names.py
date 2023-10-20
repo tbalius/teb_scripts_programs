@@ -2,6 +2,7 @@
 import sys, os
 
 # written by Trent Balius, FNLCR, 2022/08/26.
+# modifed on 2023/10/19 to use names
 
 # This script reads in a bunch of mol2 files and combines them into one files
 # so that the file is not too big we use a score cut off to only retain molecules about the cutoff
@@ -10,7 +11,7 @@ import sys, os
 # i. one file with all poses below the cutoff (not sorted) and 
 # ii. one file that is sorted and with just the miniumn energy pose for each zincid (remove duplicates) 
 
-def open_dock_mol2(list_text,filenamein,fho,fhdo,score_txt,cutoff):
+def open_dock_mol2(list_text,targetnames,filenamein,fho,fhdo,score_txt,cutoff):
 
     fhi = open(filenamein,'r') # input file handel
 
@@ -27,7 +28,7 @@ def open_dock_mol2(list_text,filenamein,fho,fhdo,score_txt,cutoff):
         splitline = line.split()
         if "#####" in line: 
                 if flag_res or flag_sol: 
-                     if score <= cutoff: # only keep things that are less than the cutoff
+                     if score <= cutoff and (name in targetnames): # only keep things that are less than the cutoff and name is a name we are looking for.
                          list_text.append([score,name, moltext])
                          fho.write(moltext)
                          fhdo.write("%s,%s\n"%(name,filenamein))
@@ -82,7 +83,7 @@ def open_dock_mol2(list_text,filenamein,fho,fhdo,score_txt,cutoff):
               #print (name, score)
         moltext = moltext+line
     # output the last pose.
-    if score <= cutoff: # only keep things that are less than the cutoff
+    if score <= cutoff and (name in targetnames): # only keep things that are less than the cutoff and have the name is a name we are looking for. 
         list_text.append([score,name, moltext])
         fho.write(moltext)
         fhdo.write("%s,%s\n"%(name,filenamein))
@@ -155,12 +156,14 @@ def write_csv(list_mol2_s_t,fho):
 def main():    
    list_mol2 = []
 
-   print("syntax: python make_combined_mol2_file.py dirpath1 mol2name score_txt1\n example:  python make_combined_mol2_file.py mol2listfile Chemgrid_Score: -50.0")
+   print("syntax: python make_combined_mol2_file.py dirpath1 mol2_file_and_mol_name score_txt1\n example:  python make_combined_mol2_file.py ../ mol2listfile_names Chemgrid_Score: -50.0")
 
-   filemol2list   = sys.argv[1]
-   score_txt1 = sys.argv[2]
-   cutoff     = float(sys.argv[3])
+   basedir        = sys.argv[1]
+   filemol2list   = sys.argv[2]
+   score_txt1 = sys.argv[3]
+   cutoff     = float(sys.argv[4])
 
+   print("dirpath1 = %s"%basedir)
    print("filemol2list = %s"%filemol2list)
    print("score_txt1 = %s"%score_txt1)
    print("cutoff = %f"%cutoff)
@@ -184,10 +187,18 @@ def main():
    fho = open(filename2,'w')
    fhdo = open(filename5,'w')
    
+   dic_file_to_names = {}
    for line in files:
-       filename1 = line.strip()
-       open_dock_mol2(list_mol2_score_text,filename1,fho,fhdo,score_txt1,cutoff)
-   
+       linesplit = line.strip().split(',')
+       zincid    = linesplit[0]
+       filename1 = linesplit[1]
+       if not filename1 in dic_file_to_names:
+         dic_file_to_names[filename1] = []
+       dic_file_to_names[filename1].append(zincid)
+   # so this is faster look for all ligand that are in the same files and look through that file only once.  
+   for filename in dic_file_to_names.keys():
+       open_dock_mol2(list_mol2_score_text,dic_file_to_names[filename],basedir+filename,fho,fhdo,score_txt1,cutoff)
+ 
    fho.close()
    fhdo.close()
    fho = open(filename3,'w')

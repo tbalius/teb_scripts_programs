@@ -3,6 +3,7 @@
 ## Writen by Trent Balius in the Shoichet Lab, UCSF in 2015
 ################################################################################################################# 
 import sys
+#import functools
 
 class sphere:
     def __init__(self,index,X,Y,Z,radius,atomnum,critical_cluster,sphere_color,cluster):
@@ -15,8 +16,8 @@ class sphere:
         self.critical_cluster = int(critical_cluster)
         self.sphere_color     = int(sphere_color)
         self.cluster          = int(cluster) # this is the cluster in the header.  
-def byIndex(x, y):
-    return cmp(x.index, y.index)
+#def byIndex(x, y):
+#    return cmp(x.index, y.index)
 
 def Are_equal(x,y):
     if (x.X == y.X and x.Y == y.Y and x.Z == y.Z): 
@@ -108,7 +109,9 @@ def read_sph_cluster_list(filename):
           sphere_list.append(tmp_sphere)
 
     #sphere_list.append(tmp_sphere)
-    sphere_list.sort(byIndex)
+    #sphere_list.sort(byIndex)
+    #sphere_list.sort(key=byIndex)
+    sphere_list.sort(key=lambda b: b.index)
     ## remove duplicates:
     remove_dullicates(sphere_list)
 
@@ -188,7 +191,9 @@ def read_sph_r(filename,ccluster,color,radius_max,radius_min):
              sphere_list.append(tmp_sphere)
 
     #sphere_list.append(tmp_sphere)
-    sphere_list.sort(byIndex)
+    #sphere_list.sort(byIndex)
+    #sphere_list.sort(key=functools.cmp_to_key(byIndex))
+    sphere_list.sort(key=lambda b: b.index)
     ## remove duplicates:
     remove_dullicates(sphere_list)
 
