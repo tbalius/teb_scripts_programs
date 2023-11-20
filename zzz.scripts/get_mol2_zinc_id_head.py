@@ -62,9 +62,9 @@ def read_multi_mol2file(filename,molname,text1):
 #################################################################################################################
 def main():
     if (len(sys.argv) != 4): # if no input
-        print " (1) mol2 file name," 
-        print " (2) file with mol names you want to search for and output, ";
-        print " (3) output file for found ligands, ";
+        print (" (1) mol2 file name," )
+        print (" (2) file with mol names you want to search for and output, ");
+        print (" (3) output file for found ligands, ");
         return
 
     filename    = sys.argv[1]
@@ -81,7 +81,7 @@ def main():
     for molname in lines:
        #print "searching " + filename + " for molecule " + molname
        #molname = molname.strip('\n').replace("ZINC","NC")
-       print "searching " + filename + " for molecule " + molname
+       print ("searching " + filename + " for molecule " + molname)
        text1 = read_multi_mol2file(filename,molname,text1)
        textAll = textAll + text1 
     file2 = open(output,'w')

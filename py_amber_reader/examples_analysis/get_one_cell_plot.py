@@ -18,7 +18,7 @@ import math, scipy, pylab, numpy
 def readmatrix_one_cell(filehandel,si,sj):
     # si is the user specified i value
     # sj is the user specified j value
-    print "Here in readmatrix_one_cell"
+    print ("Here in readmatrix_one_cell")
     i = 0
     fval = 0.0
     flagfound = False
@@ -40,7 +40,7 @@ def readmatrix_one_cell(filehandel,si,sj):
             j = j + 1
         i = i + 1
     if not flagfound:
-       print "i==%d and j ==%d not found"%(si,sj)
+       print ("i==%d and j ==%d not found"%(si,sj))
 
     return fval #,label1,label2
 
@@ -49,13 +49,13 @@ def readmatrix_one_cell(filehandel,si,sj):
 #def heatmap(Mat,label,filename,threshold,heatmap_threshold):
 def make_plot(val_array,title,filename,start,stop):
 
-     print "Here in make_plot"
+     print ("Here in make_plot")
      fig = pylab.figure(figsize=(8,8))
 
      #timearray = numpy.linspace(1,50000,num=len(val_array))
      timearray = numpy.linspace(1,len(val_array),num=len(val_array))
-     print timearray[start-1]
-     print timearray[stop-1]
+     print (timearray[start-1])
+     print (timearray[stop-1])
      ax1 = fig.add_axes([0.1,0.1,0.6,0.2])
      matplotlib.pyplot.plot(timearray,val_array,'k-') # draws a datshed line where dendogram is cut.
      #ax1.set_xticks([])
@@ -96,12 +96,12 @@ def mean_var(array):
 
 def main():
   if len(sys.argv) != 8: # if no input
-     print "syntax:  filename_prefix, frame start, frame stop, row number, column number, title, output file"
-     print "Error:  you have entered the wrong number of inputs:"
-     print len(sys.argv)
+     print ("syntax:  filename_prefix, frame start, frame stop, row number, column number, title, output file")
+     print ("Error:  you have entered the wrong number of inputs:")
+     print (len(sys.argv))
      exit()
 
-  print "You have entered in %d inputs:"%(len(sys.argv))
+  print ("You have entered in %d inputs:"%(len(sys.argv)))
   file1name  = sys.argv[1] 
   start     = int(sys.argv[2])
   stop      = int(sys.argv[3])
@@ -112,7 +112,7 @@ def main():
 
   val_array = []
   for i in range(start,stop+1):
-      print "input matrix file prefix = " + file1name+'.'+str(i)
+      print ("input matrix file prefix = " + file1name+'.'+str(i))
       file1handel = open(file1name+'.'+str(i),'r')
       val = readmatrix_one_cell(file1handel,row_n,col_n)
       file1handel.close()

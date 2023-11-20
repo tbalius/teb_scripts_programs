@@ -1,10 +1,10 @@
 
-import mol2
+import mol2_python3 as mol2
 import sys
 
-print "this file requiers the mol2 libary writen by trent balius and sudipto mukherjee"
+print ("this file requiers the mol2 libary writen by trent balius and sudipto mukherjee")
 
-print "syntex: mol2_removeH.py input_file output_file"
+print ("syntex: mol2_removeH.py input_file output_file")
 
 infile = sys.argv[1]
 #outfile = sys.argv[2]
@@ -20,5 +20,5 @@ for mol in mol_list:
 
 avg = avg / float(len(mw_list))
 
-print avg
+print (avg)
 

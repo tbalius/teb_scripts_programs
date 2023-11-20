@@ -18,7 +18,7 @@ class frame:
 
 def coord_reader(filename):
 
- print "IN coord_reader"
+ print ("IN coord_reader")
  file = open(filename,'r')
 # lines = file.readlines()
 
@@ -49,18 +49,18 @@ def coord_reader(filename):
    line_count = line_count + 1
  file.close()
 
- print "read in coord file"
+ print ("read in coord file")
 # now convet vals to frames 
 #  for val in vals()
  if (len(vals)%3 != 0 ):
-    print "error len(vals)%3 = %d"%(len(vals)%3)
+    print ("error len(vals)%3 = %d"%(len(vals)%3))
     exit(0)
  i = 0
  while i < len(vals):
        if count == size:
           temp_frame = frame(cords)
           frames.append(temp_frame)
-          print "# of Frames now:",len(frames)
+          print ("# of Frames now:",len(frames))
           cords  = []
           count  = 0
        x = float(vals[i])
@@ -78,7 +78,7 @@ def coord_reader(filename):
 
 def coord_writer(filename,cords,name):
 
- print "OUT coord_writer"
+ print ("OUT coord_writer")
  filec = open(filename,'w')
  filec.write('%s\n'%(name))
  filec.write('%7d\n'%(len(cords)))
@@ -102,10 +102,10 @@ def coord_writer(filename,cords,name):
 def main():
 
     if (len(sys.argv) != 5): # if no input
-        print " (1) crd file name,"
-        print " (2) crd file name,"
-        print " (3) output file  ";
-        print " (4) val for mixing"
+        print (" (1) crd file name,")
+        print (" (2) crd file name,")
+        print (" (3) output file  ");
+        print (" (4) val for mixing")
         return
 
     crdfilename1    = sys.argv[1]
