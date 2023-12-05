@@ -8,10 +8,6 @@ set scriptdir = "${mountdir}"
 
 ## TEB / MF comments -- March 2017
 #set mountdir = `pwd`
-#set mut = E37C 
-#set lig = DL2040 
-#set lig = DL2078 
-#set lig = DL1314_Protomer1 
 
 #set seed = "0"
 #set seed = "5"

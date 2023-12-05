@@ -123,7 +123,7 @@ set script = "/home/${username}/zzz.github/teb_scripts_programs/py_amber_reader/
  #python ${mountdir}/heatmap_matrix_avg_multiple_csv.py vdw.txt 0.0 -1.0 1.0   temp.label1_converted.txt temp.label2_converted.txt >  avg_heatmap_matrix.VDW.log
  #python ${mountdir}/heatmap_matrix_avg_multiple_csv.py ele.txt 0.0 -50.0 50.0 temp.label1_converted.txt temp.label2_converted.txt >  avg_heatmap_matrix.ELE.log
  #python ${mountdir}/heatmap_matrix_avg_multiple_csv.py tot.txt 0.0 -50.0 50.0 temp.label1_converted.txt temp.label2_converted.txt >  avg_heatmap_matrix.TOT.log
- python ${script}/heatmap_matrix_avg_multiple_csv.py vdw.txt 0.0 -1.0 1.0   temp.label1_converted.txt temp.label2_converted.txt >  avg_heatmap_matrix.VDW.log
- python ${script}/heatmap_matrix_avg_multiple_csv.py ele.txt 0.0 -50.0 50.0 temp.label1_converted.txt temp.label2_converted.txt >  avg_heatmap_matrix.ELE.log
- python ${script}/heatmap_matrix_avg_multiple_csv.py tot.txt 0.0 -50.0 50.0 temp.label1_converted.txt temp.label2_converted.txt >  avg_heatmap_matrix.TOT.log
+ python ${script}/examples_analysis/heatmap_matrix_avg_multiple_csv.py vdw.txt 0.0 -1.0 1.0   temp.label1_converted.txt temp.label2_converted.txt >  avg_heatmap_matrix.VDW.log
+ python ${script}/examples_analysis/heatmap_matrix_avg_multiple_csv.py ele.txt 0.0 -50.0 50.0 temp.label1_converted.txt temp.label2_converted.txt >  avg_heatmap_matrix.ELE.log
+ python ${script}/examples_analysis/heatmap_matrix_avg_multiple_csv.py tot.txt 0.0 -50.0 50.0 temp.label1_converted.txt temp.label2_converted.txt >  avg_heatmap_matrix.TOT.log
 

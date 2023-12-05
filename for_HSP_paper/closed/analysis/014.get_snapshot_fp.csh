@@ -42,7 +42,7 @@ cd $workdir
 set list = `ls ${mountdir}/${pdb}/007.snapshot_mmgbsa_${name}_${seed}/snapshot.*.rst`
 #set prm  =  ${mountdir}/${pdb}/0003md_tleap/com1.mmrc.leap.prm7 
 set prm  =  ${mountdir_ori}/0003md_tleap/com4.mm.leap.prm7
-set script = "/home/$username/zzz.github/teb_scripts_programs/py_amber_reader/"
+set script = "/home/${username}/zzz.github/teb_scripts_programs/py_amber_reader/"
 
 #set mask1 = "1-168,170-171"
 #set mask2 = "169"

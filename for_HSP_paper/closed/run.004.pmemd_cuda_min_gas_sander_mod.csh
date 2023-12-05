@@ -45,13 +45,6 @@ EOF1
 
 #echo cn072
 
-#SBATCH --nodelist=cn049
-#SBATCH --nodelist=cn050
-#SBATCH --nodelist=cn051
-#SBATCH --nodelist=cn052
-#SBATCH --nodelist=cn072
-#SBATCH --nodelist=cn073
-#SBATCH --nodelist=cn076
 #SBATCH --nodelist=cn051
 #SBATCH -p gpu
 #SBATCH --gres=gpu:1

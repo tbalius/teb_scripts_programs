@@ -132,8 +132,8 @@ cat << EOF >! qsub.amber.csh
 
 set username = `whoami`
 
-#setenv AMBERHOME /home/$username/zzz.programs/amber/amber18
-source /home/$username/.cshrc.amber
+#setenv AMBERHOME /home/\$username/zzz.programs/amber/amber18
+source /home/\$username/.cshrc.amber
 
  
 #set amberexe = "/nfs/ge/bin/on-one-gpu - \$AMBERHOME/bin/pmemd.cuda"

@@ -91,7 +91,7 @@ python3 ${mountdir}/convert_temp_label_to_original.py temp.label1.txt
 python3 ${mountdir}/convert_temp_label_to_original.py temp.label2.txt
 
    #python /home/${username}/zzz.github/teb_scripts_programs/py_amber_reader/examples_analysis/heatmap_matrix_mod2.py vdwseed${seed}.avg 0.0 -1.0 1.0   temp.label1_converted.txt temp.label2_converted.txt >  avg_heatmap_matrix.VDW.log
-   python ${script}/heatmap_matrix_mod2.py vdwseed${seed}.avg 0.0 -1.0 1.0   temp.label1_converted.txt temp.label2_converted.txt >  avg_heatmap_matrix.VDW.log
-   python ${script}/heatmap_matrix_mod2.py eleseed${seed}.avg 0.0 -50.0 50.0 temp.label1_converted.txt temp.label2_converted.txt >  avg_heatmap_matrix.ES.log
+   python ${script}/examples_analysis/heatmap_matrix_mod2.py vdwseed${seed}.avg 0.0 -1.0 1.0   temp.label1_converted.txt temp.label2_converted.txt >  avg_heatmap_matrix.VDW.log
+   python ${script}/examples_analysis/heatmap_matrix_mod2.py eleseed${seed}.avg 0.0 -50.0 50.0 temp.label1_converted.txt temp.label2_converted.txt >  avg_heatmap_matrix.ES.log
 
 end # seed

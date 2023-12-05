@@ -13,14 +13,6 @@ set mountdir  = `pwd`
 set mountdir_ori = "/path/to/files/Closed_fix_2023_01_19_fix_cap"
 set scriptdir = "${mountdir}"
 
-#set mut = E37C 
-#set lig = DL2040 
-#set lig = DL2078 
-#set lig = DL1314_Protomer1 
-#set lig = 228354851 
-#set lig = mol017
-#set lig = mol016
-
 #set mountdir = ${mountdir_ori}/${mut}/${lig}/pose${pose}/
 #cd $pwd
 

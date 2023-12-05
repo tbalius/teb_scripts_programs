@@ -80,14 +80,14 @@ cp $filedir/temp.label1_converted.txt $filedir/temp.label2_converted.txt .
 #exit
 
 #set list = `ls $mountdir/${pdb}/014.footprint_matrix_overtime_/name_${name}_seed_${seed}/vdw* | awk -F. '{print $3}' | sort -n`
-#set script = "/home/${username}/zzz.github/teb_scripts_programs/py_amber_reader/"
+set script = "/home/${username}/zzz.github/teb_scripts_programs/py_amber_reader/"
 
 # python3 ${mountdir}/convert_temp_label_to_original.py temp.label1.txt
 # python3 ${mountdir}/convert_temp_label_to_original.py temp.label2.txt
 
- python ${mountdir}/heatmap_matrix_avg_multiple_csv.py vdw.txt 0.0 -1.0 1.0   temp.label1_converted.txt temp.label2_converted.txt >  avg_heatmap_matrix.VDW.log
- python ${mountdir}/heatmap_matrix_avg_multiple_csv.py ele.txt 0.0 -50.0 50.0 temp.label1_converted.txt temp.label2_converted.txt >  avg_heatmap_matrix.ELE.log
- python ${mountdir}/heatmap_matrix_avg_multiple_csv.py tot.txt 0.0 -50.0 50.0 temp.label1_converted.txt temp.label2_converted.txt >  avg_heatmap_matrix.TOT.log
+ python ${script}/examples_analysis/heatmap_matrix_avg_multiple_csv.py vdw.txt 0.0 -1.0 1.0   temp.label1_converted.txt temp.label2_converted.txt >  avg_heatmap_matrix.VDW.log
+ python ${script}/examples_analysis/heatmap_matrix_avg_multiple_csv.py ele.txt 0.0 -50.0 50.0 temp.label1_converted.txt temp.label2_converted.txt >  avg_heatmap_matrix.ELE.log
+ python ${script}/examples_analysis/heatmap_matrix_avg_multiple_csv.py tot.txt 0.0 -50.0 50.0 temp.label1_converted.txt temp.label2_converted.txt >  avg_heatmap_matrix.TOT.log
 
 
 

@@ -49,8 +49,6 @@ set TASK_DIR = "${mountdir}/008_mmgbsa/full_${seed}"
 mkdir -p ${TASK_DIR}
 cd ${TASK_DIR}
 
-#cp /home/baliuste/work/RAS/dimer_6GJ8/003md_tleap/com.watbox.leap.* .
-
 set com_traj = ${mountdir}/007.com.dimer_${seed}/com.nowat.mdcrd 
 set rec_traj = ${mountdir}/007.com.dimer_${seed}/hsp83_mon1.mdcrd 
 set lig_traj = ${mountdir}/007.com.dimer_${seed}/hsp83_mon2.mdcrd
