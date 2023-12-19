@@ -1,9 +1,12 @@
-# File created by Trent Balius, FNLCR, Sept 14, 2023
-# Charges obtained from UCSF Chimera using AMBER ff03.r1
-# Non-polar hydrogen charge added to bonded heavy atom.
-# Generated with mol2_united_atom_sum_charges.py and
-# mol2toDOCK37type.py from
-# https://github.com/tbalius/teb_docking_test_sets
+! File created by Trent Balius, FNLCR, Sept 14, 2023
+! Charges obtained from UCSF Chimera using AMBER ff03.r1
+! Non-polar hydrogen charge added to bonded heavy atom.
+! Generated with mol2_united_atom_sum_charges.py and
+! mol2toDOCK37type.py from
+! https://github.com/tbalius/teb_docking_test_sets
+!
+!aaaxxxrrrnnnncqqqqqqqqxtt   format (A4, 3x, A3, A4, A1, F8.3, 1x, I2) 
+!
  P       A        1.166 13
  OP1     A       -0.776 11
  OP2     A       -0.776 11
