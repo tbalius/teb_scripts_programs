@@ -12,10 +12,15 @@ import sys, os
 
 def open_dock_mol2(list_text,filenamein,fho,fhdo,score_txt,cutoff):
 
+    if not os.path.exists(filenamein): 
+         print(filenamein+" does not exist")
+         return
+
     fhi = open(filenamein,'r') # input file handel
 
     score = 100000.0
     moltext = ""
+    name = "None"
     #new_mol   = False
     flag_head = False # in the header section
     flag_mol  = False # in the molecule info section
