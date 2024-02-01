@@ -103,7 +103,7 @@ def bootstrap_sample_pair(values,values2,arrays,arrays2,num):
 def sortSecond(val):
     return val[1]
 
-def cal_auc_logauc_fromsamples(arraylig,arraydec,dirname):
+def cal_auc_logauc_fromsamples(arraylig,arraydec,dirname,cap):
 #def cal_auc_logauc_fromsamples(arraylig,arraydec,lignames,decnames,ligfile,decfile,dirname):
 #def cal_auc_logauc_fromsamples(arraylig,arraydec,lignames,decnames,dirname):
     text_score_array=[]
@@ -156,10 +156,13 @@ def cal_auc_logauc_fromsamples(arraylig,arraydec,dirname):
     fh.close()
 
      
+    fh1 = open("extract_all.sort.uniq_no_e_cap.txt",'w')
     fh = open("extract_all.sort.uniq.txt",'w')
     for string,score in text_score_array:
         #print(score)
-        fh.write('%s\n'%string)
+        fh1.write('%s\n'%string)
+        if(score < cap):
+           fh.write('%s\n'%string)
     fh.close()
 
     #os.system('python /home/baliuste/zzz.github/DOCK_dev_2020_12_01/ucsfdock/analysis/enrich.py -i ./ -l ligand.name -d decoy.name')
@@ -365,11 +368,11 @@ def main():
 
      for i in range(num_boot):
         #cal_auc_logauc_fromsamples(lig_arrays[i],dec_arrays[i],ligands,decoys,"boot_%d"%i)
-        cal_auc_logauc_fromsamples(lig_arrays[i],dec_arrays[i],"boot_%d"%i)
+        cal_auc_logauc_fromsamples(lig_arrays[i],dec_arrays[i],"boot_%d"%i,max_val_ten+MAXSCORE_pad)
         cmd = cmd+" -i ./boot_%d"%i 
         if flag_pair:
             #cal_auc_logauc_fromsamples(lig_arrays2[i],dec_arrays2[i],ligands2,decoys2,"boot2_%d"%i)
-            cal_auc_logauc_fromsamples(lig_arrays2[i],dec_arrays2[i],"boot2_%d"%i)
+            cal_auc_logauc_fromsamples(lig_arrays2[i],dec_arrays2[i],"boot2_%d"%i,max_val_ten2+MAXSCORE_pad)
             cmd2 = cmd2+" -i ./boot2_%d"%i 
 
         fh = open("./boot_%d/roc_own.txt"%i)
@@ -450,7 +453,11 @@ def main():
      if flag_pair: 
          #os.system('python ~/zzz.github/DOCK_dev_2020_12_01/ucsfdock/analysis/plots.py'+cmd2)
          #print('python /home/baliuste/zzz.github/DOCK_dev_2020_12_01/ucsfdock/analysis/plots.py'+cmd2)
+         os.system("mv roc_own.png roc_own1.png")
          print('python '+dockpath+'/analysis/plots.py'+cmd2)
+         os.system('python '+dockpath+'/analysis/plots.py'+cmd2)
+         os.system("mv roc_own.png roc_own2.png")
+         
      
      
 

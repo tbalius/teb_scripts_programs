@@ -50,18 +50,32 @@ for mol in mol_list:
            b.a1_num = atom1num
         if b.a2_num == atom2num: 
            b.a2_num = atom1num
+    # change atom type
+    for a in mol.atom_list:
+        if a.num == atom1num:
+           a.type = new_type
+    # if dummy set charge to  charge to zero
+    # count number of non-dummy atoms for charge distribution. 
+    count_atoms = 0
+    for a in mol.atom_list:
+        if a.type == 'Du':
+           a.Q = 0.0 # set dummy charge to zero 
+        else: 
+           count_atoms = count_atoms + 1
+
     # sum up partail charges
     tot_q = 0.0
     for a in mol.atom_list:
         tot_q = tot_q + a.Q
 
     print("tot_q = %f"%tot_q)
-    # change atom type
+    diff_Q = (dis_Q-tot_q)/count_atoms
+    #print("distribute diff of %f to all non-dummy atoms."%(dis_Q-tot_q))
+    print("distribute diff of %f to each non-dummy atoms."%(diff_Q))
+
     for a in mol.atom_list:
-        if a.num == atom1num:
-           a.type = new_type
-           print("current Q = %f; add %f to atom %d"%(a.Q,dis_Q-tot_q,a.num))
-           a.Q = a.Q + dis_Q-tot_q
+        if a.type != 'Du':
+           a.Q = a.Q - diff_Q
 
     # renumber since we remove an atom. 
     for a in mol.atom_list:
