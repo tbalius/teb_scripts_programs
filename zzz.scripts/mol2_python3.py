@@ -882,7 +882,7 @@ def calc_dipole_moment(molecule):
 #################################################################################################################
 # Takes a single Mol object and returns a Mol object without the hydrogens
 # Have to remove H from atom_list, bond_list and residue_list
-def remove_hydrogens(m):
+def remove_hydrogens(m,bool_renum=False):
     atom_list = []
     bond_list = []
     residue_list = {}
@@ -909,6 +909,21 @@ def remove_hydrogens(m):
             bond_list.append(m.bond_list[bond_id])
 
     # Assuming that residue list does not change
+
+    if(bool_renum):
+    ## 
+       print("renumber")
+       mapping = []
+       dict_reverse_map = {}
+       for i,a in enumerate(atom_list):
+          mapping.append(a.num)
+          dict_reverse_map[a.num] = i+1
+          atom_list[i].num = i+1
+       for i in range(len(bond_list)):
+          #print(bond_list[i].a1_num, dict_reverse_map[bond_list[i].a1_num])
+          #print(bond_list[i].a2_num, dict_reverse_map[bond_list[i].a2_num])
+          bond_list[i].a1_num = dict_reverse_map[bond_list[i].a1_num]
+          bond_list[i].a2_num = dict_reverse_map[bond_list[i].a2_num]
 
     data = Mol(m.header,m.name,atom_list,bond_list,m.residue_list)
     return data

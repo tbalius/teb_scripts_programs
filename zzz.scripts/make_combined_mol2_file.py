@@ -78,13 +78,24 @@ def open_dock_mol2(list_text,filenamein,fho,fhdo,score_txt,cutoff):
                 flag_res  = True
                 flag_sol  = False
         if flag_head:
-           if len(splitline) < 3: 
+           #if len(splitline) < 3: 
+           #   continue
+           if len(splitline) < 2: 
               continue
-           if splitline[1] == "Name:":
-              name = splitline[2]
-           if splitline[1] == score_txt:
-              score = float(splitline[2])
-              #print (name, score)
+           elif len(splitline) == 2:
+              split_one = splitline[1].split(':')
+              if len(split_one) < 2:
+                 continue
+              if splitline[0] == "Name":
+                 name = split_one[1]
+              else: 
+                 continue
+           else: 
+             if splitline[1] == "Name:":
+                name = splitline[2]
+             if splitline[1] == score_txt:
+                score = float(splitline[2])
+                #print (name, score)
         moltext = moltext+line
     # output the last pose.
     if score <= cutoff: # only keep things that are less than the cutoff

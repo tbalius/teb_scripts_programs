@@ -5,7 +5,7 @@ import sys, mol2
 
 def write_sph(filename,mol):
     outsph = open(filename,'w')
-    print len(mol.atom_list)
+    print (len(mol.atom_list))
     outsph.write("DOCK spheres generated from ligand heavy atoms\n")
     outsph.write("cluster     1   number of spheres in cluster    %d\n" % len(mol.atom_list))
     for i in range(len(mol.atom_list)): 
@@ -20,7 +20,7 @@ def write_sph(filename,mol):
 
 def main():
   if len(sys.argv) != 3: # if no input
-     print "ERORR"
+     print ("ERORR")
      return
   namemol2 = sys.argv[1]
   namesph = sys.argv[2]

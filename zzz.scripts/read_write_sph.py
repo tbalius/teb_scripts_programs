@@ -11,6 +11,9 @@ class sphere:
         self.atomnum          = int(atomnum)
         self.critical_cluster = int(critical_cluster)
         self.sphere_color     = int(sphere_color)
+def cmp(x, y):
+    return bool(x > y) - bool(x < y)
+
 def byIndex(x, y):
     return cmp(x.index, y.index)
 
@@ -70,13 +73,13 @@ def read_sph(filename,ccluster,color):
           if ccluster == 'A': 
              flag_cluster = True
           elif int(ccluster) == cluster:
-             print "cluster", int(ccluster), cluster
+             print ("cluster", int(ccluster), cluster)
              flag_cluster = True
           else:
              flag_cluster = False
        elif not (line[0:4].replace(' ','').isdigit()):
             #print line[0:4], line[0:4].replace(' ','').isdigit()
-            print line
+            print (line)
        else: 
           index   = int(line[0:5])
           x       = float(line[5:15])
@@ -85,7 +88,7 @@ def read_sph(filename,ccluster,color):
           r       = float(line[35:43])
           if (r == 0.0): 
               r = 0.5
-              print "radius of 0.0 detected.  changed to 0.5."
+              print ("radius of 0.0 detected.  changed to 0.5.")
           
           atomnum = int(line[43:48])
           #print '\'' + line[48:50] + '\'' 
@@ -110,12 +113,12 @@ def read_sph(filename,ccluster,color):
           # and if the color is the same
              sphere_list.append(tmp_sphere)
 
-    sphere_list.sort(byIndex)
+    sphere_list.sort(key=lambda b: b.index)
     ## remove duplicates:
     remove_dullicates(sphere_list)
 
     if len(sphere_list) == 0:
-       print "there is a problem"
+       print ("there is a problem")
 
     return sphere_list
 
@@ -134,9 +137,9 @@ def write_sph(filename,spheres):
 
 def main():
     if len(sys.argv) != 5: # if no input
-       print "ERORR: there need to be 4 inputs: inputfilename, outputfilename, cluster_number, sphere color"
-       print "       if cluster number = 'A' all clusters are used."
-       print "       if color number   = 'A' all colors   are used."
+       print ("ERORR: there need to be 4 inputs: inputfilename, outputfilename, cluster_number, sphere color")
+       print ("       if cluster number = 'A' all clusters are used.")
+       print ("       if color number   = 'A' all colors   are used.")
        return
 
     fileinput  = sys.argv[1]
@@ -144,8 +147,8 @@ def main():
     ccluster   = sys.argv[3]
     color      = sys.argv[4]
 
-    print 'input =' + fileinput
-    print 'output =' + fileoutput
+    print ('input =' + fileinput)
+    print ('output =' + fileoutput)
 
     list = read_sph(fileinput,ccluster,color)
     write_sph(fileoutput,list)
