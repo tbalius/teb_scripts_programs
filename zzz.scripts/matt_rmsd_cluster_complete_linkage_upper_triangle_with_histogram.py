@@ -20,6 +20,7 @@ import scipy.cluster.hierarchy as sch
 ## The script uses scipy.cluster to perform hierarchal clustering 
 ## on the RMSD matrix
 ## this was written to help Matt Merski perform clustering analysis.
+## updated to python3 TEB, 2024/05/29
 
 def replace_char(string1,char_old,char_new):
     string_new = ''
@@ -41,6 +42,7 @@ def readrmsd(filehandel):
         #print line
         line = replace_char(line,'>',' ')
         line = replace_char(line,';',' ')
+        line = replace_char(line,',',' ')
         splitline = line.split()
         rmsdlist.append(float(splitline[2]))
         label1.append(splitline[0])
@@ -70,7 +72,7 @@ def vec_to_mat_upper_tirangle(label1,label2,rmsdlist):
     #     V        
 
     M = int(math.sqrt(2*N+1/4)-1/2)
-    print N, M
+    print (N, M)
     # inistizes Matrix
     m = []
     for i in range(M+1):
@@ -102,10 +104,15 @@ def vec_to_mat_upper_tirangle(label1,label2,rmsdlist):
         m[j][i] = float(rmsdlist[k])
 
     label = []
-    label.append(label1[0])
-    for k in range(M):
-    #for k in range(M+1):
-        label.append(label2[k])
+    #label.append(label1[0])
+    #for k in range(M):
+    ##for k in range(M+1):
+    #    label.append(label2[k])
+    for k in range(M+1):
+        label.append('')
+    for key in dic_lab.keys():
+        i = dic_lab[key]
+        label[i] = key
 
     return m, label
 
@@ -116,7 +123,7 @@ def vec_to_mat(rmsdlist):
     N = len(rmsdlist)
     #M = math.sqrt(N)
     M = int(math.sqrt(N))
-    print N, M 
+    print (N, M)
     m = []
 
     count = 0
@@ -143,11 +150,12 @@ def mat_to_mat(Mat):
     n = len(Mat[0])
 
     if (m != n):
-        print "inconsitancy in numbers of rows and columns in the matrix."
+        print ("inconsitancy in numbers of rows and columns in the matrix.")
 
-    print m,n
+    print (m,n)
 
-    X = scipy.zeros([m,n])
+    #X = scipy.zeros([m,n])
+    X = numpy.zeros([m,n])
 
     ## converts from a 2D array to Scipy Matrix 
     for i in range(0,m):
@@ -159,15 +167,16 @@ def mat_to_mat(Mat):
     return X
 
 def array_to_vector(array):
-    print "In array_to_vector"
+    print ("In array_to_vector")
     m = len(array)
-    print m
-    vec = scipy.zeros([m,1])
+    print (m)
+    #vec = scipy.zeros([m,1])
+    vec = numpy.zeros([m,1])
 
     ## converts from an array to Scipy vec
     for i in range(0,m):
         vec[i] = array[i]
-    print min(vec), max(vec)
+    print (min(vec), max(vec))
     return vec
 
 def mat_to_vector(Mat):
@@ -175,13 +184,15 @@ def mat_to_vector(Mat):
     n = len(Mat[0])
    
     if (m != n):
-        print "inconsitancy in numbers of rows and columns in the matrix."
+        print ("inconsitancy in numbers of rows and columns in the matrix.")
         sys.exit()
    
-    print m,n
+    print (m,n)
    
-    X = scipy.zeros([m,n])
-    Xvec = scipy.zeros(n*(n-1)/2)
+    #X = scipy.zeros([m,n])
+    #Xvec = scipy.zeros(n*(n-1)/2)
+    X = numpy.zeros([m,n])
+    Xvec = numpy.zeros(int(n*(n-1)/2))
    
     count2    = 0
 
@@ -214,7 +225,7 @@ def mat_to_vector(Mat):
 def heatmap(Mat,label,bool_sort,filename,threshold,heatmap_threshold):
      m = len(Mat)
      n = len(Mat[0])
-     print m,n
+     print (m,n)
 
      #xlabel = [] 
      #for i in range(0,m):
@@ -243,9 +254,9 @@ def heatmap(Mat,label,bool_sort,filename,threshold,heatmap_threshold):
          #threshold = 3.0 # good for complete
          #threshold = 2.0 # good for complete
          clusters = sch.fcluster(Y, threshold, 'distance')
-         print clusters
+         print (clusters)
          for i in range(len(label)):
-             print label[i] + " " + str(clusters[i])
+             print (label[i] + " " + str(clusters[i]))
 
          ax1 = fig.add_axes([0.09,0.1,0.2,0.6])
          sch.set_link_color_palette(['k','m','g','c'])
@@ -269,10 +280,10 @@ def heatmap(Mat,label,bool_sort,filename,threshold,heatmap_threshold):
          axmatrix = fig.add_axes([0.3,0.1,0.6,0.6])
          idx1 = Z1['leaves']
          idx2 = Z2['leaves']
-         print "#### index "
+         print ("#### index ")
          for i in idx1:
-             print i
-         print "####"
+             print (i)
+         print ("####")
          Mat = Mat[idx1,:]
          Mat = Mat[:,idx2]
          #xlabel[:] = xlabel[idx2]
@@ -286,15 +297,15 @@ def heatmap(Mat,label,bool_sort,filename,threshold,heatmap_threshold):
 
          cluster_dic = {}
 
-         print "systems sorted:"
+         print ("systems sorted:")
          for i in range(len(xlabel)):
-             print xlabel[i] + " " + str(clusters_new[i]) 
+             print (xlabel[i] + " " + str(clusters_new[i]) )
              if clusters_new[i] in cluster_dic.keys():
                 cluster_dic[clusters_new[i]] = cluster_dic[clusters_new[i]] +" "+ xlabel[i]
              else: 
                 cluster_dic[clusters_new[i]] = xlabel[i]
          for key in cluster_dic.keys():
-             print "cluster " +str(key) + ":" + cluster_dic[key]
+             print ("cluster " +str(key) + ":" + cluster_dic[key])
 
      else:
          Mat = mat_to_mat(Mat)
@@ -339,7 +350,7 @@ def heatmap(Mat,label,bool_sort,filename,threshold,heatmap_threshold):
      mp  = (heatmap_threshold - cmin) / (cmax - cmin)  # midpoint is where the white will appear
      tol = 0.02
      if mp > 0.9 or mp < 0.1:
-         print "threshold = " + str(threshold) + "is too high or low" 
+         print ("threshold = " + str(threshold) + "is too high or low" )
          exit()
 
      cdict = {'red': [(0.0,      1.0, 1.0),
@@ -393,13 +404,13 @@ def heatmap(Mat,label,bool_sort,filename,threshold,heatmap_threshold):
          axmatrix.set_yticks(range(0,n))
          axmatrix.set_yticklabels(ylabel)
          for i in range(0,n):
-             labels = axmatrix.yaxis.get_major_ticks()[i].label
+             labels = axmatrix.yaxis.get_major_ticks()[i].label1
              labels.set_fontsize(3)
      else:
          axmatrix.set_yticks([])
      
      for i in range(0,m):
-         labels = axmatrix.xaxis.get_major_ticks()[i].label
+         labels = axmatrix.xaxis.get_major_ticks()[i].label1
          labels.set_fontsize(3)
          labels.set_rotation('vertical')
     
@@ -444,7 +455,7 @@ def heatmap(Mat,label,bool_sort,filename,threshold,heatmap_threshold):
     
      clustname = ["closed", "intermediate", "open"] 
 
-     print len(xlabel)
+     print (len(xlabel))
      for i in range(len(xlabel)):
          for j in range(i,len(xlabel)): 
              ## Note that this is for a threshold of 2.0
@@ -553,18 +564,18 @@ def heatmap(Mat,label,bool_sort,filename,threshold,heatmap_threshold):
 
 def main():
   if len(sys.argv) != 5: # if no input
-     print "syntax:  matt_rmsd_cluster.py rmsd.txt matrix threshold (cut dendogram) threshold (color_heatmap)"
-     print "Error:  you have entered the wrong number of inputs:"
-     print len(sys.argv)
+     print ("syntax:  matt_rmsd_cluster.py rmsd.txt matrix threshold (cut dendogram) threshold (color_heatmap)")
+     print ("Error:  you have entered the wrong number of inputs:")
+     print (len(sys.argv))
 
-  print "You are entered in 3 inputs:"
+  print ("You are entered in 3 inputs:")
   file1name  = sys.argv[1] 
   file2name  = sys.argv[2] 
   threshold  = float(sys.argv[3])
   heatmap_threshold  = float(sys.argv[4])
   file2name = file2name+"_t"+str(threshold) ## add the treshold to filename
-  print "input rmsdfile = " + file1name
-  print "output matrix file = " + file2name
+  print ("input rmsdfile = " + file1name)
+  print ("output matrix file = " + file2name)
   file1handel = open(file1name,'r')
   file2handel = open(file2name,'w')
   rmsdlist,label1,label2 = readrmsd(file1handel)
