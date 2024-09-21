@@ -38,12 +38,17 @@ def read_extract_file(filename):
         #   continue
         line = line.strip('\n')
         splitline = line.split()
-        id = splitline[2].split('.')[0] # remove to prot id
+        m_id = splitline[2].split('.')[0] # remove to prot id
         score = splitline[21]
-        #print score
-        idDict_rank[id] = count
-        idDict_score[id] = score
+        if count < 10:
+           print ( m_id, score)
+        if m_id in idDict_rank: 
+            print (m_id + " in dict continue ...")
+            continue
+        idDict_rank[m_id] = count
+        idDict_score[m_id] = score
         count = count + 1
+        
     return idDict_rank, idDict_score 
 
 
@@ -53,7 +58,8 @@ def function_fit(parms,xvec):
     m = parms[0]
     b = parms[1]
     #print l
-    yvec = scipy.zeros([l,1])
+    #yvec = scipy.zeros([l,1])
+    yvec = numpy.zeros([l])
     for i in range(l):
         yvec[i] = m*xvec[i]+b
         #print yvec[i]
@@ -76,7 +82,8 @@ def mk_matrix(array1,array2,m):
         print ("Arrays are not the same length...")
         exit()
 
-    matrix = scipy.zeros([m,m])
+    #matrix = scipy.zeros([m,m])
+    matrix = numpy.zeros([m,m])
     amin = min([min(array1), min(array2)])
     amax = max([max(array1), max(array2)])
     
@@ -149,10 +156,14 @@ for entry in dict2.keys():
         count3 = count3+1
 m = count3
 print (count2,count1, m  )
-X = scipy.zeros([m,1])
-Y = scipy.zeros([m,1])
-Xscore = scipy.zeros([m,1])
-Yscore = scipy.zeros([m,1])
+#X = scipy.zeros([m,1])
+#Y = scipy.zeros([m,1])
+#Xscore = scipy.zeros([m,1])
+#Yscore = scipy.zeros([m,1])
+X = numpy.zeros([m])
+Y = numpy.zeros([m])
+Xscore = numpy.zeros([m])
+Yscore = numpy.zeros([m])
 #X = []
 #Y = []
 #Xscore = []
@@ -161,6 +172,7 @@ Yscore = scipy.zeros([m,1])
 count = 0
 
 fileh = open('in_both.txt','w')
+fileh2 = open('in_union.txt','w')
 
 for entry in dict2.keys():
 
@@ -169,6 +181,8 @@ for entry in dict2.keys():
        continue
     elif (dict1[entry] < 1000 and dict2[entry] < 1000): 
           fileh.write("%s\n"%entry)
+    if (dict1[entry] < 1000 or dict2[entry] < 1000): 
+          fileh2.write("%s, %d, %d\n"%(entry,dict1[entry],dict2[entry]))
     X[count] = dict1[entry]
     Y[count] = dict2[entry]
     #X.append(dict1[entry])
@@ -180,8 +194,14 @@ for entry in dict2.keys():
     count = count+1
 
 fileh.close()
+fileh2.close()
 
+print ("I am here")
+print (len(X),len(Y))
+print (len(Xscore),len(Yscore))
 rp  = stats.pearsonr(X,Y)
+#rp  = stats.pearsonr(X.T,Y)
+#rp  = stats.pearsonr(X,numpy.transpose(Y))
 rps = stats.pearsonr(Xscore,Yscore)
 rs  = stats.spearmanr(X,Y)
 norm = numpy.linalg.norm(X-Y)
@@ -383,7 +403,8 @@ fig.savefig('fig.png',dpi=600)
 fig2 = pylab.figure(figsize=(8,8))
 axis = fig2.add_axes([0.1,0.1,0.3,0.2])
 n1, bins1, patches1 = pylab.hist(Xscore,20)
-midbin1 = scipy.zeros([len(n1),1])
+#midbin1 = scipy.zeros([len(n1),1])
+midbin1 = numpy.zeros([len(n1)])
 for i in range(0,len(bins1)-1):
     midbin1[i] = (bins1[i] + bins1[i+1])/2
 #print len(n1)
@@ -393,7 +414,8 @@ im = axis.plot(midbin1, n1,'r-') #,[0,100],[0,100],'--')
 #panal
 axis = fig2.add_axes([0.5,0.1,0.3,0.2])
 n2, bins2, patches2 = pylab.hist(Yscore,20)
-midbin2 = scipy.zeros([len(n2),1])
+#midbin2 = scipy.zeros([len(n2),1])
+midbin2 = numpy.zeros([len(n2)])
 for i in range(0,len(bins2)-1):
     midbin2[i] = (bins2[i] + bins2[i+1])/2
 #print len(n2)
