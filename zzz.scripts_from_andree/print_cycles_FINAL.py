@@ -5,6 +5,7 @@ import math
 
 # This script is written by Andree Kolliegbo, July 2024!
 # This program suggests place to break a macrocycle by filtering out the places that are branches or part of a smaller cycle
+# Trent Balius, Fixed a bug.  Or he thinks he did.  Nov, 2024
 
 # The following classes define the graph structure for conversion
 class Node:
@@ -45,6 +46,7 @@ class Graph:
 
     def dfs_cycle(self, u, p, color, par):
         
+        cycle = []
         # Out of bounds check
         if u >= len(color):
             return
@@ -55,12 +57,17 @@ class Graph:
 
         # Check that node has been fully visited
         if color[u] == 2:
+            #print("visited:",p,u,par[u])
+            #cycle.append(p)
+            cycle.append(par[u])
+            cycle.append(u)
+            self.cycles.append(cycle)
+            self.num_cycles += 1
             return
 
         # Node has been paritally visisted, there is a cycle here
         if color[u] == 1:
             cur = p
-            cycle = []
            
             # Backtrack the parents of each node using par[] 
             while cur != u:
@@ -85,6 +92,7 @@ class Graph:
         for neighbor in self.nodes[u].neighbors:
             v = neighbor.atom.num
             if v == par[u]:
+                #print("parent:",v,u)
                 continue
             self.dfs_cycle(v, u, color, par)
 
@@ -93,7 +101,8 @@ class Graph:
     def detect_cycles(self):
         # Initializes the color and parent arrays to 0 and -1, respectively
         num_nodes = len(self.nodes)
-        self.cycles = [[] for _ in range(num_nodes)]
+        #self.cycles = [[] for _ in range(num_nodes)]
+        self.cycles = []
         color = [0] * (max(self.nodes.keys()) + 1)
         par = [-1] * (max(self.nodes.keys()) + 1)
 
@@ -308,6 +317,16 @@ def main():
     # Detect cycles
     graph.detect_cycles()
     print("Total cycles: ", graph.num_cycles)
+
+
+    # for debuging.
+    i = 1
+    for c in graph.cycles:
+        for n in c:
+           name = graph.nodes[n].atom.name
+           print ('cycle %d, node %d, name %s'%(i,n,name))
+        i = i + 1
+
 
     # Find breakpoints
     graph.find_macrocycle_break_points()

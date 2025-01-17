@@ -26,8 +26,8 @@ def randomomize_sph(sphs,maxval):
 
 def main():
     if len(sys.argv) != 4: # if no input
-       print "ERORR: there needs to be 3 inputs: sph inputfilename, max random value, outputfilename."
-       print "spheres with radius of  0.5 (0.0 are changed to 0.5) (ligand atoms) will not be perturbed.  Change radius to zero or 0.5 to not move. "
+       print ("ERORR: there needs to be 3 inputs: sph inputfilename, max random value, outputfilename.")
+       print ("spheres with radius of  0.5 (0.0 are changed to 0.5) (ligand atoms) will not be perturbed.  Change radius to zero or 0.5 to not move. ")
        return
 
     fileinputsph = sys.argv[1]
@@ -35,8 +35,8 @@ def main():
     fileoutput   = sys.argv[3]
    
 
-    print 'input_sph =' + fileinputsph
-    print 'output =' + fileoutput
+    print ('input_sph =' + fileinputsph)
+    print ('output =' + fileoutput)
 
     list  = sph.read_sph(fileinputsph,'A','A') # when we read in the 
     list2 = randomomize_sph(list,maxval)

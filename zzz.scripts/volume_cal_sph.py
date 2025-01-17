@@ -1,6 +1,7 @@
 
 import sys, os, math
-import mol2
+#import mol2
+import mol2_python3 as mol2
 import sph_lib
 
 # This is written by Trent Balius in the Shoichet Lab, UCSF
@@ -32,8 +33,8 @@ def bounding_box_grid_file(sphs,scale):
       if (sph.Z-sph.radius < min_z):
           min_z = sph.Z-sph.radius-buff
 
-  print "max corner = ", max_x, max_y, max_z 
-  print "min corner = ", min_x, min_y, min_z 
+  print ("max corner = ", max_x, max_y, max_z )
+  print ("min corner = ", min_x, min_y, min_z )
 
   # define bounding box. these are the values the a dx file needs
   dif_x = max_x - min_x
@@ -99,7 +100,7 @@ def write_out_dx_file(file,xn,yn,zn,dx,dy,dz,origin,values):
 
 def distance(v1,v2):
     if (len(v1)!=len(v2)):
-       print "error" 
+       print ("error" )
        exit()
     dist = 0.0
     for i in range(len(v1)):
@@ -150,7 +151,7 @@ def calc_volume(fileprefix,values,gridscale,xn,yn,zn,origin,sphs,fileh,return_va
         grid_k = round((atom.Z - origin[2] ) / gridscale)
 
         if (grid_i<0.0 or grid_j<0.0 or grid_k<0.0):
-           print "ERROR. . . "
+           print ("ERROR. . . ")
            exit()
 
         radius_gridpoint = math.ceil(radius / gridscale) + 1
@@ -184,8 +185,8 @@ def calc_volume(fileprefix,values,gridscale,xn,yn,zn,origin,sphs,fileh,return_va
 
     molV = float(molN)/float(boxN)*boxV
 
-    print "molN=",molN,"  boxN=",boxN,"  boxV=",boxV
-    print "molV=",molV
+    print ("molN=",molN,"  boxN=",boxN,"  boxV=",boxV)
+    print ("molV=",molV)
     
     fileh.write('%s,%f\n'%("molN",molN))
     fileh.write('%s,%f\n'%("boxN",boxN))
@@ -213,10 +214,10 @@ def main():
 
 
    if len(sys.argv) != 4: # if no input
-       print "ERORR:"
-       print "syntex: volumn_cal.py sphere_file scale outputprefix"
-       print "sphere file that defines the binding site (low dielectric sphere recomended) "
-       print "scale dinfines the fines of the grid."
+       print ("ERORR:")
+       print ("syntex: volumn_cal.py sphere_file scale outputprefix")
+       print ("sphere file that defines the binding site (low dielectric sphere recomended) ")
+       print ("scale dinfines the fines of the grid.")
        return
  
 
@@ -224,9 +225,9 @@ def main():
    scale         = float(sys.argv[2])
    outfile       = sys.argv[3]
 
-   print "input file = ", infilesph
-   print "scale =", scale
-   print "outputprefix =", outfile
+   print ("input file = ", infilesph)
+   print ("scale =", scale)
+   print ("outputprefix =", outfile)
    sphs  = sph_lib.read_sph(infilesph,'A','A')
 
    #xn,yn,zn,dx,dy,dz,origin,values = read_in_dx_file(infiledx)
@@ -234,7 +235,7 @@ def main():
 
    gridscale = dx # assumes that they are all the same spaceing
    
-   print gridscale ,xn,yn,zn,dx,dy,dz,origin   
+   print (gridscale ,xn,yn,zn,dx,dy,dz,origin) 
 
    file1 = open(outfile+'vol_values.txt','w')
 

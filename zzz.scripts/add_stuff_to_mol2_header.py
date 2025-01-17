@@ -45,7 +45,8 @@ def read_write_mol2_file(filename1,fileval,valtype,output,nameval):
     name = ''   
     for line in file3:
          file2.write(line)
-         linesplit = line.split()
+         #linesplit = line.split()
+         linesplit = line.replace(':',': ').split()
          if (len(linesplit) > 0):
              if ("  Name:" in line):
                  name = linesplit[2].split('.')[0]

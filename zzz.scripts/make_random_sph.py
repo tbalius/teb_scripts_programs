@@ -24,7 +24,7 @@ def randomomize_sph(sphs,maxval):
 
 def main():
     if len(sys.argv) != 4: # if no input
-       print "ERORR: there needs to be 3 inputs: sph inputfilename, max random value, outputfilename."
+       print ("ERORR: there needs to be 3 inputs: sph inputfilename, max random value, outputfilename.")
        return
 
     fileinputsph = sys.argv[1]
@@ -32,8 +32,8 @@ def main():
     fileoutput   = sys.argv[3]
    
 
-    print 'input_sph =' + fileinputsph
-    print 'output =' + fileoutput
+    print ('input_sph =' + fileinputsph)
+    print ('output =' + fileoutput)
 
     list  = sph.read_sph(fileinputsph,'A','A')
     list2 = randomomize_sph(list,maxval)

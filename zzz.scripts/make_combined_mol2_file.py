@@ -84,11 +84,12 @@ def open_dock_mol2(list_text,filenamein,fho,fhdo,score_txt,cutoff):
               continue
            elif len(splitline) == 2:
               split_one = splitline[1].split(':')
-              if len(split_one) < 2:
+              if len(split_one) != 2:
                  continue
-              if splitline[0] == "Name":
+              if split_one[0] == 'Name':
                  name = split_one[1]
               else: 
+                 print(split_one)
                  continue
            else: 
              if splitline[1] == "Name:":
@@ -150,7 +151,10 @@ def write_csv(list_mol2_s_t,fho):
          comma = False
          for line in text.split('\n'):
              if '###' in line:
-                 split_line = line.split()
+                 #split_line = line.split()
+                 split_line = line.replace(':',' ').split()
+                 #print(line)
+                 #print(split_line)
                  if (comma):
                      head = head + ','
                      csvline = csvline + ','

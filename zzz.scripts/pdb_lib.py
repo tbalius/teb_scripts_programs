@@ -238,4 +238,17 @@ def cal_dists_TP_FP_FN(pdb1,pdb2):
 
     return 
 
+#def centre_of_mass(atom_list):
+def center(atom_list):
+        centroid = [0,0,0]
+        molecular_weight = 0
+        for k in range(0,len(atom_list)):
+                centroid[0] += atom_list[k].X
+                centroid[1] += atom_list[k].Y
+                centroid[2] += atom_list[k].Z
+        centroid[0] /= len(atom_list)
+        centroid[1] /= len(atom_list)
+        centroid[2] /= len(atom_list)
+        #print 'Centroid =',centroid
+        return centroid
 

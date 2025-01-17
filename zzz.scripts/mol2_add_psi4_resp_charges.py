@@ -8,9 +8,11 @@ def main():
     mol2file = sys.argv[1]
     chargefile = sys.argv[2]
     outfile = sys.argv[3]
+    #outfileQ = sys.argv[4]
     print ('mol2 file = %s'%mol2file)
     print ('charge file = %s'%chargefile)
-    print ('mol2 outfile = %s'%outfile)
+    print ('charge outfile = %s'%outfile)
+    #print ('charge outfileQ = %s'%outfileQ)
     mol = mol2.read_Mol2_file(mol2file)[0]
     print(len(mol.atom_list))
     cfh = open(chargefile,'r')
@@ -31,10 +33,12 @@ def main():
         if "Electrostatic Potential Charges" in line: 
             read_charge_flag = True
 
-    print(len(mol.atom_list))
+    #print(len(mol.atom_list))
+    #fho = open(outfileQ,'w')
     for i in range(len(mol.atom_list)):
+        #fho.write("%f\n"%charges[i])
         mol.atom_list[i].Q = charges[i]
-    
+    #fho.close()
     mol2.write_mol2(mol,outfile)
 
 

@@ -40,13 +40,15 @@ def main():
 
 
     # Read in the converted mol2 file
-    converted_mol_list = mol2.read_Mol2_file(converted_file)
+    #converted_mol_list = mol2.read_Mol2_file(converted_file)
+    converted_mol_list = mol2.read_Mol2_file_head(converted_file)
         
     for converted_mol in converted_mol_list:
         # Create a copy of the original molecule
         new_mol = copy.deepcopy(original_mol)
         # Replace the coordinates
         new_mol.atom_list = replace_coordinates(new_mol.atom_list, converted_mol.atom_list)
+        new_mol.header = converted_mol.header
         # Write the new molecule to the output file
         mol2.append_mol2(new_mol, outfile)
 
