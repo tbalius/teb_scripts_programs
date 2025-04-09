@@ -31,6 +31,7 @@ def read_dock_multimol2_file_printmol2_files(file,setname):
              else:
                  flag = False
                  header = header + line
+                 outputprefix = setname
                  if (len(linesplit) == 3):
                      if (linesplit[1] == "Name:"):
                          print (line)
