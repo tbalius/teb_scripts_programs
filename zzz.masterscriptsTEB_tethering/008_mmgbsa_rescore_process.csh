@@ -36,9 +36,13 @@ foreach seed ( \
 cd  ${pwd}/008_mmgbsa/full_${seed}/
 
 foreach species (lig rec com) 
-  # 
-  #awk 'BEGIN{lammda = 0.00542; beta=0.92;sascale=0.005; print "vdw, es, gb, esurf, sasa, vdw+es+gb+esurf_lin" }/VDWAALS/{vdw=$3; es=$6; gb = $9}/ESURF/{sasa = $3/sascale; esurf = lammda*sasa+beta; printf"%f, %f, %f, %f, %f, %f \n",vdw,es,gb,esurf,sasa,vdw+es+gb+esurf}' mmgbsa_cal_${species}.out > mmgbsa_cal_${species}_processed.csv 
+# if surften = 0.005
+  #awk 'BEGIN{lammda = 0.005; beta=0.0; print "vdw, es, gb, esurf, sasa, vdw+es+gb+esurf_lin" }/VDWAALS/{vdw=$3; es=$6; gb = $9}/ESURF/{esurf = $3;sasa = ($3-beta)/lammda; printf"%f, %f, %f, %f, %f, %f \n",vdw,es,gb,esurf,sasa,vdw+es+gb+esurf}' mmgbsa_cal_${species}.out > mmgbsa_cal_${species}_processed.csv
+  # #awk 'BEGIN{lammda = 0.00542; beta=0.92;sascale=0.005; print "vdw, es, gb, esurf, sasa, vdw+es+gb+esurf_lin" }/VDWAALS/{vdw=$3; es=$6; gb = $9}/ESURF/{sasa = $3/sascale; esurf = lammda*sasa+beta; printf"%f, %f, %f, %f, %f, %f \n",vdw,es,gb,esurf,sasa,vdw+es+gb+esurf}' mmgbsa_cal_${species}.out > mmgbsa_cal_${species}_processed.csv 
+
+# if surften = 1.0
   awk 'BEGIN{lammda = 0.00542; beta=0.92; print "vdw, es, gb, esurf, sasa, vdw+es+gb+esurf_lin" }/VDWAALS/{vdw=$3; es=$6; gb = $9}/ESURF/{sasa = $3; esurf = lammda*sasa+beta; printf"%f, %f, %f, %f, %f, %f \n",vdw,es,gb,esurf,sasa,vdw+es+gb+esurf}' mmgbsa_cal_${species}.out > mmgbsa_cal_${species}_processed.csv 
+  #awk 'BEGIN{lammda = 0.00542; beta=0.92; print "vdw, es, gb, esurf, sasa, vdw+es+gb+esurf_lin" }/VDWAALS/{vdw=$3; es=$6; gb = $9}/ESURF/{esurf = lammda*$3+beta; sasa = $3; printf"%f, %f, %f, %f, %f, %f \n",vdw,es,gb,esurf,sasa,vdw+es+gb+esurf}' mmgbsa_cal_${species}.out > mmgbsa_cal_${species}_processed.csv
 
 end
 
