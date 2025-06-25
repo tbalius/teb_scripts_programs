@@ -8,6 +8,9 @@ import math
 # Trent Balius, Fixed a bug.  Or he thinks he did.  Nov, 2024
 
 # The following classes define the graph structure for conversion
+
+macro_atom_num = 11; # globel value for number of atoms contained in the macrocycle.  ring is considered a macrocycle if it has 12 or more atoms (>11).  
+
 class Node:
     def __init__(self, atom):
         self.atom = atom
@@ -80,7 +83,8 @@ class Graph:
             self.num_cycles += 1
             
             # Check if current cycle is the macrocycle
-            if len(cycle) > 12:
+            #if len(cycle) > 12:
+            if len(cycle) > macro_atom_num:
                 self.macrocycle_found = True
             return
 
@@ -121,7 +125,7 @@ class Graph:
         smaller_cycle_nodes = set()
 
         for cycle in self.cycles:
-            if len(cycle) > 12:
+            if len(cycle) > macro_atom_num:
                 macrocycle_nodes.update(cycle)
             else:
                 smaller_cycle_nodes.update(cycle)
@@ -147,7 +151,7 @@ class Graph:
         smaller_cycle_nodes = set()
 
         for cycle in self.cycles:
-            if len(cycle) > 12:
+            if len(cycle) > macro_atom_num:
                 macrocycle_nodes.update(cycle)
             else:
                 smaller_cycle_nodes.update(cycle)
