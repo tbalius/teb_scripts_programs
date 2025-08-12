@@ -43,9 +43,13 @@ for mol in mol_list:
         exit()
 
     # calculate current formal charge on molecule
-    dis_Q = 0.0
+    dis_Q = 0.0 # ori charge
     for a in mol.atom_list: 
         dis_Q = dis_Q + a.Q
+
+    print("dis_Q = %f"%dis_Q)
+    #dis_Q = round(dis_Q)
+    #print("round dis_Q = %f\n"%dis_Q)
         
     atoms_to_be_removed = []
     atoms_to_be_removed.append([atom1num,atom2num])
@@ -127,18 +131,26 @@ for mol in mol_list:
     print ("number of atoms at end = %d\nnon-dummy atom count = %d"%(len(mol.atom_list),count_atoms))
 
     # sum up partial charges
-    tot_q = 0.0
+    tot_q = 0.0 # new charge
     for a in mol.atom_list:
         tot_q = tot_q + a.Q
 
     print("tot_q = %f"%tot_q)
-    diff_Q = (dis_Q-tot_q)/count_atoms
+    diff_Q = (dis_Q-tot_q)/count_atoms  # ori charge - new charge 
 
     #redistribute charges to non-dummy atoms
     print("distribute diff of %f to each of the non-dummy atoms.\n"%(diff_Q))
     for a in mol.atom_list:
         if a.type != 'Du':
-           a.Q = a.Q - diff_Q
+           a.Q = a.Q + diff_Q
+
+    # sum up partial charges
+    fin_q = 0.0 # new charge
+    for a in mol.atom_list:
+        fin_q = fin_q + a.Q
+
+    print ("ori Q = %f\ndummy_before_fix Q=%f\nfixed Q = %f\n"%(dis_Q,tot_q,fin_q))
+
 
     print("------------------------------")
     print ("non-dummy atom count = %d\n\nnumber of atoms at end = %d"%(count_atoms,len(mol.atom_list)))
