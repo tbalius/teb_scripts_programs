@@ -4,10 +4,10 @@
 
 import sys, os
 
-print "This script reads in a pdb file"
-print "Written by Trent E. Balius, 2020/04/14"
+print ("This script reads in a pdb file")
+print ("Written by Trent E. Balius, 2020/04/14")
 
-print "syntax: python replace_atom_ele.py input name ele_ori ele_fin output_prefix"
+print ("syntax: python replace_atom_ele.py input name ele_ori ele_fin output_prefix")
 
 infile     = sys.argv[1]
 name       = sys.argv[2]
@@ -33,7 +33,7 @@ for line in lines:
     if line[0:6] == 'HETATM' or line[0:6] == 'ATOM  ':
       #print line[13:16], line[23:26], line[17:20]
       if line[13:16] == name:
-        print "line:"+line
+        print ("line:"+line)
         name_line = line 
         line = line[0:13]+ name.replace(ele_ori,ele_fin)+line[16:76]+" %s"%(ele_fin)+'\n'
         print(name_line)

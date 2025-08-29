@@ -46,14 +46,14 @@ count_seq = 0
 
 for line in file:
     if line[0:10] == 'REMARK 465': 
-        print line.replace('\n',' ')
+        print (line.replace('\n',' '))
     elif line[0:6] == 'SEQRES': 
-        print line.replace('\n',' ')
+        print (line.replace('\n',' '))
         splitline = line.split()
         chain_seq = splitline[2]
-        print chain_seq  
+        print (chain_seq)
         if chain_seq != chain_seq_o: 
-            residue_list_seq = residue_list_seq + '\nseq chian ' + chain_seq + ':\n'
+            residue_list_seq = residue_list_seq + '\nseq chain ' + chain_seq + ':\n'
             chain_seq_o = chain_seq
 
         for i in range(4,len(splitline)):
@@ -67,9 +67,9 @@ for line in file:
         resid   = line[23:27] 
         resname = line[17:20]
         chain   = line[21:23] 
-        #print resid, resname, chain
+        #print (resid, resname, chain)
         if chain != chaino:
-           residue_list = residue_list + '\nchian ' + chain + ':\n'
+           residue_list = residue_list + '\n>chain ' + chain + ':\n'
         if (resido !='' and (int(resid)-int(resido)) > 1):
             for i in range(0,int(resid) - int(resido)-1):
                residue_list = residue_list +'-'  
@@ -85,6 +85,6 @@ for line in file:
         resnameo = resname
         chaino   = chain
 
-print residue_list_seq
-print residue_list 
+print (residue_list_seq)
+print (residue_list)
 

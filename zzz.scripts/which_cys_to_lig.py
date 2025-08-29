@@ -65,7 +65,14 @@ for line in lines_L:
       #print line
       #print line[13:16], line[17:20]
       #if line[77:79] == 'S ' and line[17:20] == 'LIG':
-      if line[17:20] == 'LIG':
+      if (len(line) == 79): 
+         print("line is len 79")
+         line = line.strip() + "  " 
+         print(line)
+      #if (len(line) == 78):  
+      #   print("line is len 78 ... pad with white space")
+      print (line[77:79])
+      if line[77:79] != 'H ' and line[17:20] == 'LIG': # all heavy ligand atoms
         print ("*"+line[77:79] +"* #### "+ line[17:20])
         print (line[13:16])
         #print line
