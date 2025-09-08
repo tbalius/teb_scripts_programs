@@ -14,7 +14,7 @@ def add_bfactors(pdbatomlist, resids, bfile):
     minv = -99.99
     maxv = 99.99
     for line in fh:
-        print line
+        print (line)
         splitline = line.split(",")
         tempbfac = float(splitline[1])
 
@@ -35,18 +35,27 @@ def add_bfactors(pdbatomlist, resids, bfile):
     while atomcount < len(pdbatomlist) and residcount < len(resids): 
 
         if (lastid != int(pdbatomlist[atomcount].resnum)): 
-           #pdbatomlist[atomcount].bfactor = bvals[residcount]
+           # pdbatomlist[atomcount].bfactor = bvals[residcount]
+           if (flagupdate):
+              residcount = residcount + 1
            flagupdate = False
+
+        if residcount >= len(resids):
+           print("breaking out of the loop...")
+           break;
+
 
         if int(pdbatomlist[atomcount].resnum) == int(resids[residcount]): # if current atom is next residue in the resid list
            #pdbatomlist[atomcount].bfactor = bvals[residcount]
            flagupdate = True
-           residcount = residcount + 1
         if flagupdate: 
-           pdbatomlist[atomcount].bfact = float(bvals[residcount-1])
-           print atomcount, pdbatomlist[atomcount].atomnum, pdbatomlist[atomcount].resnum, pdbatomlist[atomcount].bfact, residcount, bvals[residcount-1]
+           pdbatomlist[atomcount].bfact = float(bvals[resids[residcount]-1])
+           print (atomcount, pdbatomlist[atomcount].atomnum, pdbatomlist[atomcount].resnum, pdbatomlist[atomcount].bfact, residcount, bvals[resids[residcount]-1])
+
         lastid = int(pdbatomlist[atomcount].resnum)   
         atomcount = atomcount+1
+
+
     return pdbatomlist
 
 
@@ -96,7 +105,7 @@ def main():
            print ("uhoh. list is not monotonic")
            exit()
 
-    print residlist
+    print (residlist)
     #exit()
 
     pdblist_chains = pdb.read_pdb(fileinputpdb)
