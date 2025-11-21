@@ -1,4 +1,7 @@
-#!/usr/bin/python
+
+# scriptr for generating a extract all file from dock6 dock.out files
+
+#   #!/usr/bin/python
 
 import sys, os
 

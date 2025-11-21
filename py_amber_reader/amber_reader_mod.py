@@ -710,7 +710,7 @@ def intermolecular_Energy(parm_stuff,frame,start1,stop1,start2,stop2):
     #print (start1, start2, stop1, stop2)
     print (start1, stop1, start2, stop2)
 
-    print len(parm_stuff.CHARGE)
+    print (len(parm_stuff.CHARGE))
 
     if (stop1 > (len(parm_stuff.CHARGE)+1) ): 
        print ("WARNING. stop1 > (len(parm_stuff.CHARGE)+1)")
@@ -721,7 +721,7 @@ def intermolecular_Energy(parm_stuff,frame,start1,stop1,start2,stop2):
     for i in range(start1,stop1):
         for j in range(start2,stop2):
              if i == j:
-                print "i==j. skip"
+                print ("i==j. skip")
                 continue
              q1 = parm_stuff.CHARGE[i-1]
              q2 = parm_stuff.CHARGE[j-1]
@@ -860,7 +860,7 @@ def main():
          start1 = parm_stuff.RESIDUE_POINTER[resid1-1]
          stop1  = parm_stuff.RESIDUE_POINTER[resid1]
        # print "************" # for debuging
-       print "residue1 (resid = %d): atom start = %d, atom stop = %d"%(resid1, start1,stop1) 
+       print ("residue1 (resid = %d): atom start = %d, atom stop = %d"%(resid1, start1,stop1) )
        # print "************"
        for resid2 in int_list2:
  

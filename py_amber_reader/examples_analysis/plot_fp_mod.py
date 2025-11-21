@@ -27,7 +27,7 @@ def read_vec(filehandel):
         if fval < minval:
            minval = fval
         vec.append(fval)
-    print "min, max = ",minval, maxval
+    print ("min, max = ",minval, maxval)
 
     return vec #,label1,label2
 
@@ -64,7 +64,7 @@ def plot_data(vec1,filename,lab1file,scale):
 
      #ax2 = fig.add_axes([0.3,0.75,0.6,0.2])
      ax2 = fig.add_axes([0.05,0.5,0.9,0.4])
-     print vec1
+     print (vec1)
 
      #scale = 0.5
      mean1,std1 = mean_std(vec1)
@@ -102,12 +102,12 @@ def plot_data(vec1,filename,lab1file,scale):
 def main():
   if len(sys.argv) != 4: # if no input
   #if len(sys.argv) != 2: # if no input
-     print "syntax:  filename_prefix, label1_filename, scale"
+     print ("syntax:  filename_prefix, label1_filename, scale")
      #print "syntax:  filename_prefix"
-     print "Error:  you have entered the wrong number of inputs:"
-     print len(sys.argv)
+     print ("Error:  you have entered the wrong number of inputs:")
+     print (len(sys.argv))
 
-  print "You have entered in 3 inputs:"
+  print ("You have entered in 3 inputs:")
   file1name  = sys.argv[1] 
   lab1               = sys.argv[2]
   scale              = float(sys.argv[3]) 
@@ -116,7 +116,7 @@ def main():
   #vmax               = float(sys.argv[4])
   #lab1               = sys.argv[5] 
   #lab2               = sys.argv[6] 
-  print "input matrix file = " + file1name
+  print ("input matrix file = " + file1name)
   file1handel = open(file1name+'.txt','r')
   m = read_vec(file1handel)
   file1handel.close()
