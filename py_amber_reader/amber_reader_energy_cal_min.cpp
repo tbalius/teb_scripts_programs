@@ -20,6 +20,8 @@
 // TEB adding in bonded terms, a full energy evaluation (2025/11/22) 
 // and minimization. 
 // thinking about adding in monte carlo optimizer. 
+//
+// g++ amber_reader_energy_cal_min.cpp -O2 -Wall -Wextra -o amber_reader_energy 
 
 #include <iostream>
 #include <fstream>
@@ -29,6 +31,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <algorithm>
+#include <iomanip>
 
 struct Bond {
     int atom1;
@@ -716,10 +719,10 @@ Parm parm_reader(const std::string &filename) {
             //std::cout            << a1 << " " << a2 << " " << bc << std::endl ;
             bond.forceC = BondFC[bc-1];
             bond.ideal = BondI[bc-1];
-            std::cout << "BOND: " << bond.atom1 << " " ;
-            std::cout             << bond.atom2 << " " ; 
-            std::cout             << bond.forceC << " " ; 
-            std::cout             << bond.ideal << std::endl ; 
+            //std::cout << "BOND: " << bond.atom1 << " " ;
+            //std::cout             << bond.atom2 << " " ; 
+            //std::cout             << bond.forceC << " " ; 
+            //std::cout             << bond.ideal << std::endl ; 
    
             //tbonds.push_back(bond);
             bonds.push_back(bond);
@@ -758,11 +761,11 @@ Parm parm_reader(const std::string &filename) {
             //std::cout            << a1 << " " << a2 << " " << bc << std::endl ;
             angle.forceC = AngleFC[bc-1];
             angle.ideal = AngleI[bc-1];
-            std::cout << "ANGLE: " << angle.atom1 << " " ;
-            std::cout              << angle.atom2 << " " ; 
-            std::cout              << angle.atom3 << " " ; 
-            std::cout              << angle.forceC << " " ; 
-            std::cout              << angle.ideal << std::endl ; 
+            //std::cout << "ANGLE: " << angle.atom1 << " " ;
+            //std::cout              << angle.atom2 << " " ; 
+            //std::cout              << angle.atom3 << " " ; 
+            //std::cout              << angle.forceC << " " ; 
+            //std::cout              << angle.ideal << std::endl ; 
    
             //tangles.push_back(angle);
             angles.push_back(angle);
@@ -776,8 +779,8 @@ Parm parm_reader(const std::string &filename) {
     //std::vector<Dihedral> tdiheds;
     // dihedral angles
     int count_d = 0;
-    std::cout << "temp_dihed_array.size() = " << temp_dihed_array.size() << std::endl;
-    std::cout << " num dihed = " << temp_dihed_array.size() / 5 << std::endl;
+    //std::cout << "temp_dihed_array.size() = " << temp_dihed_array.size() << std::endl;
+    //std::cout << " num dihed = " << temp_dihed_array.size() / 5 << std::endl;
     //exit(0);
     for (size_t i = 0; i < temp_dihed_array.size(); i++) {
          int a1, a2, a3, a4, bc;
@@ -809,10 +812,10 @@ Parm parm_reader(const std::string &filename) {
             dihed.ele14scale = 1.0/SCEE_SCALE_V[bc-1];
             //dihed.SCNB_SCALE = SCNB_SCALE_V[bc-1];
             dihed.vdw14scale = 1.0/SCNB_SCALE_V[bc-1];
-            std::cout << "DIHED: " << dihed.atom1  << " " ;
-            std::cout              << dihed.atom2  << " " ; 
-            std::cout              << dihed.atom3  << " " ; 
-            std::cout              << dihed.atom4  << std::endl; 
+            //std::cout << "DIHED: " << dihed.atom1  << " " ;
+            //std::cout              << dihed.atom2  << " " ; 
+            //std::cout              << dihed.atom3  << " " ; 
+            //std::cout              << dihed.atom4  << std::endl; 
             // https://ambermd.org/FileFormats.php  
             // https://docs.mdanalysis.org/2.7.0/documentation_pages/topology/TOPParser.html
             // 1) The atom numbers in the following arrays that describe bonds, angles, 
@@ -829,34 +832,34 @@ Parm parm_reader(const std::string &filename) {
             //
             // We should ignore impropers in non-bonded calc 
             if (dihed.atom4 < 0) { 
-                 std::cout << "\n improper :: M_bonded = ";
-                 std::cout <<  M_bonded[a1/3][abs(a4)/3] << std::endl;
+                 //std::cout << "\n improper :: M_bonded = ";
+                 //std::cout <<  M_bonded[a1/3][abs(a4)/3] << std::endl;
                  //std::cout << "im dih i = "<< i << " ele14scale = " << dihed.ele14scale << std::endl;
                  //std::cout << "im dih i = "<< i << " vdw14scale = " << dihed.vdw14scale << std::endl;
             } 
             else{ // if it is a standard dihedral:  
                  if (dihed.atom3 < 0) { 
                  //if (dihed.atom3 <= 0) { 
-                     std::cout << " ignore 1-4  \n";
+                     //std::cout << " ignore 1-4  \n";
                      if (M_bonded[a1/3][abs(a4)/3] == 0) { // only do this if it is not been assigned a number. 
                                                            // this is for not double conting or ignoring a group. 
                                                            // if the group has already been given a positive value then leave it
                                                            // if it hasn't then we sould flag to be ignored.
                        M_bonded[a1/3][abs(a4)/3] = -4; // though about using 5
                        M_bonded[abs(a4)/3][a1/3] = -4; // though about using 5
-                       std::cout << "not included dih i = "<< i << " ele14scale = " << dihed.ele14scale << std::endl;
-                       std::cout << "not included dih i = "<< i << " vdw14scale = " << dihed.vdw14scale << std::endl;
+                       //std::cout << "not included dih i = "<< i << " ele14scale = " << dihed.ele14scale << std::endl;
+                       //std::cout << "not included dih i = "<< i << " vdw14scale = " << dihed.vdw14scale << std::endl;
                      }
                  } else { // do not ignore
                      M_bonded[a1/3][abs(a4)/3] = 4;
                      M_bonded[abs(a4)/3][a1/3] = 4;
-                     std::cout << "dih i = "<< i << " ele14scale = " << dihed.ele14scale << std::endl;
-                     std::cout << "dih i = "<< i << " vdw14scale = " << dihed.vdw14scale << std::endl;
+                     //std::cout << "dih i = "<< i << " ele14scale = " << dihed.ele14scale << std::endl;
+                     //std::cout << "dih i = "<< i << " vdw14scale = " << dihed.vdw14scale << std::endl;
                  }
             }
-            std::cout              << dihed.forceC << " " ; 
-            std::cout              << dihed.period  << " " ; 
-            std::cout              << dihed.phase  << std::endl ; 
+            //std::cout              << dihed.forceC << " " ; 
+            //std::cout              << dihed.period  << " " ; 
+            //std::cout              << dihed.phase  << std::endl ; 
    
             //tdiheds.push_back(dihed);
             dihedrals.push_back(dihed);
@@ -887,26 +890,26 @@ Parm parm_reader(const std::string &filename) {
         }
     }
 
-    std::cout << "ATOM_NAME = " << ATOM_NAME.size() << "\n";
-    std::cout << "CHARGE = " << CHARGE.size() << "\n";
-    std::cout << "ATOM_TYPE_INDEX = " << ATOM_TYPE_INDEX.size() << "\n";
+    //std::cout << "ATOM_NAME = " << ATOM_NAME.size() << "\n";
+    //std::cout << "CHARGE = " << CHARGE.size() << "\n";
+    //std::cout << "ATOM_TYPE_INDEX = " << ATOM_TYPE_INDEX.size() << "\n";
 
     int max_atom_type_index = 0;
     if (!ATOM_TYPE_INDEX.empty()) {
         max_atom_type_index = *std::max_element(ATOM_TYPE_INDEX.begin(), ATOM_TYPE_INDEX.end());
     }
 
-    std::cout << "max(ATOM_TYPE_INDEX) = " << max_atom_type_index << "\n";
-    std::cout << "max(ATOM_TYPE_INDEX)^2 = " << max_atom_type_index * max_atom_type_index << "\n";
-    std::cout << "NONBONDED_PARM_INDEX = " << NONBONDED_PARM_INDEX.size() << "\n";
+    //std::cout << "max(ATOM_TYPE_INDEX) = " << max_atom_type_index << "\n";
+    //std::cout << "max(ATOM_TYPE_INDEX)^2 = " << max_atom_type_index * max_atom_type_index << "\n";
+    //std::cout << "NONBONDED_PARM_INDEX = " << NONBONDED_PARM_INDEX.size() << "\n";
 
     int max_nonbonded = 0;
     if (!NONBONDED_PARM_INDEX.empty()) {
         max_nonbonded = *std::max_element(NONBONDED_PARM_INDEX.begin(), NONBONDED_PARM_INDEX.end());
     }
-    std::cout << "max(NONBONDED_PARM_INDEX) = " << max_nonbonded << "\n";
-    std::cout << "LENNARD_JONES_ACOEF = " << LENNARD_JONES_ACOEF.size() << "\n";
-    std::cout << "LENNARD_JONES_BCOEF = " << LENNARD_JONES_BCOEF.size() << "\n";
+    //std::cout << "max(NONBONDED_PARM_INDEX) = " << max_nonbonded << "\n";
+    //std::cout << "LENNARD_JONES_ACOEF = " << LENNARD_JONES_ACOEF.size() << "\n";
+    //std::cout << "LENNARD_JONES_BCOEF = " << LENNARD_JONES_BCOEF.size() << "\n";
 
     // build atom_type_uniq (for debug printing if desired)
     std::vector<std::string> atom_type_uniq;
@@ -920,11 +923,11 @@ Parm parm_reader(const std::string &filename) {
                 count++;
             }
         }
-        std::cout << "ATOM_TYPE_INDEX == " << AtomNum
-                  << " has N = " << count << " atoms of this type\n";
+        //std::cout << "ATOM_TYPE_INDEX == " << AtomNum
+        //          << " has N = " << count << " atoms of this type\n";
     }
 
-    std::cout << "\n\n LJ matrixes\n";
+    //std::cout << "\n\n LJ matrixes\n";
 
     // make matrices
     std::vector<std::vector<int>> M_index;
@@ -1042,6 +1045,72 @@ bool coord_reader(
     return more_cord_flag;
 }
 
+bool coord_writter(
+    const std::string &filename,
+    const Frame &frameX
+){
+    //std::ofstream outfileh((filename).c_str());
+/*
+  default_name
+      27
+   -19.2029201 -35.6845165   6.8076401 -19.4252840 -35.4411130   7.9804169
+   -20.5258775 -35.3495088   8.4944800 -18.2134171 -35.2081008   8.8786104
+*/
+    std::ofstream outfileh(filename);
+
+    outfileh << "default_name" << std::endl;
+    int start1 = 0;
+    int stop1 = frameX.cords.size();
+
+    std::string s;
+    char sb[ 7 ];  // You had better have room for what you are sprintf()ing!
+    sprintf( sb, "%6d", stop1 );
+    s = sb;
+    
+    //outfileh << stop1 << std::endl;
+    outfileh << s << std::endl;
+
+
+    for (int i = start1; i < stop1; i=i+2) {
+        //outfileh << std::setw(12) << std::setprecision(10) << frameX.cords[i].x   << " "; 
+        //outfileh << std::setw(12) << std::setprecision(10) << frameX.cords[i].y   << " "; 
+        char sb1[ 13 ];  // You had better have room for what you are sprintf()ing!
+        sprintf( sb1, "%12.7f", frameX.cords[i].x );
+        s = sb1;
+        outfileh << s; 
+        sprintf( sb1, "%12.7f", frameX.cords[i].y );
+        s = sb1;
+        outfileh << s; 
+        if (i+1 < stop1 ) {
+           //outfileh << std::setw(12) << std::setprecision(10) << frameX.cords[i].z   << " "; 
+           //outfileh << std::setw(12) << std::setprecision(10) << frameX.cords[i+1].x << " "; 
+           //outfileh << std::setw(12) << std::setprecision(10) << frameX.cords[i+1].y << " "; 
+           //outfileh << std::setw(12) << std::setprecision(10) << frameX.cords[i+1].z; 
+           sprintf( sb1, "%12.7f", frameX.cords[i].z );
+           s = sb1;
+           outfileh << s; 
+           sprintf( sb1, "%12.7f", frameX.cords[i+1].x );
+           s = sb1;
+           outfileh << s; 
+           sprintf( sb1, "%12.7f", frameX.cords[i+1].y );
+           s = sb1;
+           outfileh << s; 
+           sprintf( sb1, "%12.7f", frameX.cords[i+1].z );
+           s = sb1;
+           outfileh << s; 
+        } else {
+           //outfileh << std::setw(12) << std::setprecision(10) << frameX.cords[i].z; 
+           sprintf( sb1, "%12.7f", frameX.cords[i].z );
+           s = sb1;
+           outfileh << s; 
+        }
+        outfileh << std::endl;
+    }
+
+    outfileh.close();
+    return true;
+}
+
 // Distance between two coordinate points
 double distance(const Cord &c1, const Cord &c2) {
     double dx = c1.x - c2.x;
@@ -1100,6 +1169,7 @@ double cal_angle(const Cord &c1, const Cord &c2, const Cord &c3) {
     //std::cout << c3.x << " "<< c3.y << " " << c3.z << std::endl;
     //std::cout << "dot = " << dot << "; lenv1 = " << lenv1 <<  "; lenv2 = "  << lenv2 << "; dot/(lenv1 lenv2) = " << dot/(lenv1*lenv2) << std::endl;
 
+
     if (lenv1 < 0.0001) { 
         lenv1 = 0.0001;
     }
@@ -1107,10 +1177,19 @@ double cal_angle(const Cord &c1, const Cord &c2, const Cord &c3) {
         lenv2 = 0.0001;
     }
     
+    double val = dot/(lenv1*lenv2);
+
+    if (val > 1.0){
+        val = 1.0;
+    }
+    if (val < -1.0){
+        val = -1.0;
+    }
     //double PI = 3.14159265359;
 
     //return std::acos(dot/(lenv1*lenv2)) * 180.0 / PI;
-    return std::acos(dot/(lenv1*lenv2));
+    //return std::acos(dot/(lenv1*lenv2));
+    return std::acos(val);
 }
 
 
@@ -1138,16 +1217,9 @@ double cal_dihedral(const Cord &c1, const Cord &c2, const Cord &c3, const Cord &
     double lenv2 = lenth_vec(u2xu3.x,u2xu3.y,u2xu3.z);
 
     
-    //std::cout << "dot = " << dot << "; lenv1 = " << lenv1 <<  "; lenv2 = "  << lenv2 << "; dot/(lenv1 lenv2) = " << dot/(lenv1*lenv2) << std::endl;
-
-    if (dot/(lenv1*lenv2)-1.0 < 0.0001){
-       //std::cout << u1xu2.x << " " << u1xu2.y << " " << u1xu2.z << " " << u2xu3.x << " " << u2xu3.y << " " << u2xu3.z << std::endl;
-       double dist = dist_vecs(u1xu2.x,u1xu2.y,u1xu2.z,u2xu3.x,u2xu3.y,u2xu3.z); 
-       std::cout << "dist = " << dist << std::endl;
-       if (dist < 0.0001){
-           return double(0.0);
-       }
-    }
+    //std::cout << "dot = " << dot << "; lenv1 = " << lenv1 <<  "; lenv2 = "  << lenv2 << "; dot/(lenv1 lenv2) = " << val << std::endl;
+/*
+*/
     if (lenv1 < 0.0001) { 
         lenv1 = 0.0001;
     }
@@ -1155,7 +1227,68 @@ double cal_dihedral(const Cord &c1, const Cord &c2, const Cord &c3, const Cord &
         lenv2 = 0.0001;
     }
 
-    return std::acos(dot/(lenv1*lenv2));
+    double val = dot/(lenv1*lenv2);
+
+/*
+    if (dot < 0.00001){
+        val = 0.0;
+        //exit(0);
+    }
+*/
+
+    if (std::isnan(val)){
+        std::cout << "dot = " << dot << "; lenv1 = " << lenv1 <<  "; lenv2 = "  << lenv2 << "; dot/(lenv1 lenv2) = " << val << std::endl;
+        val = 1;
+        //exit(0);
+    }
+
+/*
+    if ((val-1.0) < 0.0001){
+    //if ((dot/(lenv1*lenv2)-1.0) < 0.0001){
+       //std::cout << u1xu2.x << " " << u1xu2.y << " " << u1xu2.z << " " << u2xu3.x << " " << u2xu3.y << " " << u2xu3.z << std::endl;
+       double dist = dist_vecs(u1xu2.x,u1xu2.y,u1xu2.z,u2xu3.x,u2xu3.y,u2xu3.z); 
+       //std::cout << "dist = " << dist << std::endl;
+       if (dist < 0.0001){
+           return double(0.0);
+       }
+    }
+
+        
+    //if (lenv1 > 10000000.0 or lenv2 > 10000000.0) {
+    //    std::cout<< "warning vec are large." << std::endl;
+    //    return acos(0);
+    //} 
+*/
+    if (val > 1.0){
+        //std::cout<< " val = " << val << "should be between on [-1, 1]" << std::endl;
+        //std::cout<< " dot = " << dot;
+        //std::cout<< " lenv1 = " << lenv1;
+        //std::cout<< " lenv2 = " << lenv2;
+        //std::cout<<  std::endl;
+        val = 1.0;
+    }
+    if (val < -1.0){
+        //std::cout<< " val = " << val << "should be between on [-1, 1]" << std::endl;
+        //std::cout<< " dot = " << dot;
+        //std::cout<< " lenv1 = " << lenv1;
+        //std::cout<< " lenv2 = " << lenv2;
+        //std::cout<<  std::endl;
+        val = -1.0;
+    }
+
+    //double ang = std::acos(dot/(lenv1*lenv2));
+    double ang = std::acos(val);
+/*    
+    if (std::isnan(ang)){
+        std::cout<< "ang = " << ang << std::endl; 
+        std::cout<< " dot = " << dot;
+        std::cout<< " lenv1 = " << lenv1;
+        std::cout<< " lenv2 = " << lenv2;
+        std::cout<<  std::endl;
+    } 
+*/
+    return ang;
+    //return std::acos(dot/(lenv1*lenv2));
 }
 
 // Improper Dihedral between four coordinate points
@@ -1205,16 +1338,54 @@ double cal_improper(const Cord &c1, const Cord &c2, const Cord &c3, const Cord &
 }
 
 
-double vdw_energy_function(double A, double B, double r) {
-    return A / std::pow(r, 12.0) - B / std::pow(r, 6.0);
+double teb_func(double b, double N, double M, double r){
+               //printf("I am here in teb_func\n");
+               //printf("%f,%f,%f,%f\n",b,N,M,r);
+               //double b = 0.13,N=5.0,M=0.3;
+               // x^2M = (x^2)^M
+               //double sqrtPI = 1.77245385091;
+               //double val  = ( N/(b*sqrtPI))*exp(-1.0*pow(pow((r/b),2.0),M));
+               if (r < 0.0){
+                   r = 0.0;
+               }
+               double val  =  N*exp(-1.0*pow(pow((r/b),2.0),M));
+               //double val  = ( N/(b*sqrtPI))*exp(-1.0*pow((r/b),2.0*M));
+               //cout << "val = " << val << endl;
+               //printf("r=%f ,   val = %f\n",r,val);
+               return val;
 }
 
-double es_energy_function(double q1, double q2, double r) {
-    return q1 * q2 / r;
+
+
+double vdw_energy_function(double A, double B, double r, int method) {
+    if (method == 1){
+        return A / std::pow(r, 12.0) - B / std::pow(r, 6.0);
+    } else if (method == 2){
+                         // b,        N,        M,                    // b,        N,        M,
+        return A * teb_func(1.151669, 1.322028, 1.330330,r) - B * teb_func(0.906882, 5.863632, 4.429459,r);
+    } else if (method == 3){ // just repultion
+                         // b,        N,        M,           
+        //return A * teb_func(1.151669, 1.322028, 1.330330,r) ;
+        return A * teb_func(0.5, 10000.0, 1,r) ;
+    }
+}
+  
+
+double es_energy_function(double q1, double q2, double r, int method) {
+    if (method == 1){ // standard 
+        return q1 * q2 / r;
+    } else if (method == 2){
+                               // b,        N,        M,
+        return q1 * q2 * teb_func(0.879128, 4.733930, 0.336965,r);
+    } else if (method == 3){
+                               // b,        N,        M,
+        return 0;
+    }
 }
 
-double energy_function(double A, double B, double q1, double q2, double r) {
-    return A / std::pow(r, 12.0) - B / std::pow(r, 6.0) + q1 * q2 / r;
+double energy_function(double A, double B, double q1, double q2, double r, int method) {
+    //return A / std::pow(r, 12.0) - B / std::pow(r, 6.0) + q1 * q2 / r;
+    return vdw_energy_function(A,B,r,method) + es_energy_function(q1,q2,r,method);
 }
 
 struct EnergyTriple {
@@ -1238,10 +1409,10 @@ EnergyBonded bonded_Energy(
     const Frame &frameX
 ) {
 
-   std::cout << "number of atoms:" << frameX.cords.size() << std::endl;
-   std::cout << "number of bonds:" << parm_stuff.bonds.size() << std::endl;
-   std::cout << "number of angles:" << parm_stuff.angles.size() << std::endl;
-   std::cout << "number of dihedrals:" << parm_stuff.diheds.size() << std::endl;
+   //std::cout << "number of atoms:" << frameX.cords.size() << std::endl;
+   //std::cout << "number of bonds:" << parm_stuff.bonds.size() << std::endl;
+   //std::cout << "number of angles:" << parm_stuff.angles.size() << std::endl;
+   //std::cout << "number of dihedrals:" << parm_stuff.diheds.size() << std::endl;
 
    double Ebond = 0.0;
    for (size_t i = 0; i < parm_stuff.bonds.size(); i++){
@@ -1255,10 +1426,10 @@ EnergyBonded bonded_Energy(
         double d = distance(frameX.cords[a1-1], frameX.cords[a2-1]); 
         //double d = distance(frameX.cords[a1], frameX.cords[a2]); 
         double E = fC*std::pow((d-id),2.0);
-        std::cout << "E = " << E << std::endl;
+        //std::cout << "E = " << E << std::endl;
         Ebond = Ebond + E;
    }
-   std::cout << "Ebond = " << Ebond << std::endl;
+   //std::cout << "Ebond = " << Ebond << std::endl;
 
    double Eangle = 0.0;
    for (size_t i = 0; i < parm_stuff.angles.size(); i++){
@@ -1279,10 +1450,10 @@ EnergyBonded bonded_Energy(
         //std::cout << "angle = " << a << std::endl;
         //std::cout << "id angle = " << id << std::endl;
         double E = fC*std::pow((a-id),2.0);
-        std::cout << "E = " << E << std::endl;
+        //std::cout << "E = " << E << std::endl;
         Eangle = Eangle + E;
    }
-   std::cout << "Eangle = " << Eangle << std::endl;
+   //std::cout << "Eangle = " << Eangle << std::endl;
 
    double Edihedral = 0.0;
    for (size_t i = 0; i < parm_stuff.diheds.size(); i++){
@@ -1300,16 +1471,20 @@ EnergyBonded bonded_Energy(
         if (parm_stuff.diheds[i].atom4 >= 0){
            dih = cal_dihedral(frameX.cords[a1-1], frameX.cords[a2-1], frameX.cords[a3-1],frameX.cords[a4-1]);
         } else { // atom4  is negative so is an improper
-           std::cout << "...improper..." << std::endl;
+           //std::cout << "...improper..." << std::endl;
            dih = cal_improper(frameX.cords[a1-1], frameX.cords[a2-1], frameX.cords[a3-1],frameX.cords[a4-1]); 
         }
         //double E = 0.5*fC*(1.0+std::cos(period*dih+phase));
         double E = fC*(1.0+std::cos(period*dih+phase));
-        std::cout << "dihed = "  << dih << "; E = " << E << std::endl;
-        //std::cout << "E = " << E << std::endl;
+        if (std::isnan(E)){
+           std::cout << a1 << " " << a2 << " " << a3 << " " << a4 << std::endl;
+           std::cout << "dihed = "  << dih << "; E = " << E << std::endl;
+           std::cout << "E = " << E << std::endl;
+           E = 0.0;
+        }
         Edihedral = Edihedral + E;
    }
-   std::cout << "Edihedral = " << Edihedral << std::endl;
+   //std::cout << "Edihedral = " << Edihedral << std::endl;
 
    //exit(0);
    //EnergyBonded val;
@@ -1324,7 +1499,8 @@ EnergyBonded bonded_Energy(
 
 EnergyTriple intermolecular_Energy(
     const Parm &parm_stuff,
-    const Frame &frameX
+    const Frame &frameX,
+    int method
 ) {
     double Eint = 0.0;
     double Evdw = 0.0;
@@ -1359,10 +1535,10 @@ EnergyTriple intermolecular_Energy(
             double B  = parm_stuff.M_LJB[idx_i][idx_j];
             double r  = distance(frameX.cords[i - 1], frameX.cords[j - 1]);
 
-            double e = energy_function(A, B, q1, q2, r);
+            double e = energy_function(A, B, q1, q2, r, method);
             Eint += e;
-            Evdw += vdw_energy_function(A, B, r);
-            Ees  += es_energy_function(q1, q2, r);
+            Evdw += vdw_energy_function(A, B, r, method);
+            Ees  += es_energy_function(q1, q2, r, method);
         }
     }
 
@@ -1386,7 +1562,8 @@ bool generate_pairlist(
     list14.clear();
     //double cutoff = 10.0; // I should make this a user speciffied value.
     //double cutoff = 20.0; // I should make this a user speciffied value.
-    double cutoff = 100000.0; // I should make this a user speciffied value.
+    //double cutoff = 100000.0; // I should make this a user speciffied value.
+    double cutoff = 20.0; // I should make this a user speciffied value.
     int start1 = 1;
     int stop1 = parm_stuff.CHARGE.size()+1;
     int start2 = 1;
@@ -1442,7 +1619,11 @@ EnergyTriple intermolecular_Energy_pairlist(
     const Parm &parm_stuff,
     const Frame &frameX,
     const std::vector <pair> &pairlist,
-    const std::vector <pair> &pairlist14
+    const std::vector <pair> &pairlist14,
+    int atom, // if atom is -1, do everything in the pair list if atom is positive integer skip all pair without that atom
+              // this is useful in the minimizer. only those pair the inclue the atom of interest will need to be calculated
+              // all others are not changing.  
+    int method
 ) {
     double Eint = 0.0;
     double Evdw = 0.0;
@@ -1457,6 +1638,11 @@ EnergyTriple intermolecular_Energy_pairlist(
                 std::cout << "i==j. skip\n";
                 continue;
             }
+            if (atom != -1){
+              if (atom != i and atom !=j){ 
+                continue;
+              }
+            }
             double q1 = parm_stuff.CHARGE[i - 1];
             double q2 = parm_stuff.CHARGE[j - 1];
             int idx_i = parm_stuff.ATOM_TYPE_INDEX[i - 1] - 1;
@@ -1466,14 +1652,14 @@ EnergyTriple intermolecular_Energy_pairlist(
             double B  = parm_stuff.M_LJB[idx_i][idx_j];
             double r  = distance(frameX.cords[i - 1], frameX.cords[j - 1]);
 
-            double e = energy_function(A, B, q1, q2, r);
+            double e = energy_function(A, B, q1, q2, r, method);
             Eint += e;
-            Evdw += vdw_energy_function(A, B, r);
-            Ees  += es_energy_function(q1, q2, r);
+            Evdw += vdw_energy_function(A, B, r, method);
+            Ees  += es_energy_function(q1, q2, r, method);
             //std::cout << " i = " << i << " j = " << j << " q1 = " << q1 << " q2 = " << q2 << " r = " << r << std::endl;
             //exit(0);
     }
-    std::cout << "; VDW (no 1-4): " << Evdw  << "; ES (no 1-4): " << Ees << std::endl;
+    //std::cout << "; VDW (no 1-4): " << Evdw  << "; ES (no 1-4): " << Ees << std::endl;
     // 1/2 for vdw
     // 1/1.2 for es
     double escale = 1.0/1.2;
@@ -1488,6 +1674,11 @@ EnergyTriple intermolecular_Energy_pairlist(
                 std::cout << "i==j. skip\n";
                 continue;
             }
+            if (atom != -1){
+              if (atom != i and atom !=j){ 
+                  continue;
+              }
+            }
             double q1 = parm_stuff.CHARGE[i - 1];
             double q2 = parm_stuff.CHARGE[j - 1];
             int idx_i = parm_stuff.ATOM_TYPE_INDEX[i - 1] - 1;
@@ -1501,8 +1692,8 @@ EnergyTriple intermolecular_Energy_pairlist(
             //Eint += e;
             //Evdw += vdw_energy_function(A, B, r);
             //Ees  += es_energy_function(q1, q2, r);
-            double ev = vscale * vdw_energy_function(A, B, r);
-            double ee = escale * es_energy_function(q1, q2, r);
+            double ev = vscale * vdw_energy_function(A, B, r, method);
+            double ee = escale * es_energy_function(q1, q2, r, method);
             Evdw14 += ev;
             Ees14 += ee;
             Eint += ev+ee;
@@ -1514,13 +1705,178 @@ EnergyTriple intermolecular_Energy_pairlist(
             //exit(0);
     }
 
-    std::cout << "; VDW (1-4): " << Evdw14  << "; ES (1-4): " << Ees14 << std::endl;
+    //std::cout << "; VDW (1-4): " << Evdw14  << "; ES (1-4): " << Ees14 << std::endl;
 
     Evdw += Evdw14;
     Ees  += Ees14;
 
     EnergyTriple out { Eint, Evdw, Ees };
     return out;
+}
+
+bool jiggle_atoms(
+    Frame &frameX, // 
+    const std::vector <int> &atomlist,
+    double scale
+){
+    //double scale = 0.5;
+    int random_value_int;
+    double random_value;
+    std::srand(std::time({})); // use current time as seed for random generator
+    for (size_t a = 0; a < atomlist.size(); a++){
+        int i = atomlist[a];
+        random_value_int = std::rand();
+        random_value = scale * (double(random_value_int)/double(RAND_MAX)- 0.5 );
+        frameX.cords[i].x = frameX.cords[i].x +random_value;
+        random_value_int = std::rand();
+        random_value = scale * (double(random_value_int)/double(RAND_MAX)- 0.5 );
+        frameX.cords[i].y = frameX.cords[i].y +random_value;
+        random_value_int = std::rand();
+        random_value = scale * (double(random_value_int)/double(RAND_MAX)- 0.5 );
+        frameX.cords[i].z = frameX.cords[i].z +random_value;
+    }
+    return true;
+}
+// give a list of atoms to minimize on. 
+// all atoms not in the list will not move (they will be held rigid. 
+//
+bool Energy_min_pairlist(
+    const Parm &parm_stuff,
+    //const Frame &frameX,
+    //Frame frameX, // make a copy of the frame.
+    Frame & frameX, // mod ori 
+    const std::vector <pair> &pairlist,
+    const std::vector <pair> &pairlist14,
+    const std::vector <int> &atomlist,
+    int method,
+    int maxint // maxium interations
+) {
+
+    if (atomlist.size() == 0){
+        std::cout << "exit... atomlist must be non empty" << std::endl;
+        exit(0);
+    }
+
+    int vsize = 3*parm_stuff.CHARGE.size();
+    double step = 0.001;
+    //double step = 0.00000000001;
+
+    std::vector<double> dEdx(vsize,0);   // derivitive
+    //std::vector<double> dE(vsize,0);   // change in energy
+    
+
+    // calculat gradient. 
+    EnergyBonded eb; 
+    EnergyTriple e; 
+    eb = bonded_Energy(parm_stuff, frameX); 
+    e = intermolecular_Energy_pairlist(parm_stuff, frameX, pairlist, pairlist14,-1, method);
+    double current = eb.Ebond + eb.Eangle +  eb.Edihed + e.Evdw + e.Ees;
+    double old = current;
+    std::cout << "atomlist.size() = " << atomlist.size() << std::endl;
+
+    //for (size_t ii = 0; ii < 1000000; ii++){
+    for (size_t ii = 0; ii < maxint; ii++){
+        std::cout << "min::step = " << ii << std::endl;
+        for (size_t a = 0; a < atomlist.size(); a++){
+            int i = atomlist[a];
+            float tot; 
+            eb = bonded_Energy(parm_stuff, frameX); 
+            e = intermolecular_Energy_pairlist(parm_stuff, frameX, pairlist, pairlist14,i, method);
+            float ref = eb.Ebond + eb.Eangle +  eb.Edihed + e.Evdw + e.Ees ;
+            //std::cout << " ref = " << ref << std::endl;
+            // x cord 
+            frameX.cords[i].x = frameX.cords[i].x + step ;
+            eb = bonded_Energy(parm_stuff, frameX); 
+            e = intermolecular_Energy_pairlist(parm_stuff, frameX, pairlist, pairlist14,i, method);
+            tot = eb.Ebond + eb.Eangle +  eb.Edihed + e.Evdw + e.Ees ;
+            //std::cout << " tot = " << tot << std::endl;
+            dEdx[3*i] = (tot-ref)/step;
+            //std::cout << " dEdx[3*i] = " << dEdx[3*i] << std::endl;
+            frameX.cords[i].x = frameX.cords[i].x - step ;
+            // y cord 
+            frameX.cords[i].y = frameX.cords[i].y + step ;
+            eb = bonded_Energy(parm_stuff, frameX); 
+            e = intermolecular_Energy_pairlist(parm_stuff, frameX, pairlist, pairlist14,i,method);
+            tot = eb.Ebond + eb.Eangle +  eb.Edihed + e.Evdw + e.Ees ;
+            //std::cout << " tot = " << tot << std::endl;
+            dEdx[3*i+1] = (tot-ref)/step;
+            frameX.cords[i].y = frameX.cords[i].y - step ;
+            // z cord
+            frameX.cords[i].z = frameX.cords[i].z + step ;
+            eb = bonded_Energy(parm_stuff, frameX); 
+            e = intermolecular_Energy_pairlist(parm_stuff, frameX, pairlist, pairlist14,i,method);
+            tot = eb.Ebond + eb.Eangle +  eb.Edihed + e.Evdw + e.Ees ;
+            //std::cout << " tot = " << tot << std::endl;
+            dEdx[3*i+2] = (tot-ref)/step;
+            frameX.cords[i].z = frameX.cords[i].z - step ;
+        }
+        // should I normalize the step?
+        // take a step -dE/dx
+        // normilize vectory
+        double sum2 = 0;
+        //double scale = 0.0001;
+        double scale = 0.001;
+        //double scale = 0.000000001;
+
+        for (size_t i = 0; i < vsize; i++){
+             //std::cout << "i = "<< i << " dEdx[3*i] = " << dEdx[3*i] << std::endl;
+             if (std::isnan(dEdx[i])){
+                  std::cout << " warning energy is not a number ... set to zerro" << std::endl;
+                  dEdx[i] = 0.0;
+             }else if (dEdx[i] > 100.0) { 
+                  dEdx[i] = 100.0;
+             }else if (dEdx[i] < -100.0) { 
+                  dEdx[i] = -100.0;
+             } //else {
+             //}
+             sum2 = sum2+pow(dEdx[i],2);
+        }
+
+        std::cout << " sum2 = " << sum2 << std::endl;
+        double norm; 
+        if (std::isnan(sum2)){
+            norm = 100000000.0;
+        } else{
+            norm = sqrt(sum2);
+        }
+        std::cout << " norm = " << norm << std::endl;
+        
+        for (size_t i = 0; i < vsize; i++){
+             dEdx[i] = scale*dEdx[i]/norm;
+        }
+       
+        for (size_t a = 0; a < atomlist.size(); a++){
+            int i = atomlist[a];
+            //std:: cout << dEdx[3*i+0] << std::endl;
+            //std:: cout << dEdx[3*i+1] << std::endl;
+            //std:: cout << dEdx[3*i+2] << std::endl;
+            //frameX.cords[i].x = frameX.cords[i].x + dEdx[3*i+0] ;
+            frameX.cords[i].x = frameX.cords[i].x - dEdx[3*i+0] ;
+            frameX.cords[i].y = frameX.cords[i].y - dEdx[3*i+1] ;
+            frameX.cords[i].z = frameX.cords[i].z - dEdx[3*i+2];
+        }
+    
+        eb = bonded_Energy(parm_stuff, frameX); 
+        e = intermolecular_Energy_pairlist(parm_stuff, frameX, pairlist, pairlist14,-1, method);
+        old = current;
+        current = eb.Ebond + eb.Eangle +  eb.Edihed + e.Evdw + e.Ees;
+    
+        std:: cout << e.Evdw << "+" << e.Ees <<"+" << eb.Ebond <<"+" << eb.Eangle <<"+" << eb.Edihed << std::endl;
+        std:: cout << "Etot = " << current << std::endl;
+        //if (fabs(current - old) < 0.0001){
+        //if ((current - old) < 0.0001){
+        if (( old - current) < 0.0001){
+            std::cout << "converge ... " << std::endl;
+            std::cout << std::setw(12) << std::setprecision(10) << " current =" << current << ";\n";
+            std::cout << std::setw(12) << std::setprecision(10) << " old     = " << old << std::endl;
+            std::cout << std::setw(12) << std::setprecision(10) << " diff    =" << (current - old) << std::endl;
+            break;
+        }
+
+    }
+    //std::string filename = "output.rst7";
+    //coord_writter(filename, frameX);
+    return true;
 }
 
 // Parse a string like "1-4,7-10,34-59" into a vector<int>
@@ -1551,42 +1907,72 @@ std::vector<int> find_range(const std::string &list) {
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 7) {
+    if (argc != 6) {
         std::cout << "Input:\n";
         std::cout << "amber prmtop filename\n";
         std::cout << "amber mdcrd filename\n";
-        std::cout << "residues list1 for species 1 :  Loop over these residues, continuity not nessicery\n";
+        std::cout << "residues list to minimize (all other residue atoms are fixed).\n";
         std::cout << "residues list examples: 1-4,7-10,34-59\n";
-        std::cout << "residues list2 for species 2 ( if species 2 is more than one residue generates a matrix)\n";
         std::cout << "output filename\n";
-        std::cout << "outputflag: timestep (output matrix for every time step in addition to averge) or justavg\n";
+        std::cout << "method: 1 is for standard energy function, 2 is for the squishy non-bonded energy function, 3 just vdw repulsive\n";
         return 0;
     }
 
     std::string parmfile      = argv[1];
     std::string crdfile       = argv[2];
     std::string list1         = argv[3];
-    std::string list2         = argv[4];
-    std::string output        = argv[5];
-    std::string outputflagstr = argv[6];
+    std::string output        = argv[4];
+    std::string methodstr     = argv[5];
 
-    bool oflag = false;
-    if (outputflagstr == "timestep") {
-        oflag = true;
-    } else if (outputflagstr == "justavg") {
-        oflag = false;
+    //int method = 1;
+    //int method = 2;
+    int method = std::atoi(methodstr.c_str());
+    std::cout << "method = " << method << std::endl; 
+
+    if (methodstr == "1") {
+        //oflag = true;
+        std::cout << "standard energy function method \n" << std::endl;
+    } else if (methodstr == "2") {
+        //oflag = false;
+        std::cout << "squishy energy function method \n" << std::endl;
+    } else if (methodstr == "3") {
+        //oflag = false;
+        std::cout << "squishy energy function method, just vdw repultion + bonded\n" << std::endl;
     } else {
-        std::cout << "output_flag must be either timestep or justavg\n";
+        std::cout << "method must be 1, 2, or 3\n";
         return 1;
     }
 
-    //std::vector<int> int_list1 = find_range(list1);
+    std::vector<int> int_list1 = find_range(list1);
     //std::vector<int> int_list2 = find_range(list2);
 
     Parm parm_stuff = parm_reader(parmfile);
     //exit(0);
 
     int numatoms = (int)parm_stuff.AMBER_ATOM_TYPE.size();
+    std::vector <int> atomlist;
+    //for (size_t i = 0; i < parm_stuff.CHARGE.size(); i++){
+    // RESIDUE_POINTER
+    //for (size_t i = 0; i < parm_stuff.RESIDUE_POINTER.size(); i++){
+    for (size_t r = 0; r < int_list1.size(); r++){
+         //int i = int_list1[r]-1;
+         int i = r;
+         int rstop;
+         if (i == parm_stuff.RESIDUE_POINTER.size()-1){
+               rstop = parm_stuff.CHARGE.size()+1; // all remaining atoms 
+         } else {
+               rstop =  parm_stuff.RESIDUE_POINTER[int_list1[i]]-1;
+         }
+         std::cout << "residue i = " <<  int_list1[i] << ": atom start = " << parm_stuff.RESIDUE_POINTER[int_list1[i]-1] << " --- atom stop = " ;
+         //std::cout << (parm_stuff.RESIDUE_POINTER[int_list1[i]]-1) << std::endl;
+         std::cout << rstop << std::endl;
+         //for (size_t ii = parm_stuff.RESIDUE_POINTER[int_list1[i]-1]; ii < (parm_stuff.RESIDUE_POINTER[int_list1[i]]); ii++){
+         for (size_t ii = parm_stuff.RESIDUE_POINTER[int_list1[i]-1]; ii < rstop; ii++){
+             std::cout << ii << " " ;
+             atomlist.push_back(ii-1);
+         }
+         std::cout << std::endl;
+    }
 
     // Matrices for avg, avg^2, variance
     //size_t n1 = int_list1.size();
@@ -1651,17 +2037,40 @@ int main(int argc, char *argv[]) {
         // generate a distance based pair list
         // update periodically.  this is when we are runing min and mc. 
 
-        //EnergyTriple e = intermolecular_Energy(parm_stuff, frameX);
+        //EnergyTriple e = intermolecular_Energy(parm_stuff, frameX, method);
          
         std::vector <pair> pairlist;
         std::vector <pair> pairlist14;
 
         //bool flag = 
-        generate_pairlist(parm_stuff, frameX,pairlist, pairlist14);
-        EnergyTriple e = intermolecular_Energy_pairlist(parm_stuff, frameX, pairlist, pairlist14);
+        generate_pairlist(parm_stuff, frameX, pairlist, pairlist14);
+        EnergyTriple e = intermolecular_Energy_pairlist(parm_stuff, frameX, pairlist, pairlist14,-1, method);  // -1 indicates that all pairs will be included in the calculation.
 
         //std:: cout << "I AM HERE" << std::endl;
+        std:: cout << "e.Evdw + e.Ees + eb.Ebond + eb.Eangle + eb.Edihed" << std::endl;
         std:: cout << e.Evdw << "+" << e.Ees <<"+" << eb.Ebond <<"+" << eb.Eangle <<"+" << eb.Edihed << std::endl;
+
+        // minimize atom one frist
+        // then atoms one and two, then one, two, and three ... and so on. 
+
+        std::vector <int> tempatomlist;
+
+        jiggle_atoms(frameX,atomlist,0.1);
+
+        for (size_t i = 0; i < atomlist.size();i++){
+             //jiggle_atoms(frameX,atomlist,0.1);
+             std::cout << "minimize atom i = " << i << std::endl;
+             int atom = atomlist[i];
+             tempatomlist.push_back(atom);
+             Energy_min_pairlist(parm_stuff, frameX, pairlist, pairlist14, tempatomlist, method, 100000);
+        }
+        //exit(0);
+
+        jiggle_atoms(frameX,atomlist,0.5);
+
+        Energy_min_pairlist(parm_stuff, frameX, pairlist, pairlist14, atomlist, method, 100000);
+        std::string filename = "output.rst7";
+        coord_writter(filename, frameX);
 
         exit(0);
     } 
