@@ -997,13 +997,16 @@ bool coord_reader(
 
         if (line_count == 0) {
             if (line.find("Restart") != std::string::npos ||
-                line.find("default_name") != std::string::npos) {
+                line.find("default_name") != std::string::npos ||
+                line.find("output") != std::string::npos ) {
                 std::cout << "file " << filename << " is a restart file.\n";
                 // Do NOT increment line_count, skip to next line
                 continue;
             }
+            std::cout << "line at count == 0 :: " << line << std::endl;
         }
 
+        
         if (line_count > 0) {
             for (size_t i = 0; i < data.size(); i++) {
                 if (ii > 3 * size - 1) {
@@ -1176,8 +1179,20 @@ double cal_angle(const Cord &c1, const Cord &c2, const Cord &c3) {
     if (lenv2 < 0.0001) { 
         lenv2 = 0.0001;
     }
+
+    if(dot<0.0001 and dot>-0.0001){
+       dot = 0.0;
+    }   
     
     double val = dot/(lenv1*lenv2);
+
+    if (std::isnan(val)){
+        std::cout << v1x << " " << v1y << " " << v1z << std::endl;
+        std::cout << v2x << " " << v2y << " " << v2z << std::endl;
+        std::cout << "in angle :: dot = " << dot << "; lenv1 = " << lenv1 <<  "; lenv2 = "  << lenv2 << "; dot/(lenv1 lenv2) = " << val << std::endl;
+        val = 1;
+        exit(0);
+    }
 
     if (val > 1.0){
         val = 1.0;
@@ -1227,6 +1242,11 @@ double cal_dihedral(const Cord &c1, const Cord &c2, const Cord &c3, const Cord &
         lenv2 = 0.0001;
     }
 
+    //if(dot<0.0001){
+    if(dot<0.0001 and dot>-0.0001){
+       dot = 0.0;
+    }   
+
     double val = dot/(lenv1*lenv2);
 
 /*
@@ -1237,9 +1257,11 @@ double cal_dihedral(const Cord &c1, const Cord &c2, const Cord &c3, const Cord &
 */
 
     if (std::isnan(val)){
-        std::cout << "dot = " << dot << "; lenv1 = " << lenv1 <<  "; lenv2 = "  << lenv2 << "; dot/(lenv1 lenv2) = " << val << std::endl;
+        std::cout << u1xu2.x << " " << u1xu2.y << " " << u1xu2.z << std::endl;
+        std::cout << u2xu3.x << " " << u2xu3.y << " " << u2xu3.z << std::endl;
+        std::cout << "in dihed:: dot = " << dot << "; lenv1 = " << lenv1 <<  "; lenv2 = "  << lenv2 << "; dot/(lenv1 lenv2) = " << val << std::endl;
         val = 1;
-        //exit(0);
+        exit(0);
     }
 
 /*
@@ -1365,8 +1387,10 @@ double vdw_energy_function(double A, double B, double r, int method) {
         return A * teb_func(1.151669, 1.322028, 1.330330,r) - B * teb_func(0.906882, 5.863632, 4.429459,r);
     } else if (method == 3){ // just repultion
                          // b,        N,        M,           
-        //return A * teb_func(1.151669, 1.322028, 1.330330,r) ;
-        return A * teb_func(0.5, 10000.0, 1,r) ;
+        return A * teb_func(1.151669, 1.322028, 1.330330,r) ;
+        //return A * teb_func(0.5, 10000.0, 1,r) ;
+    } else if (method == 4){ // just bonded
+        return 0.0 ;
     }
 }
   
@@ -1378,8 +1402,9 @@ double es_energy_function(double q1, double q2, double r, int method) {
                                // b,        N,        M,
         return q1 * q2 * teb_func(0.879128, 4.733930, 0.336965,r);
     } else if (method == 3){
-                               // b,        N,        M,
-        return 0;
+        return 0.0;
+    } else if (method == 4){ // just bonded
+        return 0.0 ;
     }
 }
 
@@ -1425,6 +1450,9 @@ EnergyBonded bonded_Energy(
 
         double d = distance(frameX.cords[a1-1], frameX.cords[a2-1]); 
         //double d = distance(frameX.cords[a1], frameX.cords[a2]); 
+        if (std::isnan(d)){
+            d = 0.0;
+        }
         double E = fC*std::pow((d-id),2.0);
         //std::cout << "E = " << E << std::endl;
         Ebond = Ebond + E;
@@ -1834,15 +1862,24 @@ bool Energy_min_pairlist(
 
         std::cout << " sum2 = " << sum2 << std::endl;
         double norm; 
-        if (std::isnan(sum2)){
-            norm = 100000000.0;
+        //if (sum2 < 0.00000000001){
+        if (sum2 == 0.0){
+            norm = 1;
         } else{
-            norm = sqrt(sum2);
+            if (std::isnan(sum2)){
+                norm = 100000000.0;
+            } else{
+                norm = sqrt(sum2);
+            }
         }
         std::cout << " norm = " << norm << std::endl;
         
         for (size_t i = 0; i < vsize; i++){
              dEdx[i] = scale*dEdx[i]/norm;
+             if (std::isnan(dEdx[i])){
+                  std::cout << " warning energy is not a number ... set to zerro" << std::endl;
+                  dEdx[i] = 0.0;
+             }
         }
        
         for (size_t a = 0; a < atomlist.size(); a++){
@@ -1907,14 +1944,16 @@ std::vector<int> find_range(const std::string &list) {
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 6) {
+    if (argc != 8) {
         std::cout << "Input:\n";
         std::cout << "amber prmtop filename\n";
         std::cout << "amber mdcrd filename\n";
         std::cout << "residues list to minimize (all other residue atoms are fixed).\n";
         std::cout << "residues list examples: 1-4,7-10,34-59\n";
         std::cout << "output filename\n";
-        std::cout << "method: 1 is for standard energy function, 2 is for the squishy non-bonded energy function, 3 just vdw repulsive\n";
+        std::cout << "method: 1 is for standard energy function, 2 is for the squishy non-bonded energy function, 3 just vdw repulsive + bonded, 4 just bonded\n";
+        std::cout << "Jiggle=yes or Jiggle=no\n";
+        std::cout << "OneByOneFirst or Allonly  \n";
         return 0;
     }
 
@@ -1923,6 +1962,8 @@ int main(int argc, char *argv[]) {
     std::string list1         = argv[3];
     std::string output        = argv[4];
     std::string methodstr     = argv[5];
+    std::string Jiggle        = argv[6];
+    std::string onebyone      = argv[7];
 
     //int method = 1;
     //int method = 2;
@@ -1938,9 +1979,32 @@ int main(int argc, char *argv[]) {
     } else if (methodstr == "3") {
         //oflag = false;
         std::cout << "squishy energy function method, just vdw repultion + bonded\n" << std::endl;
+    } else if (methodstr == "4") {
+        //oflag = false;
+        std::cout << " Just bonded energies\n" << std::endl;
     } else {
-        std::cout << "method must be 1, 2, or 3\n";
+        std::cout << "method must be 1, 2, 3, or 4\n";
         return 1;
+    }
+
+    bool jiggleb = false;
+    if (Jiggle == "Jiggle=yes") {
+        jiggleb = true;
+    } else if (Jiggle == "Jiggle=no") {
+        jiggleb = false;
+    } else{
+        std::cout << "Error: input error: "<< Jiggle << " is not a valid option." << " Options are Jiggle=yes or Jiggle=no" << std::endl;
+        exit(0);
+    }
+
+    bool onebyoneb = false;
+    if (onebyone == "OneByOneFirst") {
+        onebyoneb = true;
+    } else if (onebyone == "Allonly") {
+        onebyoneb = false;
+    } else{
+        std::cout << "Error: input error: "<< onebyone << " is not a valid option." << " Options are OneByOneFirst or Allonly" << std::endl;
+        exit(0);
     }
 
     std::vector<int> int_list1 = find_range(list1);
@@ -2054,19 +2118,24 @@ int main(int argc, char *argv[]) {
         // then atoms one and two, then one, two, and three ... and so on. 
 
         std::vector <int> tempatomlist;
-
-        jiggle_atoms(frameX,atomlist,0.1);
-
-        for (size_t i = 0; i < atomlist.size();i++){
+        if (jiggleb) {
+           jiggle_atoms(frameX,atomlist,0.1);
+        }
+        if (onebyoneb) {
+          for (size_t i = 0; i < atomlist.size();i++){
              //jiggle_atoms(frameX,atomlist,0.1);
              std::cout << "minimize atom i = " << i << std::endl;
              int atom = atomlist[i];
              tempatomlist.push_back(atom);
              Energy_min_pairlist(parm_stuff, frameX, pairlist, pairlist14, tempatomlist, method, 100000);
+             //exit(0);
+          }
         }
         //exit(0);
 
-        jiggle_atoms(frameX,atomlist,0.5);
+        if (jiggleb) {
+           jiggle_atoms(frameX,atomlist,0.1);
+        }
 
         Energy_min_pairlist(parm_stuff, frameX, pairlist, pairlist14, atomlist, method, 100000);
         std::string filename = "output.rst7";

@@ -49,9 +49,9 @@ def read_write_mol2_file(filename1,fileval,valtype,output,nameval):
          linesplit = line.replace(':',': ').split()
          if (len(linesplit) > 0):
              if ("  Name:" in line):
-                 name = linesplit[2].split('.')[0]
-                 #print name dict_val[name]
-                 #print name, dict_val
+                 #name = linesplit[2].split('.')[0]
+                 name = linesplit[2].strip()
+                 #print (name, dict_val[name])
                  #exit()
                  if name in dict_val: 
                  #if name in dict_val: 

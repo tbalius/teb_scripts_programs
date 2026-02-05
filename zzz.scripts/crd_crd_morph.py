@@ -35,7 +35,7 @@ def coord_reader(filename):
        line_count = line_count + 1
        continue
    if line_count == 1:
-       print ("number of cordanates = %s \n",line)
+       print ("number of cordanates = %s \n"%line)
        size = int(line.split()[0])
        line_count = line_count + 1
        continue

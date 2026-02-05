@@ -22,7 +22,7 @@ def distance_sph_pdb(sphs,pdbatoms,dt):
 
 def main():
     if len(sys.argv) != 5: # if no input
-       print "ERORR: there need to be 4 inputs: sph inputfilename, pdb inputfilename, outputfilename, distance."
+       print ("ERORR: there need to be 4 inputs: sph inputfilename, pdb inputfilename, outputfilename, distance.")
        return
 
     fileinputsph = sys.argv[1]
@@ -30,10 +30,10 @@ def main():
     fileoutput   = sys.argv[3]
     distance     = float(sys.argv[4])
 
-    print 'input_sph =' + fileinputsph
-    print 'input_pdb =' + fileinputpdb
-    print 'output =' + fileoutput
-    print 'distance = %6.3f'%distance
+    print ('input_sph =' + fileinputsph)
+    print ('input_pdb =' + fileinputpdb)
+    print ('output =' + fileoutput)
+    print ('distance = %6.3f'%distance)
 
     list = sph.read_sph(fileinputsph,"A","A")
     pdblist = pdb.read_pdb(fileinputpdb)[0]    
