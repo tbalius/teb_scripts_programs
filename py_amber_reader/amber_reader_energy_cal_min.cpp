@@ -1,3 +1,6 @@
+// 
+// The programe amber_reader_energy_cal_min.cpp is based on
+//
 // amber_reader_frame_by_frame_var.cpp
 // C++ translation of amber_reader_frame_by_frame_var.py
 // Original author (Python): Trent E. Balius
@@ -19,6 +22,7 @@
 
 // TEB adding in bonded terms, a full energy evaluation (2025/11/22) 
 // and minimization. 
+// This includes modified non-bonded functional forms. 
 // thinking about adding in monte carlo optimizer. 
 //
 // g++ amber_reader_energy_cal_min.cpp -O2 -Wall -Wextra -o amber_reader_energy 
