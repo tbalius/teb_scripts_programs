@@ -13,24 +13,27 @@ def bounding_box_grid_file(sphs,scale):
 
   # find extreme points. 
     # loop over spheres
-  max_x = max_y = max_z = 0.0
-  min_x = min_y = min_z = 10000.0
+  #max_x = max_y = max_z = 0.0
+  # it might be better to set it equal to a values
+  # max_x = sph.X+sph[0].radius+buff 
+  max_x = max_y = max_z = -10000.0
+  min_x = min_y = min_z =  10000.0
 
   buff = scale # add/substract a buffer to make sure spheres are completly contained
 
   for sph in sphs:
       # add/subtract radius.
-      if (sph.X+sph.radius > max_x):
+      if (sph.X+sph.radius+buff > max_x):
           max_x = sph.X+sph.radius+buff
-      if (sph.X-sph.radius < min_x):
+      if (sph.X-sph.radius-buff < min_x):
           min_x = sph.X-sph.radius-buff
-      if (sph.Y+sph.radius > max_y):
+      if (sph.Y+sph.radius+buff > max_y):
           max_y = sph.Y+sph.radius+buff
-      if (sph.Y-sph.radius < min_y):
+      if (sph.Y-sph.radius-buff < min_y):
           min_y = sph.Y-sph.radius-buff
-      if (sph.Z+sph.radius > max_z):
+      if (sph.Z+sph.radius+buff > max_z):
           max_z = sph.Z+sph.radius+buff
-      if (sph.Z-sph.radius < min_z):
+      if (sph.Z-sph.radius-buff < min_z):
           min_z = sph.Z-sph.radius-buff
 
   print ("max corner = ", max_x, max_y, max_z )
