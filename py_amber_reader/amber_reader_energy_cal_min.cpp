@@ -1769,6 +1769,198 @@ bool jiggle_atoms(
     }
     return true;
 }
+// calc RMSD between two frames.
+double RMSD(Frame &refX,Frame &frameX,const std::vector <int> &atomlist){
+    // check that refX and frameX have same number of atoms outside. 
+    double rmsd = 0.0;
+    for (size_t a = 0; a < atomlist.size(); a++){
+        int i = atomlist[a];
+        rmsd = rmsd + pow((frameX.cords[i].x - refX.cords[i].x),2.0);
+        rmsd = rmsd + pow((frameX.cords[i].y - refX.cords[i].y),2.0);
+        rmsd = rmsd + pow((frameX.cords[i].z - refX.cords[i].z),2.0);
+        //std::cout << i << ": x = " << frameX.cords[i].x << " " << refX.cords[i].x << std::endl; 
+        //std::cout << i << ": y = " << frameX.cords[i].y << " " << refX.cords[i].y << std::endl; 
+        //std::cout << i << ": z = " << frameX.cords[i].z << " " << refX.cords[i].z << std::endl; 
+        //std::cout << i << ": dist = " << sqrt(rmsd) << std::endl; 
+        //exit(0);
+    }
+    //rmsd = rmsd / a;
+    rmsd = rmsd / atomlist.size();
+    rmsd = sqrt(rmsd);
+    return rmsd;
+}
+
+// calculate the Ermsd. 
+double ERMSD(Frame &refX,Frame &frameX,const std::vector <int> &atomlist, bool rmsdLorH, double rmsdFC){
+   double rmsd = RMSD(refX,frameX,atomlist);
+   double Ermsd = 0.0;
+   if (rmsdLorH){ // if linear
+       Ermsd = rmsdFC * rmsd;
+   } else { // if harmonic
+       Ermsd = rmsdFC * pow(rmsd,2.0);
+   } 
+   //std:: cout << "RMSD = " << rmsd << "\n Ermsd = " << Ermsd << std::endl;
+   return Ermsd;
+}
+
+// calc distance contrains between pairs of atoms.
+double E_distance_contraints(Frame &frameX, const std::vector <int> &atomlist1, const std::vector <int> &atomlist2, const std::vector <double> &ideals, double distFC){
+
+    if (atomlist2.size() != atomlist1.size()){ 
+        std::cout << "Error.  atomlist2.size() != atomlist1.size() in distances function" << std::endl;
+        exit(0);
+    }
+    if (atomlist2.size() != ideals.size()){ 
+        std::cout << "Error.  atomlist2.size() != ideals.size() in distances function" << std::endl;
+        exit(0);
+    }
+    //}
+
+    double Edist = 0.0;
+    for (size_t a = 0; a < atomlist1.size(); a++){
+        int i = atomlist1[a];
+        int j = atomlist2[a];
+        double ideal = ideals[a];
+        double dist = 0;
+        dist = dist + pow((frameX.cords[i].x - frameX.cords[j].x),2.0);
+        dist = dist + pow((frameX.cords[i].y - frameX.cords[j].y),2.0);
+        dist = dist + pow((frameX.cords[i].z - frameX.cords[j].z),2.0);
+        Edist = Edist + pow((sqrt(dist) - ideal),2.0);
+        //std::cout << i << ": x = " << frameX.cords[i].x << " " << refX.cords[i].x << std::endl; 
+        //std::cout << i << ": y = " << frameX.cords[i].y << " " << refX.cords[i].y << std::endl; 
+        //std::cout << i << ": z = " << frameX.cords[i].z << " " << refX.cords[i].z << std::endl; 
+        //std::cout << i << ": dist = " << sqrt(rmsd) << std::endl; 
+        //exit(0);
+    }
+    //rmsd = rmsd / a;
+    Edist = distFC*Edist;
+    return Edist;
+}
+
+// distance contraint file reader: frist line is the contraint value, all other lines with have pairs atoms give with resdue and atom numbers and an ideal distance
+// 10000
+// :64@5 :12@1 10.0
+//
+bool dist_con_reader(
+    //std::ifstream &fh,
+    const std::string &filename,
+    const std::vector<int> &residue_pointer, // 
+    const int & numatoms,
+    //std::vector<int> &res1,
+    //std::vector<int> &res2,
+    //std::vector<int> &atom1,
+    //std::vector<int> &atom2,
+    double & distFC,
+    std::vector<int> &atomlist1,
+    std::vector<int> &atomlist2,
+    std::vector<double> &ideals
+) {
+
+    std::cout << "In dist_con_reader" << std::endl;
+    //std::ifstream fh,
+    std::ifstream fh(filename.c_str());
+    int count = 0;
+    //res1.clear();
+    //res2.clear();
+    //atom1.clear();
+    //atom2.clear();
+    atomlist1.clear();
+    atomlist2.clear();
+    ideals.clear();
+
+    std::string line;
+
+    while (std::getline(fh, line)) {
+
+        std::vector<std::string> data = split_whitespace(line);
+        if (count == 0){
+            if (data.size() == 1){
+               std::cout << data[0] << std::endl;
+               distFC = std::atof(data[0].c_str());
+            }
+        }
+        else {
+            for (int i = 0; i < 2; i++){
+                std::cout << data[i] << std::endl;
+                std::string res; //residue number
+                std::string atm; //atom number
+                bool rflag = false;
+                bool aflag = false;
+                for (char c : data[i]) {
+                    if (c == ':') {
+                        if (aflag){
+                           std::cout << "Error. with contraint file residue must be defined before atom :resnum@atomnum" << std::endl;
+                           exit(0);
+                        }
+                        rflag = true;
+                        aflag = false;
+                        continue;
+                    }
+                    else if (c == '@'){ 
+                        if (not rflag){
+                           std::cout << "Error. with contraint file must have :resnum defining residue before @atomnum" << std::endl;
+                           exit(0);
+                        }
+                        aflag = true;
+                        rflag = false;
+                        continue;
+                    } 
+                    if (rflag) res.push_back(c);
+                    if (aflag) atm.push_back(c);
+                }
+                std::cout << res << " " << atm << std::endl; 
+                int resnum = std::atoi(res.c_str());
+                int atomnum = std::atoi(atm.c_str());
+                // get the fist atom number of the residue.
+                int fristatom = residue_pointer[resnum-1];
+                // get the last atom number of the residue.
+                int lastatom = 0;
+                if (resnum == residue_pointer.size()){ // if it is the last residue then use the numatms.
+                     lastatom = atomnum;
+                }
+                else{
+                     lastatom = residue_pointer[resnum] - 1;
+                } 
+
+                int global_atomnum = fristatom + atomnum -2; // this is the atom number not depencent on the residue. substract by two to substract each number by 1 
+
+                if (fristatom + atomnum > lastatom) {
+                       std::cout << "Warrning. atom number is too big, we might be using an atom outside the residue.  " << std::endl;
+                       std::cout << "residue atoms: " << fristatom << "-" << lastatom << std::endl;
+                       std::cout << "residue number: " << resnum << "; atom number: " << atomnum << std::endl;
+                } 
+                if (fristatom + atomnum > numatoms) {
+                      std::cout << "Error. fristatom + atomnum > numatoms. " << std::endl;
+                      exit(0);
+
+                }
+                
+                std::cout << "residue atoms: " << fristatom << "-" << lastatom << std::endl;
+                std::cout << "residue number: " << resnum << "; atom number: " << atomnum << std::endl;
+
+                if (i == 0 ) {
+                    //res1.push_back(resnum);
+                    //atom1.push_back(atmnum);
+                    atomlist1.push_back(global_atomnum);
+                }
+                else if (i==1){
+                    //res2.push_back(resnum);
+                    //atom2.push_back(atmnum);
+                    atomlist2.push_back(global_atomnum);
+                }
+            }
+            double ideal = std::atof(data[2].c_str());
+            ideals.push_back(ideal);
+            std::cout << "ideal = " << ideal << std::endl;
+        }
+        
+        count++;
+
+    }
+    return true;
+
+}
+
 // give a list of atoms to minimize on. 
 // all atoms not in the list will not move (they will be held rigid. 
 //
@@ -1781,8 +1973,19 @@ bool Energy_min_pairlist(
     const std::vector <pair> &pairlist14,
     const std::vector <int> &atomlist,
     int method,
-    int maxint // maxium interations
-) {
+    int maxint, // maxium interations
+    double step,
+    double scale,
+    bool rmsdflag,
+    Frame & rmsdX,
+    bool LorH,
+    double rmsdFC, 
+    bool dist_con_flag,
+    const std::vector <int> &dc_atomlist1, 
+    const std::vector <int> &dc_atomlist2, 
+    const std::vector <double> &dc_ideals, 
+    double dc_FCdist
+    ) {
 
     if (atomlist.size() == 0){
         std::cout << "exit... atomlist must be non empty" << std::endl;
@@ -1790,7 +1993,7 @@ bool Energy_min_pairlist(
     }
 
     int vsize = 3*parm_stuff.CHARGE.size();
-    double step = 0.001;
+    //double step = 0.001;
     //double step = 0.00000000001;
 
     std::vector<double> dEdx(vsize,0);   // derivitive
@@ -1803,6 +2006,14 @@ bool Energy_min_pairlist(
     eb = bonded_Energy(parm_stuff, frameX); 
     e = intermolecular_Energy_pairlist(parm_stuff, frameX, pairlist, pairlist14,-1, method);
     double current = eb.Ebond + eb.Eangle +  eb.Edihed + e.Evdw + e.Ees;
+    if (rmsdflag){
+        double Ermsd = ERMSD(rmsdX,frameX,atomlist,LorH,rmsdFC);
+        current = current + Ermsd; // add rmsd restraint energy to current.
+    }
+    if (dist_con_flag){
+        double Edist_con = E_distance_contraints(frameX, dc_atomlist1, dc_atomlist2, dc_ideals, dc_FCdist);
+        current = current + Edist_con; // add distance constraint energy to current.
+    }
     double old = current;
     std::cout << "atomlist.size() = " << atomlist.size() << std::endl;
 
@@ -1815,12 +2026,28 @@ bool Energy_min_pairlist(
             eb = bonded_Energy(parm_stuff, frameX); 
             e = intermolecular_Energy_pairlist(parm_stuff, frameX, pairlist, pairlist14,i, method);
             float ref = eb.Ebond + eb.Eangle +  eb.Edihed + e.Evdw + e.Ees ;
+            if (rmsdflag){
+                double Ermsd = ERMSD(rmsdX,frameX,atomlist,LorH,rmsdFC);
+                ref = ref + Ermsd; // add rmsd restraint energy to ref.
+            }
+            if (dist_con_flag){
+                double Edist_con = E_distance_contraints(frameX, dc_atomlist1, dc_atomlist2, dc_ideals, dc_FCdist);
+                ref = ref + Edist_con; // add distance constraint energy to ref.
+            }
             //std::cout << " ref = " << ref << std::endl;
             // x cord 
             frameX.cords[i].x = frameX.cords[i].x + step ;
             eb = bonded_Energy(parm_stuff, frameX); 
             e = intermolecular_Energy_pairlist(parm_stuff, frameX, pairlist, pairlist14,i, method);
             tot = eb.Ebond + eb.Eangle +  eb.Edihed + e.Evdw + e.Ees ;
+            if (rmsdflag){
+                double Ermsd = ERMSD(rmsdX,frameX,atomlist,LorH,rmsdFC);
+                tot = tot + Ermsd; // add rmsd restraint energy to tot.
+            }
+            if (dist_con_flag){
+                double Edist_con = E_distance_contraints(frameX, dc_atomlist1, dc_atomlist2, dc_ideals, dc_FCdist);
+                tot = tot + Edist_con; // add distance constraint energy to tot.
+            }
             //std::cout << " tot = " << tot << std::endl;
             dEdx[3*i] = (tot-ref)/step;
             //std::cout << " dEdx[3*i] = " << dEdx[3*i] << std::endl;
@@ -1838,6 +2065,14 @@ bool Energy_min_pairlist(
             eb = bonded_Energy(parm_stuff, frameX); 
             e = intermolecular_Energy_pairlist(parm_stuff, frameX, pairlist, pairlist14,i,method);
             tot = eb.Ebond + eb.Eangle +  eb.Edihed + e.Evdw + e.Ees ;
+            if (rmsdflag){
+                double Ermsd = ERMSD(rmsdX,frameX,atomlist,LorH,rmsdFC);
+                tot = tot + Ermsd; // add rmsd restraint energy to tot.
+            }
+            if (dist_con_flag){
+                double Edist_con = E_distance_contraints(frameX, dc_atomlist1, dc_atomlist2, dc_ideals, dc_FCdist);
+                tot = tot + Edist_con; // add distance constraint energy to tot.
+            }
             //std::cout << " tot = " << tot << std::endl;
             dEdx[3*i+2] = (tot-ref)/step;
             frameX.cords[i].z = frameX.cords[i].z - step ;
@@ -1847,7 +2082,7 @@ bool Energy_min_pairlist(
         // normilize vectory
         double sum2 = 0;
         //double scale = 0.0001;
-        double scale = 0.001;
+        //double scale = 0.001;
         //double scale = 0.000000001;
 
         for (size_t i = 0; i < vsize; i++){
@@ -1885,25 +2120,59 @@ bool Energy_min_pairlist(
                   dEdx[i] = 0.0;
              }
         }
-       
-        for (size_t a = 0; a < atomlist.size(); a++){
-            int i = atomlist[a];
-            //std:: cout << dEdx[3*i+0] << std::endl;
-            //std:: cout << dEdx[3*i+1] << std::endl;
-            //std:: cout << dEdx[3*i+2] << std::endl;
-            //frameX.cords[i].x = frameX.cords[i].x + dEdx[3*i+0] ;
-            frameX.cords[i].x = frameX.cords[i].x - dEdx[3*i+0] ;
-            frameX.cords[i].y = frameX.cords[i].y - dEdx[3*i+1] ;
-            frameX.cords[i].z = frameX.cords[i].z - dEdx[3*i+2];
+      
+        bool flag_step = true;
+        //bool gradient  = false;
+        int count_steps = 0;
+        while (flag_step) { // step in the same direction until it is no longer favorable // or until max is reached. 
+            for (size_t a = 0; a < atomlist.size(); a++){
+                int i = atomlist[a];
+                //std:: cout << dEdx[3*i+0] << std::endl;
+                //std:: cout << dEdx[3*i+1] << std::endl;
+                //std:: cout << dEdx[3*i+2] << std::endl;
+                //frameX.cords[i].x = frameX.cords[i].x + dEdx[3*i+0] ;
+                frameX.cords[i].x = frameX.cords[i].x - dEdx[3*i+0] ;
+                frameX.cords[i].y = frameX.cords[i].y - dEdx[3*i+1] ;
+                frameX.cords[i].z = frameX.cords[i].z - dEdx[3*i+2];
+            }
+            
+            eb = bonded_Energy(parm_stuff, frameX); 
+            e = intermolecular_Energy_pairlist(parm_stuff, frameX, pairlist, pairlist14,-1, method);
+            if (count_steps == 0){
+                // only update this will the frist energy evaluation of the while loop. 
+                // this way the convergant evaluation is on the first value so that it will try a new gradent. 
+                old = current;
+            }
+            double old_while = current;
+            current = eb.Ebond + eb.Eangle +  eb.Edihed + e.Evdw + e.Ees;
+            std:: cout << e.Evdw << "+" << e.Ees <<"+" << eb.Ebond <<"+" << eb.Eangle <<"+" << eb.Edihed << std::endl;
+            if (rmsdflag){
+                double Ermsd = ERMSD(rmsdX,frameX,atomlist,LorH,rmsdFC);
+                current = current + Ermsd; // add rmsd restraint energy to current.
+                std:: cout << "ERMSD = " << Ermsd << std::endl;
+            }
+            if (dist_con_flag){
+                double Edist_con = E_distance_contraints(frameX, dc_atomlist1, dc_atomlist2, dc_ideals, dc_FCdist);
+                current = current + Edist_con; // add distance constraint energy to current.
+                std:: cout << "Edist_con = " << Edist_con << std::endl;
+            }
+            std:: cout << "Etot = " << current << std::endl;
+            //if (( old - current) < 0.0 or count_steps > 100){  // if the diff is less then zero or if the max is reach then set bool flag_step to false so we exit the while loop
+            //  the convergance value inside the while loop need to be bigger 
+            if (( old_while - current) < 0.0001 or count_steps > 200){  // if the diff is less then zero or if the max is reach then set bool flag_step to false so we exit the while loop
+                std:: cout << "stop while loop count_step = " << count_steps << std::endl;
+                flag_step = false;
+                // move back happens below. 
+                for (size_t a = 0; a < atomlist.size(); a++){
+                    int i = atomlist[a];
+                    frameX.cords[i].x = frameX.cords[i].x + dEdx[3*i+0] ;
+                    frameX.cords[i].y = frameX.cords[i].y + dEdx[3*i+1] ;
+                    frameX.cords[i].z = frameX.cords[i].z + dEdx[3*i+2];
+                //    current = old;
+                }
+            }
+            count_steps++;
         }
-    
-        eb = bonded_Energy(parm_stuff, frameX); 
-        e = intermolecular_Energy_pairlist(parm_stuff, frameX, pairlist, pairlist14,-1, method);
-        old = current;
-        current = eb.Ebond + eb.Eangle +  eb.Edihed + e.Evdw + e.Ees;
-    
-        std:: cout << e.Evdw << "+" << e.Ees <<"+" << eb.Ebond <<"+" << eb.Eangle <<"+" << eb.Edihed << std::endl;
-        std:: cout << "Etot = " << current << std::endl;
         //if (fabs(current - old) < 0.0001){
         //if ((current - old) < 0.0001){
         if (( old - current) < 0.0001){
@@ -1911,6 +2180,13 @@ bool Energy_min_pairlist(
             std::cout << std::setw(12) << std::setprecision(10) << " current =" << current << ";\n";
             std::cout << std::setw(12) << std::setprecision(10) << " old     = " << old << std::endl;
             std::cout << std::setw(12) << std::setprecision(10) << " diff    =" << (current - old) << std::endl;
+            // move back happens above
+            //for (size_t a = 0; a < atomlist.size(); a++){
+            //    int i = atomlist[a];
+            //    frameX.cords[i].x = frameX.cords[i].x + dEdx[3*i+0] ;
+            //    frameX.cords[i].y = frameX.cords[i].y + dEdx[3*i+1] ;
+            //    frameX.cords[i].z = frameX.cords[i].z + dEdx[3*i+2];
+            //}
             break;
         }
 
@@ -1948,7 +2224,7 @@ std::vector<int> find_range(const std::string &list) {
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 8) {
+    if (argc != 15) {
         std::cout << "Input:\n";
         std::cout << "amber prmtop filename\n";
         std::cout << "amber mdcrd filename\n";
@@ -1958,6 +2234,13 @@ int main(int argc, char *argv[]) {
         std::cout << "method: 1 is for standard energy function, 2 is for the squishy non-bonded energy function, 3 just vdw repulsive + bonded, 4 just bonded\n";
         std::cout << "Jiggle=yes or Jiggle=no\n";
         std::cout << "OneByOneFirst or Allonly  \n";
+        std::cout << "max min steps (must be int) \n";
+        std::cout << "step size (used to calculate the gradient) recommended: 0.001 \n";
+        std::cout << "scale (used to scale the normalized gradient) recommended: 0.1 \n";
+        std::cout << "RMSD reference filename.  (if not used then give value 'None' )\n";
+        std::cout << "'linear' or 'harmonic' for rmsd constrain\n";
+        std::cout << "rmsd force constant  (float)\n";
+        std::cout << "distance contraint file (if not used then give value 'None') ";
         return 0;
     }
 
@@ -1968,10 +2251,49 @@ int main(int argc, char *argv[]) {
     std::string methodstr     = argv[5];
     std::string Jiggle        = argv[6];
     std::string onebyone      = argv[7];
+    std::string maxstepsstr   = argv[8];
+    std::string stepstr       = argv[9];
+    std::string scalestr      = argv[10];
+    std::string rmsdcrdfile   = argv[11];
+    std::string rmsdtype      = argv[12];
+    std::string rmsdFCstr     = argv[13];
+    std::string distconfile   = argv[14]; // distance contraint file
 
     //int method = 1;
     //int method = 2;
     int method = std::atoi(methodstr.c_str());
+    int maxsteps = std::atoi(maxstepsstr.c_str());
+    double gstep = std::atof(stepstr.c_str());
+    double gscale = std::atof(scalestr.c_str());
+    double rmsdFC = std::atof(rmsdFCstr.c_str());
+
+    bool rmsdLorH;  // true if linear, false if harmonic
+    //if (rmsdLorHstr == "linear"){
+    if (rmsdtype == "linear"){
+        rmsdLorH = true;
+    }
+    //else if ( rmsdLorHstr == "harmonic"){
+    else if ( rmsdtype == "harmonic"){
+        rmsdLorH = false;
+    }
+    else {
+        std::cout << "RMSDtype = " << rmsdtype << std::endl;
+        std::cout << "Error RMSDtype must be 'linear' or 'harmonic'\n";
+        return 1;
+    }
+    bool rmsdflag = true;
+    if (rmsdcrdfile == "None"){
+        std::cout << "No RMSD reference is used. \n" << std::endl;
+        rmsdFC = 0.0;
+        rmsdflag = false;
+    }  
+
+    bool dist_con_flag = true;
+    if (distconfile == "None"){
+        std::cout << "No distance contraint file is given. \n" << std::endl;
+        dist_con_flag = false;
+    }  
+
     std::cout << "method = " << method << std::endl; 
 
     if (methodstr == "1") {
@@ -2029,7 +2351,8 @@ int main(int argc, char *argv[]) {
          if (i == parm_stuff.RESIDUE_POINTER.size()-1){
                rstop = parm_stuff.CHARGE.size()+1; // all remaining atoms 
          } else {
-               rstop =  parm_stuff.RESIDUE_POINTER[int_list1[i]]-1;
+               //rstop =  parm_stuff.RESIDUE_POINTER[int_list1[i]]-1;
+               rstop =  parm_stuff.RESIDUE_POINTER[int_list1[i]];
          }
          std::cout << "residue i = " <<  int_list1[i] << ": atom start = " << parm_stuff.RESIDUE_POINTER[int_list1[i]-1] << " --- atom stop = " ;
          //std::cout << (parm_stuff.RESIDUE_POINTER[int_list1[i]]-1) << std::endl;
@@ -2058,11 +2381,41 @@ int main(int argc, char *argv[]) {
     //std::vector<std::vector<double>> var_mat_vdw(n1, std::vector<double>(n2, 0.0));
     //std::vector<std::vector<double>> var_mat_ele(n1, std::vector<double>(n2, 0.0));
 
+    std::vector<std::string> remainder_data;
+    int linecount = 0;
+
+    // READ IN RMSD reference.  
+    Frame rmsdX;
+    if (rmsdflag){
+        //std::cout << "I AM HERE" << std::endl;
+        std::ifstream fhr(rmsdcrdfile.c_str());
+        if (!fhr) {
+            std::cerr << "Error opening coordinate file: " << rmsdcrdfile << "\n";
+            return 1;
+        }
+        bool more = coord_reader(linecount, fhr, rmsdX, rmsdcrdfile, numatoms, remainder_data);
+        if (more){
+            std::cerr << "Warning. we only use one frame in RMSD, but there are more frams in " << rmsdcrdfile << "\n";
+        }
+        fhr.close();
+    }
+    //
+
+    std::vector <int> dc_atomlist1;
+    std::vector <int> dc_atomlist2;
+    std::vector <double> dc_ideals;
+    double dc_FCdist = 0.0;
+    if (dist_con_flag){
+        dist_con_reader(distconfile,parm_stuff.RESIDUE_POINTER,parm_stuff.CHARGE.size()+1,dc_FCdist,dc_atomlist1,dc_atomlist2,dc_ideals);
+    }
+
     std::ifstream fh(crdfile.c_str());
     if (!fh) {
         std::cerr << "Error opening coordinate file: " << crdfile << "\n";
         return 1;
     }
+
+
 
     //std::ofstream vdwfileh_frames;
     //std::ofstream elefileh_frames;
@@ -2078,8 +2431,8 @@ int main(int argc, char *argv[]) {
     //}
 
     int i = 0;
-    int linecount = 0;
-    std::vector<std::string> remainder_data;
+    linecount = 0;
+    remainder_data.clear();
 
     while (true) {
         Frame frameX;
@@ -2087,6 +2440,29 @@ int main(int argc, char *argv[]) {
         if (!more) break;
 
         std::cout << "remainder: " << remainder_data.size() << "\n";
+
+        double Ermsd =0.0;
+        if (rmsdflag){
+            if (rmsdX.cords.size() != frameX.cords.size()){
+                std:: cout << "Error. rmsd reference does not have right number of atoms." << std::endl;
+                exit(0);
+            }
+            //double rmsd = RMSD(rmsdX,frameX,atomlist);
+            //double Ermsd = 0.0;
+            //if (rmsdLorH){ // if linear
+            //    Ermsd = rmsdFC * rmsd;
+            //} else { // if harmonic
+            //    Ermsd = rmsdFC * pow(rmsd,2.0);
+            //} 
+            //std:: cout << "RMSD = " << rmsd << "\n Ermsd = " << Ermsd << std::endl;
+            //double Ermsd = ERMSD(rmsdX,frameX,atomlist,rmsdLorH,rmsdFC);
+            Ermsd = ERMSD(rmsdX,frameX,atomlist,rmsdLorH,rmsdFC);
+        }
+        double Edist_con = 0.0;
+        if (dist_con_flag){
+             //double Edist_con = E_distance_contraints(frameX, dc_atomlist1, dc_atomlist2, dc_ideals, dc_FCdist);
+             Edist_con = E_distance_contraints(frameX, dc_atomlist1, dc_atomlist2, dc_ideals, dc_FCdist);
+        }
 
         EnergyBonded eb; 
         eb = bonded_Energy(parm_stuff, frameX); 
@@ -2118,6 +2494,13 @@ int main(int argc, char *argv[]) {
         std:: cout << "e.Evdw + e.Ees + eb.Ebond + eb.Eangle + eb.Edihed" << std::endl;
         std:: cout << e.Evdw << "+" << e.Ees <<"+" << eb.Ebond <<"+" << eb.Eangle <<"+" << eb.Edihed << std::endl;
 
+        if (rmsdflag){ 
+            std:: cout << "Ermsd = " << Ermsd << std::endl;
+        }
+        if (dist_con_flag){
+            std:: cout << "Edist_con = " << Edist_con << std::endl;
+        }
+        
         // minimize atom one frist
         // then atoms one and two, then one, two, and three ... and so on. 
 
@@ -2131,7 +2514,10 @@ int main(int argc, char *argv[]) {
              std::cout << "minimize atom i = " << i << std::endl;
              int atom = atomlist[i];
              tempatomlist.push_back(atom);
-             Energy_min_pairlist(parm_stuff, frameX, pairlist, pairlist14, tempatomlist, method, 100000);
+             //Energy_min_pairlist(parm_stuff, frameX, pairlist, pairlist14, tempatomlist, method, 100000);
+             //Energy_min_pairlist(parm_stuff, frameX, pairlist, pairlist14, tempatomlist, method, maxsteps, 0.001,0.1);
+             //Energy_min_pairlist(parm_stuff, frameX, pairlist, pairlist14, tempatomlist, method, maxsteps, gstep, gscale,rmsdflag,rmsdX,rmsdLorH,rmsdFC);
+             Energy_min_pairlist(parm_stuff, frameX, pairlist, pairlist14, tempatomlist, method, maxsteps, gstep, gscale,rmsdflag,rmsdX,rmsdLorH,rmsdFC,dist_con_flag,dc_atomlist1, dc_atomlist2, dc_ideals, dc_FCdist);
              //exit(0);
           }
         }
@@ -2141,8 +2527,12 @@ int main(int argc, char *argv[]) {
            jiggle_atoms(frameX,atomlist,0.1);
         }
 
-        Energy_min_pairlist(parm_stuff, frameX, pairlist, pairlist14, atomlist, method, 100000);
-        std::string filename = "output.rst7";
+        //Energy_min_pairlist(parm_stuff, frameX, pairlist, pairlist14, atomlist, method, 100000);
+        //Energy_min_pairlist(parm_stuff, frameX, pairlist, pairlist14, atomlist, method, maxsteps,0.001,0.1);
+        //Energy_min_pairlist(parm_stuff, frameX, pairlist, pairlist14, atomlist, method, maxsteps, gstep, gscale,rmsdflag,rmsdX,rmsdLorH,rmsdFC);
+        Energy_min_pairlist(parm_stuff, frameX, pairlist, pairlist14, atomlist, method, maxsteps, gstep, gscale,rmsdflag,rmsdX,rmsdLorH,rmsdFC,dist_con_flag,dc_atomlist1, dc_atomlist2, dc_ideals, dc_FCdist);
+        //std::string filename = "output.rst7";
+        std::string filename = output;
         coord_writter(filename, frameX);
 
         exit(0);
