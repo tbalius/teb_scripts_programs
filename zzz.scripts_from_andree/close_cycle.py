@@ -5,6 +5,8 @@ import copy
 # part 3 of the macrocycle breaking project
 # written by Andree Kolliegbo, july 2024
 
+# this script should continue to work for 2atoms2dummies scheme because the two dummies DA and DB are added to the end of the atoms.  
+
 '''
 ok so the thought process for this script is to basically just replace the old file with the new coordinates , but repeat it for all of the poses constructed in the new mol2 file
 
