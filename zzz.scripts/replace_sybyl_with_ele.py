@@ -5,7 +5,7 @@
 # molecule has a different atom type for an atom than your docked pose the RMSD correctly. 
 # DOCK 6 uses the Hungarian Algorithm to creat a correspondance amoung poses.  
 
-# Trent updated on 2026/07/09 to use mol2 libary. this solves some bugs.
+# Trent updated on 2026/07/09 to use the mol2 library. This solves some bugs.
 
 
 import math, sys
